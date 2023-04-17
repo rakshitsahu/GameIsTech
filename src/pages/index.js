@@ -6,41 +6,31 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   return (
     <>
-    <div className=" flex justify-between bg-neutral-800">
-    <span className="flex flex-row  bg-neutral-800">
-    <Image
-        src="/coder.png"
-        alt="Picture of the author"
-        width={250}
-        height={250}
-      />
-    </span>
-    </div>
-      <div className="flex justify-center bg-red-800 ">
-      
-        <nav className="flex bg-neutral-800 rounded-b-md">
+    <div >
+      <nav className="flex w-full justify-self-center justify-items-center bg-red-500 ">
+        <ul className=" flex rounded-b-md">
 
-          <span className="p-6 bg-gradient-to-r hover:bg-red-500 ml-4 delay-200 ">
-            <font className="font-semibold text-xl text-white">Home</font>
-          </span>
+          <li className="flex  p-6 bg-gradient-to-r hover:bg-red-500 ml-4 delay-200 ">
+            <font className="flex font-semibold text-xl text-white">Home</font>
+          </li>
 
-          <span className="p-6 bg-gradient-to-r hover:bg-red-500 ml-4 delay-200 ">
-            <font className="font-semibold text-xl text-white">About Us</font>
-          </span>
+          <li className="flex p-6 bg-gradient-to-r hover:bg-red-500 ml-4 delay-200 ">
+            <font className="flex font-semibold text-xl text-white">About Us</font>
+          </li>
 
-          <span className="p-6 bg-gradient-to-r hover:bg-red-500 ml-4 delay-200 ">
-            <font className="font-semibold text-xl text-white">
+          <li className="flex p-6 bg-gradient-to-r hover:bg-red-500 ml-4 delay-200 ">
+            <font className="flex font-semibold text-xl text-white">
               Privacy Policy
             </font>
-          </span>
+          </li>
 
-          <span className="p-6 bg-gradient-to-r hover:bg-red-500 ml-4 delay-200 ">
-            <font className="font-semibold text-xl text-white">
+          <li className="flex p-6 bg-gradient-to-r hover:bg-red-500 ml-4 delay-200 ">
+            <font className="flex font-semibold text-xl text-white">
               Terms & Conditions
             </font>
-          </span>
-
-        </nav>
+          </li>
+        </ul>
+      </nav>
       </div>
     </>
   );

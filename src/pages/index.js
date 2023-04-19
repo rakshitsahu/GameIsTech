@@ -69,7 +69,7 @@ export default function Home() {
           <div className=" flex rounded-lg shadow-2xl overflow-hidden border-red-500 border-4 place-self-start">
           <Image src="/Valorant/poster/poster.jpg" className=" hover:scale-110 duration-500" height={180} width={180} />
           </div>
-          Valorant
+          Valorantt
           </div>
           
         </div>

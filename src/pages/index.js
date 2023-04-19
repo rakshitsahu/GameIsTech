@@ -4,32 +4,72 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const data = [
+    {
+      name: "Apex Legends",
+      PosterPath: "/ApexLegends/poster.jpeg",
+    },
+    {
+      name: "BattleField",
+      PosterPath: "/BattleField/poster.jpeg",
+    },
+    {
+      name: "ClashRoyale",
+      PosterPath: "/ClashRoyale/poster.jpeg",
+    },
+    {
+      name: "COC",
+      PosterPath: "/COC/poster.jpeg",
+    },
+    {
+      name: "COD",
+      PosterPath: "/COD/poster.jpeg",
+    },
+    {
+      name: "CSGO",
+      PosterPath: "/CSGO/poster.jpeg",
+    },
+    {
+      name: "Fortnite",
+      PosterPath: "/Fortnite/poster.jpeg",
+    },
+    {
+      name: "LOL",
+      PosterPath: "/LOL/poster.jpeg",
+    },
+    {
+      name: "OverWatch",
+      PosterPath: "/OverWatch/poster.jpeg",
+    },
+    {
+      name: "PUBG",
+      PosterPath: "/PUBG/poster.jpeg",
+    },
+  ];
 
-  const SocialIcons = () =>{
-    return                    <div className="flex flex-wrap pb-4  justify-center ">
-    <span className="pt-3 px-2 ">
-      <Image
-        src="/Social_Media_Icons/facebook.png"
-        height={30}
-        width={30}
-      />
-    </span>
-    <span className="pt-3 px-2 ">
-      <Image
-        src="/Social_Media_Icons/instagram.png"
-        height={30}
-        width={30}
-      />
-    </span>
-    <span className="pt-3 px-2 ">
-      <Image
-        src="/Social_Media_Icons/twitter.png"
-        height={30}
-        width={30}
-      />
-    </span>
-  </div>
-  }
+  const SocialIcons = () => {
+    return (
+      <div className="flex flex-wrap pb-4  justify-center ">
+        <span className="pt-3 px-2 ">
+          <Image
+            src="/Social_Media_Icons/facebook.png"
+            height={30}
+            width={30}
+          />
+        </span>
+        <span className="pt-3 px-2 ">
+          <Image
+            src="/Social_Media_Icons/instagram.png"
+            height={30}
+            width={30}
+          />
+        </span>
+        <span className="pt-3 px-2 ">
+          <Image src="/Social_Media_Icons/twitter.png" height={30} width={30} />
+        </span>
+      </div>
+    );
+  };
 
   return (
     <>
@@ -49,49 +89,77 @@ export default function Home() {
               Terms & Conditions
             </span>
           </div>
-          <SocialIcons/>
+          <SocialIcons />
         </nav>
       </div>
-      
-      
+
       <div className="grid md:grid-cols-3 lg:grid-cols-3 sm:grid-cols-2 gap-4 mt-4 mx-4">
         <div className="flex flex-wrap p-6 gap-3 bg-black rounded-lg md:col-span-2 lg:col-span-2 text-3xl text-white">
-        
-        <font className ="mx-4 w-full">Games That are ready to Track:-</font>
-        <div className="grid text-white justify-items-center text-lg">
-        <div className=" flex rounded-lg shadow-2xl overflow-hidden border-red-500 border-4 place-self-start">
-        <Image src="/Valorant/poster/poster.jpg" className=" hover:scale-110 duration-500" height={180} width={180} />
-        </div>
-        Valorant
-        </div>
-          
-          <div className="grid text-white justify-items-center text-lg">
-          <div className=" flex rounded-lg shadow-2xl overflow-hidden border-red-500 border-4 place-self-start">
-          <Image src="/Valorant/poster/poster.jpg" className=" hover:scale-110 duration-500" height={180} width={180} />
+          <div className="flex flex-wrap gap-4">
+            <font className="mx-4 w-full">Games That are ready to Track:-</font>
+            <div className="grid text-white justify-items-center text-lg">
+              <div className=" flex rounded-lg shadow-2xl overflow-hidden border-red-500 border-4 place-self-start">
+                <Image
+                  src="/Valorant/poster/poster.jpg"
+                  className=" hover:scale-110 duration-500"
+                  height={180}
+                  width={180}
+                />
+              </div>
+              Valorant
+            </div>
+
+            <div className="grid text-white justify-items-center text-lg">
+              <div className=" flex rounded-lg shadow-2xl overflow-hidden border-red-500 border-4 place-self-start">
+                <Image
+                  src="/Valorant/poster/poster.jpg"
+                  className=" hover:scale-110 duration-500"
+                  height={180}
+                  width={180}
+                />
+              </div>
+              Valorant
+            </div>
           </div>
-          Valorant
+          <div className="flex flex-wrap gap-4">
+            <font className="mx-4 w-full">Game Under maintainence</font>
+            <div className="grid text-white justify-items-center text-lg">
+              <div className=" flex rounded-lg shadow-2xl overflow-hidden border-red-500 border-4 place-self-start">
+                <Image
+                  src="/Valorant/poster/poster.jpg"
+                  className=" hover:scale-110 duration-500"
+                  height={180}
+                  width={180}
+                />
+              </div>
+              Valorant
+            </div>
+
           </div>
           
         </div>
-        
+
         <div className="py-10 w-1/4  w-full justify-items-center text-white bg-black rounded-lg px-3 py-3">
-        
-        <font className="justify-center text-3xl">Welcome to the sports Tracker!</font> 
-        <p className="mt-4">    
-        The one Application to Track the stats of Sports & video Games
-       We Aim to share and provide the best & accurate stats of Sports and video Games..
-       <br />
-       Do not  forget to Connect with Us on Social Media 
-       in case you haven't
-       </p>
-       <SocialIcons/>
+          <font className="justify-center text-3xl">
+            Welcome to the sports Tracker!
+          </font>
+          <p className="mt-4">
+            The one Application to Track the stats of Sports & video Games We
+            Aim to share and provide the best & accurate stats of Sports and
+            video Games..
+            <br />
+            Do not forget to Connect with Us on Social Media in case you haven't
+          </p>
+          <SocialIcons />
         </div>
-      
       </div>
-      
-      <button type="button" class="bg-gradient-to-r bg-clip-text text-transparent from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 ...">
-  Hover me
-</button>
+
+      <button
+        type="button"
+        class="bg-gradient-to-r bg-clip-text text-transparent from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 ..."
+      >
+        Hover me
+      </button>
     </>
   );
 }

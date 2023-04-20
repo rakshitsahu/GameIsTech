@@ -1,52 +1,54 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
-
+import Link from "next/link";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
   const data = [
     {
       name: "Apex Legends",
-      PosterPath: "/ApexLegends/poster.jpeg",
+      PosterPath: "/ApexLegends/poster.jpg",
     },
     {
       name: "BattleField",
-      PosterPath: "/BattleField/poster.jpeg",
+      PosterPath: "/BattleField/poster.jpg",
     },
     {
       name: "ClashRoyale",
-      PosterPath: "/ClashRoyale/poster.jpeg",
+      PosterPath: "/ClashRoyale/poster.jpg",
     },
     {
       name: "COC",
-      PosterPath: "/COC/poster.jpeg",
+      PosterPath: "/COC/poster.jpg",
     },
     {
       name: "COD",
-      PosterPath: "/COD/poster.jpeg",
+      PosterPath: "/COD/poster.jpg",
     },
     {
       name: "CSGO",
-      PosterPath: "/CSGO/poster.jpeg",
+      PosterPath: "/CSGO/poster.jpg",
     },
     {
       name: "Fortnite",
-      PosterPath: "/Fortnite/poster.jpeg",
+      PosterPath: "/Fortnite/poster.jpg",
     },
     {
       name: "LOL",
-      PosterPath: "/LOL/poster.jpeg",
+      PosterPath: "/LOL/poster.jpg",
     },
     {
       name: "OverWatch",
-      PosterPath: "/OverWatch/poster.jpeg",
+      PosterPath: "/OverWatch/poster.jpg",
     },
     {
       name: "PUBG",
-      PosterPath: "/PUBG/poster.jpeg",
+      PosterPath: "/PUBG/poster.jpg",
     },
   ];
+  const notready = ()  =>{
 
+  }
   const SocialIcons = () => {
     return (
       <div className="flex flex-wrap pb-4  justify-center ">
@@ -94,46 +96,45 @@ export default function Home() {
       </div>
 
       <div className="grid md:grid-cols-3 lg:grid-cols-3 sm:grid-cols-2 gap-4 mt-4 mx-4">
-        <div className="flex flex-wrap p-6 gap-3 bg-black rounded-lg md:col-span-2 lg:col-span-2 text-3xl text-white">
-          <div className="flex flex-wrap gap-4">
+        <div className="flex flex-wrap p-6 gap-3 bg-black rounded-lg sm:col-span-2 md:col-span-2 lg:col-span-2 text-3xl text-white">
+          <div className="flex flex-wrap gap-4 justify-center">
             <font className="mx-4 w-full">Games That are ready to Track:-</font>
-            <div className="grid text-white justify-items-center text-lg">
-              <div className=" flex rounded-lg shadow-2xl overflow-hidden border-red-500 border-4 place-self-start">
+            <Link href='/tracker/valorant/valorant'>
+            <div className="grid text-white text-lg justify-items-center">
+              <div className=" flex h-80 w-50 rounded-lg shadow-2xl  border-red-500 border-4 place-self-start">
                 <Image
                   src="/Valorant/poster/poster.jpg"
-                  className=" hover:scale-110 duration-500"
+                  className=" hover:scale-110 duration-500 rounded-lg "
                   height={180}
                   width={180}
                 />
               </div>
               Valorant
             </div>
+            </Link>
+            
 
-            <div className="grid text-white justify-items-center text-lg">
-              <div className=" flex rounded-lg shadow-2xl overflow-hidden border-red-500 border-4 place-self-start">
-                <Image
-                  src="/Valorant/poster/poster.jpg"
-                  className=" hover:scale-110 duration-500"
-                  height={180}
-                  width={180}
-                />
-              </div>
-              Valorant
-            </div>
           </div>
-          <div className="flex flex-wrap gap-4">
+          <div className="flex flex-wrap gap-4 justify-center">
             <font className="mx-4 w-full">Game Under maintainence</font>
-            <div className="grid text-white justify-items-center text-lg">
-              <div className=" flex rounded-lg shadow-2xl overflow-hidden border-red-500 border-4 place-self-start">
-                <Image
-                  src="/Valorant/poster/poster.jpg"
-                  className=" hover:scale-110 duration-500"
-                  height={180}
-                  width={180}
-                />
+            {data.map((game) =>{
+              
+              return (
+                <>
+                <div className="grid text-white justify-items-center text-lg ">
+                <div className="flex h-80 w-50 rounded-lg shadow-2xl  border-red-500 border-4 place-self-start">
+                  <Image
+                    src={game.PosterPath}
+                    className=" hover:scale-110 duration-500 rounded-lg "
+                    height={180}
+                    width={180}
+                  />
+                </div>
+                {game.name}
               </div>
-              Valorant
-            </div>
+                </>
+                )
+            })}
 
           </div>
           
@@ -154,12 +155,6 @@ export default function Home() {
         </div>
       </div>
 
-      <button
-        type="button"
-        class="bg-gradient-to-r bg-clip-text text-transparent from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500 ..."
-      >
-        Hover me
-      </button>
     </>
   );
 }

@@ -8,17 +8,13 @@ export default function Valorant() {
   const [Agents , setAgents] = useState({})
   const getdata = async ()=>{
     try {
-      const res = await axios.get('https://valorant-api.com/v1/agents');
-      const unfiltered = res.data.data
-      const filtered = {}
-      for( let i = 0 ; i < unfiltered.length ;i++ ){
-        if( unfiltered.isPlayableCharacter )
-        filtered.push(unfiltered[i])
-        console.log(unfiltered[i])
-      }
-      console.log(filtered)
-      setAgents(filtered)
-      console.log(filtered.length)
+      const res = await axios.get('https://valorant-api.com/v1/agents',{
+        params: {
+          isPlayableCharacter: true
+        }
+      });
+      setAgents(res.data.data)
+      console.log(Agents.length)
     } catch (error) {
       console.log(error)
     }

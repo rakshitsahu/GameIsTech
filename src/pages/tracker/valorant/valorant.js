@@ -51,7 +51,24 @@ export default function Valorant() {
       );
     })}
 </div>
-    <span className='flex flex-wrap gap-3 justify-center bg-black rounded-lg p-3'>Block 2</span>
+<div className='flex flex-wrap gap-3 justify-center bg-black rounded-lg p-3'>
+<div className='text-white w-full  text-xl'> <center>Weapons</center> </div>
+
+{Object.keys(Agents).map(  (Agent) => {
+  return (
+    <span key={Agent}>
+    
+    { 
+    Agents[Agent].isPlayableCharacter && <div className='h-24 w-24 rounded-full shadow-2xl overflow-clip bg-red-500 border-2 hover:border-blue-700' key={Agent}>
+    <img src={Agents[Agent].fullPortraitV2} className='self-auto overflow-clip shadow-2xl hover:scale-110 duration-500' alt="" />
+    
+    </div>
+   }
+    
+    </span>
+  );
+})}
+</div>
     <span className='flex flex-wrap gap-3 justify-center bg-black rounded-lg p-3'>Block 3</span>
     <span className='flex flex-wrap gap-3 justify-center bg-black rounded-lg p-3'>Block 4</span>
     </div>

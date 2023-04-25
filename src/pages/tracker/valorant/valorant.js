@@ -6,7 +6,29 @@ import axios from 'axios'
 
 export default function Valorant() {
   const [Agents , setAgents] = useState({})
-  const getdata = async ()=>{
+  const [Weapons , setWeapons] = useState({})
+  const getWeapons = async () =>{
+    try {
+      const res = await axios.get('https://valorant-api.com/v1/weapons ');
+      setWeapons(res.data.data)
+      //console.log(Agents.length)
+    } catch (error) {
+      console.log(error)
+    } 
+  }
+  const getActs = async () => {
+    try {
+      const res = await axios.get('https://ap.api.riotgames.com/val/ranked/v1/leaderboards/by-act/',{
+        params: {
+          actId: "0df5adb9-4dcb-6899-1306-3e9860661dd3"
+        }
+      });
+      console.log(res)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  const getAgents = async ()=>{
     try {
       const res = await axios.get('https://valorant-api.com/v1/agents',{
         params: {
@@ -14,13 +36,15 @@ export default function Valorant() {
         }
       });
       setAgents(res.data.data)
-      console.log(Agents.length)
+      //console.log(Agents.length)
     } catch (error) {
       console.log(error)
     }
   }
   useEffect(()=>{
-    getdata()
+    getAgents()
+    getWeapons()
+    getActs()
   },[])
   
   return (
@@ -42,7 +66,7 @@ export default function Valorant() {
         
         { 
         Agents[Agent].isPlayableCharacter && <div className='h-24 w-24 rounded-full shadow-2xl overflow-clip bg-red-500 border-2 hover:border-blue-700' key={Agent}>
-        <img src={Agents[Agent].fullPortraitV2} className='self-auto overflow-clip shadow-2xl hover:scale-110 duration-500' alt="" />
+        <img src={Agents[Agent].displayIcon} className='self-auto overflow-clip shadow-2xl hover:scale-110 duration-500' alt="" />
         
         </div>
        }
@@ -54,22 +78,20 @@ export default function Valorant() {
 <div className='flex flex-wrap gap-3 justify-center bg-black rounded-lg p-3'>
 <div className='text-white w-full  text-xl'> <center>Weapons</center> </div>
 
-{Object.keys(Agents).map(  (Agent) => {
+{Object.keys(Weapons).map(  (Weapon) => {
   return (
-    <span key={Agent}>
+    <span key={Weapon}>
     
-    { 
-    Agents[Agent].isPlayableCharacter && <div className='h-24 w-24 rounded-full shadow-2xl overflow-clip bg-red-500 border-2 hover:border-blue-700' key={Agent}>
-    <img src={Agents[Agent].fullPortraitV2} className='self-auto overflow-clip shadow-2xl hover:scale-110 duration-500' alt="" />
-    
+    <div className='h-24 w-24 rounded-full shadow-2xl overflow-clip place-content-center bg-red-500 border-2 hover:border-blue-700' key={Weapon}>
+    <img src={Weapons[Weapon].displayIcon} className= 'pt-7 overflow-clip shadow-2xl hover:scale-110 duration-500' alt="" />
     </div>
-   }
-    
     </span>
   );
 })}
 </div>
-    <span className='flex flex-wrap gap-3 justify-center bg-black rounded-lg p-3'>Block 3</span>
+    <span className='flex flex-wrap gap-3 justify-center bg-black rounded-lg p-3'>
+    
+    </span>
     <span className='flex flex-wrap gap-3 justify-center bg-black rounded-lg p-3'>Block 4</span>
     </div>
 

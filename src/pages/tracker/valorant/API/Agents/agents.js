@@ -11,3 +11,4 @@ const getAgents = async ()=>{
       console.log(error)
     }
   }
+  export {getAgents}

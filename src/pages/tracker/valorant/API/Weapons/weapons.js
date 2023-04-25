@@ -6,3 +6,4 @@ const getWeapons = async () =>{
       console.log(error)
     } 
   }
+  export {getWeapons}

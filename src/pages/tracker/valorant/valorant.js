@@ -3,48 +3,40 @@ import {GiTrophyCup,GiTrapMask} from 'react-icons/gi'
 import {TbMapSearch} from 'react-icons/tb'
 import {IoSparklesSharp} from 'react-icons/io5'
 import axios from 'axios'
-
+import { getAgents } from './API/Agents/agents'
+import { getWeapons } from './API/Weapons/weapons'
+import { leaderboard } from './API/Leaderboard/leaderboard'
 export default function Valorant() {
   const [Agents , setAgents] = useState({})
   const [Weapons , setWeapons] = useState({})
-  const getWeapons = async () =>{
-    try {
-      const res = await axios.get('https://valorant-api.com/v1/weapons ');
-      setWeapons(res.data.data)
-      //console.log(Agents.length)
-    } catch (error) {
-      console.log(error)
-    } 
-  }
   const getActs = async () => {
     try {
       const res = await axios.get('https://ap.api.riotgames.com/val/ranked/v1/leaderboards/by-act/',{
         params: {
           actId: "0df5adb9-4dcb-6899-1306-3e9860661dd3"
         }
-      });
-      console.log(res)
+      }) ;
+      
     } catch (error) {
       console.log(error)
     }
   }
-  const getAgents = async ()=>{
-    try {
-      const res = await axios.get('https://valorant-api.com/v1/agents',{
-        params: {
-          isPlayableCharacter: true
-        }
-      });
-      setAgents(res.data.data)
-      //console.log(Agents.length)
-    } catch (error) {
-      console.log(error)
+
+  useEffect( ()=>{
+    //getAgents()
+    const agentsJson = getAgents()
+    agentsJson.then( (json) => {
+      setAgents(json)
+    } )
+    const weaponsJson = getWeapons()
+    weaponsJson.then( (json) =>{
+      setWeapons(json)
+    } )
+    const req = {
+      server : "na" , from : 0 , to : 200 , actId : "573f53ac-41a5-3a7d-d9ce-d6a6298e5704"
     }
-  }
-  useEffect(()=>{
-    getAgents()
-    getWeapons()
-    getActs()
+    leaderboard()
+    //getActs()
   },[])
   
   return (

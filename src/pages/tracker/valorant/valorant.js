@@ -3,9 +3,9 @@ import {GiTrophyCup,GiTrapMask} from 'react-icons/gi'
 import {TbMapSearch} from 'react-icons/tb'
 import {IoSparklesSharp} from 'react-icons/io5'
 import axios from 'axios'
-import { getAgents } from './API/Agents/agents'
-import { getWeapons } from './API/Weapons/weapons'
-import { leaderboard } from './API/Leaderboard/leaderboard'
+import { getAgents } from './Agents/agents'
+import { getWeapons } from './Weapons/weapons'
+import { leaderboard } from '../../api/valorant/leaderboard/leaderboard'
 export default function Valorant() {
   const [Agents , setAgents] = useState({})
   const [Weapons , setWeapons] = useState({})

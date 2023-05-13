@@ -99,7 +99,7 @@ export default function Home() {
         <div className="flex flex-wrap p-6 gap-3 bg-black rounded-lg sm:col-span-2 md:col-span-2 lg:col-span-2 text-3xl text-white">
           <div className="flex flex-wrap gap-4 justify-center">
             <font className="mx-4 w-full">Games That are ready to Track:-</font>
-            <Link href='/tracker/valorant/valorant'>
+            <Link href='/tracker/valorant/home'>
             <div className="grid text-white text-lg justify-items-center">
               <div className=" flex h-80 w-50 rounded-lg shadow-2xl  border-red-500 border-4 place-self-start">
                 <Image

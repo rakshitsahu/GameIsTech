@@ -3,6 +3,8 @@ import { getAgents } from '@/util/valorant/agents'
 import axios from 'axios'
 import { useEffect , useState } from 'react'
 import Navbar from '@/Components/valorant/Navbar'
+import { useRouter } from 'next/router'
+
 export default function Agents() {
   const [Agents , setAgents] = useState({})
   useEffect( ()=>{
@@ -13,10 +15,13 @@ export default function Agents() {
       console.log(json)
     } )
   },[])
+  const router = useRouter()
+  const agentuuid = router.query.slug
+  console.log(router.query.slug)
   return (
     <>
     <Navbar/>
-  
+    {router.query.slug}
     <div className='bg-black flex flex-wrap m-5 p-3 gap-3 rounded-lg justify-center text-white'>
     {Object.keys(Agents).map(  (Agent) => {
       return (

@@ -115,9 +115,6 @@ export default function Home() {
             
 
           </div>
-<<<<<<< HEAD
-          Valorantt
-=======
           <div className="flex flex-wrap gap-4 justify-center">
             <font className="mx-4 w-full">Game Under maintainence</font>
             {data.map((game) =>{
@@ -139,7 +136,6 @@ export default function Home() {
                 )
             })}
 
->>>>>>> valo
           </div>
           
         </div>

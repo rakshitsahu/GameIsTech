@@ -5,7 +5,7 @@ export default async function leaderboard(req, res) {
     const options = {
         method:method,
         headers : {
-            'X-Riot-Token' : 'RGAPI-d6c2f299-727f-41c6-bfbd-520fba9c79a2'
+            'X-Riot-Token' : 'RGAPI-4f0d3c90-3d38-413c-99cf-ce5c97cd58d0'
         }
     }
     try {

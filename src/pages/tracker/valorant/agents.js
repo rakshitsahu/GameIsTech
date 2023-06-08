@@ -48,13 +48,14 @@ export default function Agents() {
     <>
       <Navbar />
       {router.query.slug}
-      <div className="flex flex-wrap">
+      <div className="flex flex-wrap justify-center">
         {Object.keys(AgentMap).map((key) => {
           return (
             <div
               key={key}
-              className="bg-zinc-900 m-5 p-3 gap-3  rounded-lg text-white"
+              className="bg-zinc-900 w-10/12 m-5 p-3 gap-3 rounded-lg text-white"
             >
+           
               <div className="Role_block  ">
                 <div className="Role_Details">
                   <div className="flex gap-3">
@@ -78,24 +79,24 @@ export default function Agents() {
                     <div key={index} className="flex flex-wrap">
                     <div
                       
-                      className="grid grid-cols-6 gap-3 flex-wrap w-72 bg-black p-3 rounded-xl justify-between"
+                      className="gap-3 flex-wrap w-72 bg-black p-3 rounded-xl justify-between"
                     >
-                      <div className="col-span-2">
+                      <div className="flex gap-3">
                             <img
                             src={AgentMap[key][index].displayIcon}
                             className="bg-white rounded-xl h-16"
                           ></img>
-                          
-                      </div>
-
-                      <div className="flex flex-wrap col-span-4 gap-3">
-                        <img
+                          <img
                           src={AgentMap[key][index].role.displayIcon}
                           className=" rounded-xl h-9 w-9"
                           
                         ></img>
-                        <div>{AgentMap[key][index].displayName}</div>
-                        {AgentMap[key][index].description}
+                        <h2>{AgentMap[key][index].displayName}</h2>
+                      </div>
+
+                      <div className="flex flex-wrap col-span-4 gap-3">
+
+                        <p>{AgentMap[key][index].description}</p>
                       </div>
 
                     </div>
@@ -103,6 +104,7 @@ export default function Agents() {
                   );
                 })}
               </div>
+           
             </div>
           );
         })}

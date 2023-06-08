@@ -8,7 +8,7 @@ function Navbar() {
     <nav className='flex flex-wrap w-full bg-gray-700 text-white p-5 gap-3'>
     <Link href='http://localhost:3000/tracker/valorant/agents'><span className='flex gap-2'>   <GiTrapMask className='self-center '/>Agents</span></Link>
    <Link href='http://localhost:3000/tracker/valorant/maps'> <span className='flex gap-2'> <TbMapSearch className='self-center '/> Maps </span></Link>
-   <Link href='http://localhost:3000/tracker/valorant/Skins'> <span className='flex gap-2'>  <IoSparklesSharp className='self-center '/>Skins </span></Link>
+   <Link href='http://localhost:3000/tracker/valorant/skins'> <span className='flex gap-2'>  <IoSparklesSharp className='self-center '/>Skins </span></Link>
    <Link href='http://localhost:3000/tracker/valorant/leaderboard'> <span className='flex gap-2'>  <GiTrophyCup className='self-center '/> Leaderboard  </span></Link>
     </nav>
   )

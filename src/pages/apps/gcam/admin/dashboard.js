@@ -1,7 +1,14 @@
+
 import React from "react";
 import AdminNavbar from "@/Components/gcam/adminNavbar";
-import { useState } from "react";
+import { useState ,useEffect } from "react";
 import { Button } from "react-bootstrap";
+import TakeInput from "@/Components/gcam/pages/dashboard/takeInput";
+import AndroidVersionModel from "@/MongoDb/Gcam/Models/AndroidVersion";
+import { CreatePageState } from "@/Components/gcam/EnumStates";
+import { IoCloseCircle } from "react-icons/io5";
+import axios from "axios";
+import mongoose from "mongoose";
 function getButton(label){
   return <Button
   className="bg-blue-600 p-3 rounded-lg m-3"
@@ -15,149 +22,128 @@ function getButton(label){
   Add
 </Button>
 }
-const Dashboard = () => {
-  const [processors, setProcessors] = useState([]);
-  const [processorName, setProcessorName] = useState("");
-  const [processorBrands, setProcessorBrands] = useState([]);
-  const [processorBrandName, setProcessorBrandName] = useState("");
 
-  const [deviceBrands, setDeviceBrands] = useState([]);
-  const [deviceBrandName, setDeviceBrandName] = useState("");
-
-  const [androidVersionList, setAndroidVersionList] = useState([]);
-  const [androidVersion, setAndroidVersion] = useState('');
-  
-  const [developers, setDevelopers] = useState({});
-  function addProcessorName() {
-    if (!processors.includes(processorName))
-      setProcessors((current) => [...current, processorName]);
-    setProcessorName("");
-    console.log(processors);
+const options = [
+  {
+    name : 'Android Versions',
+    url : 'http://localhost:3000/api/gcam/androidversion'
   }
+  ,
+  {
+    name : 'Phone Brands',
+    url : 'http://localhost:3000/api/gcam/phonebrands'
+  },
+  {
+    name : 'Processor Brands',
+    url : 'http://localhost:3000/api/gcam/processorbrands'
+  },
+  {
+    name : 'Developer Names',
+    url : 'http://localhost:3000/api/gcam/developernames'
+  }
+
+]
+
+const Dashboard = () => {
+  const [URL, setURL] = useState('')
+  const [list , setList] = useState({})
+  const [deletedList , setDeletedList] = useState([])
+  const [name , setName] = useState('')
+  const [currentOption , setCurrentOption] = useState('')
+  async function makeRequest(url){
+    const res = await axios.get(url).then((res)=>{ return res.data })
+    return res.data
+  }
+
+  function handleCurrentOption(newOption){
+    if( currentOption != '' )
+    {
+      document.getElementById(currentOption).classList.remove('bg-blue-500')
+      document.getElementById(currentOption).classList.add('bg-emerald-500')
+    }
+    
+      document.getElementById(newOption).classList.remove('bg-emerald-500')
+      document.getElementById(newOption).classList.add('bg-blue-500')
+    
+    console.log(currentOption , newOption)
+    setCurrentOption(newOption)
+  }
+
+  function  deleteItem(item){
+    document.getElementById(item.name).classList.remove('bg-teal-500')
+    document.getElementById(item.name).classList.add('bg-red-400')
+    setDeletedList([...deletedList, item])
+  }
+  useEffect( () => {
+    console.log(URL)
+    const data = makeRequest(URL)
+    data.then((res)=>{
+      setList(res)
+      console.log(res)
+    })
+  }, [URL]);
+
   return (
     <>
       <AdminNavbar />
 
-      <div>
-            {//******************** Processors Info
-            }
-        <div className="Processors">
-          <div id="test">
-            {" "}
-            Processor Brand :{" "}
-            <input
-              type="text"
-              value={processorBrandName}
-              className="w-72 h-12 rounded-lg text-lg text-black"
-              onChange={(e) => setProcessorBrandName(e.target.value)}
-            />
-            <Button
-              className="bg-blue-600 p-3 rounded-lg m-3"
-              onClick={(e) => {
-                setProcessorBrands(
-                  [...processorBrands, processorBrandName],
-                  setProcessorBrandName("")
-                );
-              }}
-            >
-              Add
-            </Button>
-          </div>
-          <div id="test">
-            {" "}
-            Processors :{" "}
-            <input
-              type="text"
-              value={processorName}
-              className="w-72 h-12 rounded-lg text-lg text-black"
-              onChange={(e) => setProcessorName(e.target.value)}
-            />
-            <Button
-              className="bg-blue-600 p-3 rounded-lg m-3"
-              onClick={(e) => {
-                setProcessors(
-                  [...processors, processorName],
-                  setProcessorName("")
-                );
-              }}
-            >
-              Add
-            </Button>
-          </div>
-        </div>
-              {//******************** End Processors Info
-      }
-
-      { /* ************************ Device Brands */ }
-      <div className="Device_Brand">
-      Device Brand Name :
-      <input
-      type="text"
-      value={deviceBrandName}
-      className="w-72 h-12 rounded-lg text-lg text-black"
-      onChange={(e) => setDeviceBrandName(e.target.value)}
-    />
-    <Button
-      className="bg-blue-600 p-3 rounded-lg m-3"
-      onClick={(e) => {
-        setDeviceBrands(
-          [...deviceBrands, deviceBrandName],
-          setDeviceBrandName("")
+      <div className="grid grid-cols-3 h-screen content-center gap-4 drop-shadow-2xl m-3">
+      <div className="  rounded-xl p-4 m-2  "> 
+      <div className="flex justify-center inline-block">
+      <div >
+      <font> Enter The Android version  </font>
+      <TakeInput  State = {CreatePageState.Androidversion} SetName = 'name' />
+      <font> Enter The processor Brand  </font>
+      <TakeInput State = {CreatePageState.ProcessorBrands} SetName = 'name'/>
+      <font> Enter The Phone Brands  </font>
+      <TakeInput State = {CreatePageState.PhoneBrands} SetName = 'name'/>
+      <font> Enter The Developer Name  </font>
+      <TakeInput State = {CreatePageState.DeveloperNames} SetName = 'name'/>
+      </div>
+      </div>
+      </div>
+      <div className="items-center col-span-2 justify-center overflow-x-auto space-x-2 space-y-3">
+      <div className=" grid grid-cols-4 gap-4 ">
+      {Object.keys(options).map(  (option) => {
+        return (
+          
+          <button key={option} id= {options[option].name} className="bg-emerald-500  p-2 drop-shadow-2xl rounded-xl" onClick={() =>{
+             setName(options[option].name) ,
+             setURL(options[option].url),
+             handleCurrentOption(options[option].name)
+             setDeletedList([])
+            //  document.getElementById(options[option].name).classList.remove('bg-emerald-500')
+            }} >
+           {options[option].name} 
+           </button>
         );
-      }}
-    >
-      Add
-    </Button>
+      })}
       </div>
-      { /* ************************ End Device Brands */ }
+      
+      
+      <div className="grid grid-cols-6 gap-4" >
+      
+      { 
+        Object.keys(list).map(  (iterator) => {
 
-      <div>
-            { /* ************************ Device Brands */ }
-      <div className="Device_Brand">
-      Device Brand Name :
-      <input
-      type="text"
-      value={deviceBrandName}
-      className="w-72 h-12 rounded-lg text-lg text-black"
-      onChange={(e) => setDeviceBrandName(e.target.value)}
-    />
-    <Button
-      className="bg-blue-600 p-3 rounded-lg m-3"
-      onClick={(e) => {
-        setDeviceBrands(
-          [...deviceBrands, deviceBrandName],
-          setDeviceBrandName("")
-        );
-      }}
-    >
-      Add
-    </Button>
+        if(URL){
+          return <span key={iterator} id={list[iterator].name} className="grid   bg-teal-500 p-2 drop-shadow-2xl rounded-xl">
+          <button className="justify-self-end" onClick={()=>{deleteItem(list[iterator])}}><IoCloseCircle/></button>
+          <span className="justify-self-center">{list[iterator].name}
+          
+          </span>
+          
+          </span>
+        }
+
+      }) 
+    }
       </div>
-      { /* ************************ End Device Brands */ }
       </div>
-            { /* ************************ Android Version */ }
-            <div className="Android_version">
-            Android Version :
-            <input
-            type="text"
-            value={androidVersion}
-            className="w-72 h-12 rounded-lg text-lg text-black"
-            onChange={(e) => setAndroidVersion(e.target.value)}
-          />
-          <Button
-            className="bg-blue-600 p-3 rounded-lg m-3"
-            onClick={(e) => {
-              setAndroidVersionList(
-                [...androidVersionList, androidVersion],
-                setAndroidVersion("")
-              );
-            }}
-          >
-            Add
-          </Button>
-            </div>
-            { /* ************************ End Android versions */ }
+      
       </div>
+
+
     </>
   );
 };

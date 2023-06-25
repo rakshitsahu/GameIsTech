@@ -126,18 +126,14 @@ function CreatePost() {
     <font className = 'self-center text-2xl'>Brand : </font> 
 
     <select name="cars" defaultValue='makeChoice' value={deviceBrand} onChange={(e) => setDeviceBrand(e.target.value) } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
-    <optgroup label="Xiaomi">
-      <option value="volvo">Redmi</option>
-      <option value="saab">Mi</option>
-    </optgroup>
-    <optgroup label="Google">
-      <option value="mercedes">Pixel</option>
-      <option value="audi">MTK 49</option>
-    </optgroup>
-    <optgroup label="Samsung">
-      <option value="Galaxy">Galaxy</option>
-      <option value="audi">MTK 49</option>
-    </optgroup>
+    {Object.keys(brandsjson).map(  (index) => {
+      //console.log ( 'the brand is ', brandsjson.index)
+        return (
+          <option key={index} value={brandsjson[index].name}>{brandsjson[index].name}</option>
+
+        );
+      })}
+
   </select>
     </div>
     <div>  
@@ -149,25 +145,30 @@ function CreatePost() {
          <div className='grid grid-cols-2'>  
          <font className='self-center text-2xl'>Processor :</font> 
   <select name="cars" defaultValue='makeChoice' value={processorName} onChange={(e) => setProcessorName(e.target.value) } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
-  <optgroup label="Snapdragon">
-    <option value="volvo">865</option>
-    <option value="saab">420</option>
-  </optgroup>
-  <optgroup label="Mediatek">
-    <option value="mercedes">MTK 42</option>
-    <option value="audi">MTK 49</option>
-  </optgroup>
-  <optgroup label="Exionus">
-    <option value="mercedes">MTK 42</option>
-    <option value="audi">MTK 49</option>
-  </optgroup>
+  {Object.keys(processsorsJson).map(  (index) => {
+      //console.log ( 'the brand is ', processsorsJson.index)
+        return (
+          <option key={index} value={processsorsJson[index].name}>{processsorsJson[index].name}</option>
+
+        );
+      })}
 </select>
 
      </div>
      <font className='place-self-center text-3xl font-thin mt-3  '>Google Camera Details</font>
     <div id = 'test' className='grid grid-cols-2'>
     <font className='self-center text-2xl'>Developer Name : </font>
-    <input type='text' onChange={(e)=> setGcamDeveloperName(e.target.value)} className='w-72 h-12 rounded-lg text-lg text-black'/>
+    <select name="cars" defaultValue='makeChoice' value={processorName} onChange={(e)=> setGcamDeveloperName(e.target.value)} className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
+  {Object.keys(developersJson).map(  (index) => {
+      //console.log ( 'the brand is ', developersJson.index)
+        return (
+          <option key={index} value={developersJson[index].name}>{developersJson[index].name}</option>
+
+        );
+      })
+    }
+</select>
+    
      </div>
 
      

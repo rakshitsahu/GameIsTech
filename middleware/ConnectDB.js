@@ -2,7 +2,7 @@
 import mongoose from "mongoose";
 import { MongoClient } from "mongodb";
 import { Androidversionrun , PhoneBrandsRun , ProcessorBrandsRun } from "@/Components/gcam/useModels";
-import CreatePageStateManager from "../GCAM/createPageStateManager";
+import ResponseStatus from "../GCAM/responseStatus";
 import { CreatePageState } from "@/Components/gcam/EnumStates";
 const connectDB = handler => async (req, res)=>{
     console.log('trying connection')
@@ -10,10 +10,8 @@ const connectDB = handler => async (req, res)=>{
         console.log('connection successfull')
 
         // await CreatePageStateManager( parseInt(req.headers.state) , req.headers.data)
-    }).catch((err) => {
-        console.log(err)
-    })
-
+    }).catch( ()=> res.status(ResponseStatus.Error_Ocurred).json({ message : "Error occured while connecting to database" }) )
+    // await mongoose.connection.close()
     return handler(req,res)
 }
 export default connectDB

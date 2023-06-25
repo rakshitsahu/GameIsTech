@@ -49,52 +49,10 @@ async function DeveloperNamesRun(data){
         if(!result)
             await model.collection.insertOne(data)
     } )
-
     console.log('inserted')
 }
 
-async function GcamCheck(data){
-    data = JSON.parse(data)
-    const model = GcamModel
-    model.collection.findOne({downloadLink : data.downloadLink} , async (error , result) =>{
-        if(!result)
-        return ;
-        await model.collection.insertOne(data ,(error , result) =>{
-            if(error)
-            return ;
-            console.log('the id is ' , data._id)
-            return data._id
-
-        });
-    } )
-}
-// async function GcamPost(data){
-//     data = JSON.parse(data)
-//     const model = GcamPostModel
-//     const Post = data.post
-//     const Gcam = data.gcam
-//     const objectID = GcamCheck(Gcam)
-//     model.collection.findOne({name : Post.name} , 
-//         async (error , result) => {
-//         if(result)
-//         {
-//             model.collection.updateOne({ name : Post.name } , {
-//                 $addToSet : { gcamIds : objectID }
-//             } )
-//         }
-//         else{
-//             model.collection.insertOne(Post, (error , res)=>{
-//                 if(error)
-//                 return ;
-//                 else
-//                 return res;
-//             })
-//         }
-
-//     }
-//      )
-// }
-export {Androidversionrun, PhoneBrandsRun , ProcessorBrandsRun,DeveloperNamesRun , GcamCheck  }
+export {Androidversionrun, PhoneBrandsRun , ProcessorBrandsRun,DeveloperNamesRun  }
 // run()
 
 

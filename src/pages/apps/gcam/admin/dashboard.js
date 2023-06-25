@@ -1,4 +1,3 @@
-
 import React from "react";
 import AdminNavbar from "@/Components/gcam/adminNavbar";
 import { useState ,useEffect } from "react";
@@ -8,7 +7,6 @@ import AndroidVersionModel from "@/MongoDb/Gcam/Models/AndroidVersion";
 import { CreatePageState } from "@/Components/gcam/EnumStates";
 import { IoCloseCircle } from "react-icons/io5";
 import axios from "axios";
-import mongoose from "mongoose";
 function getButton(label){
   return <Button
   className="bg-blue-600 p-3 rounded-lg m-3"
@@ -51,7 +49,7 @@ const Dashboard = () => {
   const [name , setName] = useState('')
   const [currentOption , setCurrentOption] = useState('')
   async function makeRequest(url){
-    const res = await axios.get(url).then((res)=>{ return res.data })
+    const res = await axios.get(url)
     return res.data
   }
 
@@ -102,7 +100,7 @@ const Dashboard = () => {
       </div>
       </div>
       </div>
-      <div className="items-center col-span-2 justify-center overflow-x-auto space-x-2 space-y-3">
+      <div className="grid items-center col-span-2 justify-center overflow-x-auto space-x-2 space-y-3">
       <div className=" grid grid-cols-4 gap-4 ">
       {Object.keys(options).map(  (option) => {
         return (
@@ -123,8 +121,7 @@ const Dashboard = () => {
       
       <div className="grid grid-cols-6 gap-4" >
       
-      { 
-        Object.keys(list).map(  (iterator) => {
+      { Object.keys(list).map(  (iterator) => {
 
         if(URL){
           return <span key={iterator} id={list[iterator].name} className="grid   bg-teal-500 p-2 drop-shadow-2xl rounded-xl">
@@ -136,9 +133,10 @@ const Dashboard = () => {
           </span>
         }
 
-      }) 
-    }
+      }) }
+      
       </div>
+      <button className="p-3 w-32 rounded-3xl bg-emerald-500 hover:bg-emerald-800 ">Delete</button>
       </div>
       
       </div>

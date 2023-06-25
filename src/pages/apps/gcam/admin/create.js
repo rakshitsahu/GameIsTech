@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap'
 import AdminNavbar from '@/Components/gcam/adminNavbar'
 import { version } from 'mongoose'
 import axios from 'axios'
+
 function CreatePost() {
   const [deviceName , setDeviceName] = useState('')
   const [gcamName , setGcamName] = useState('')
@@ -11,67 +12,95 @@ function CreatePost() {
   const [gcamVersion , setGcamVersion] = useState('')
   const [gcamDescription , setGcamDescription] = useState('')
   const [gcamDeveloperName , setGcamDeveloperName] = useState('')
-  const [deviceNameList , setDeviceNameList] = useState(['redmi' , 'xiaomu', 'leonovo'])
-
   const [processorName , setProcessorName] =  useState('')
   const [deviceBrand , setDeviceBrand] = useState('')
+  const [processsorsJson , setProcessorJson] = useState([])
+  const [brandsjson , setBrandsJson] = useState([])
+  const [developersJson , setDevelopersJson]= useState([])
+  const [androidVersionsJson , setAndroidVersionsJson]= useState([])
+  async function getData(){
+    await axios.get('http://localhost:3000/api/gcam/androidversion').then(
+      (res)=> setAndroidVersionsJson(res.data)
+    ).catch((err)=> {})
+
+    await axios.get('http://localhost:3000/api/gcam/developernames').then(
+      (res) => setDevelopersJson(res.data)
+    ).catch((err)=>{})
+
+    await axios.get('http://localhost:3000/api/gcam/phonebrands').then(
+      (res)=> setBrandsJson(res.data)
+    ).catch((err)=>{})
+
+    await axios.get('http://localhost:3000/api/gcam/processorbrands').then(
+      (res)=> setProcessorJson(res.data)
+    ).catch((err)=>{})
+
+
+  }
+
+  useEffect( () => {
+    getData()
+  }, []);
+
   function onDeviceNameChange(e){
     setDeviceName(e.target.value)
   }
 
-  async function addDeviceName(){
-    if(!deviceNameList.includes(deviceName))
-    setDeviceNameList(current => [...current , deviceName ])
-    setDeviceName('')
-    console.log('device added')
+  async function onPostClick(){
     
-  }
-
-  const removeDeviceName = async (index) => {
-
-    setDeviceNameList(oldValues => {
-      return oldValues.filter((t, i) => i !== index)
-    })
-  }
-
-  // async function onPostClick(){
-  //   const Post = {
-  //     name : deviceName,
-  //     processor : processorName,
-  //     brand : dev
-  //   }
-  // }
-
-  async function onAddGcamClick(){
-    
-
-    const gcamData = { 
+    const Post = {
+      name : deviceName,
+      processor : processorName,
+      brand : gcamDeveloperName,
+      downloadLink : gcamDownloadLink
+    }
+    const gcamData = {
       developerName : gcamDeveloperName,
       name :gcamName,
       version : parseInt(gcamVersion),
       downloadLink : gcamDownloadLink,
       description : document.getElementById('gcam').value
     }
-    console.log(gcamData)
-    const stringJson = JSON.stringify(gcamData)
-    const config = {
-      headers :  {
-        data : stringJson
-      }
+    const PostData = {
+      post : Post,
+      gcam : gcamData
     }
-    await axios.get('http://localhost:3000/api/gcam/gcamcheck', config).then(
+    console.log(PostData)
+
+    await axios.post('http://localhost:3000/api/gcam/gcampost',PostData).then(
       (result)=>{
         console.log('result is ' , result);
         return result
       }
+    ).catch()
+  }
+
+  async function onAddGcamClick(){
+
+    const gcamData = {
+      developerName : gcamDeveloperName,
+      name :gcamName,
+      version : parseInt(gcamVersion),
+      downloadLink : gcamDownloadLink,
+      description : document.getElementById('gcam').value
+    }
+    // console.log(gcamData)
+    // const stringJson = JSON.stringify(gcamData)
+    // const config = {
+    //   headers :  {
+    //     data : stringJson
+    //   }
+    // }
+    const res  = await axios.post('http://localhost:3000/api/gcam/gcamcheck', gcamData).then(
+      (result)=>{
+        // console.log('result is ' , result);
+        return result
+      }
     )
+    return res;
 
   }
 
-  useEffect(() => {
-    console.log('changed')
-    setDeviceNameList(deviceNameList) // Side-effect!
-  }, [deviceNameList.length]);
 
   return (
     <>
@@ -88,22 +117,11 @@ function CreatePost() {
     <div className='DEVICE_NAME grid grid-cols-2'>
     <font className='self-center text-2xl'>Device Name :</font>
     <div id = 'test'>  <input type='text' value={deviceName} className='w-72 h-12 rounded-lg text-lg text-black' onChange={onDeviceNameChange}/>
-    <Button className='bg-blue-600 p-3 rounded-lg m-3' onClick={addDeviceName}>Add</Button> 
+ 
     </div>
     </div>
 
-    <div className='flex flex-wrap gap-3 place-self-center'> 
-    {
-      deviceNameList.map((_device, index) => {
-          return (
-            <div className='p-2 rounded-xl bg-blue-500' key={_device} >{_device} 
-          <Button className='p-2' onClick={()=>{removeDeviceName(index)}}> X</Button>
-          </div>
-          )
-        })
-      }
-    devices included : {deviceNameList.length}
-    </div>
+
     <div className='grid grid-cols-2'>
     <font className = 'self-center text-2xl'>Brand : </font> 
 
@@ -128,7 +146,6 @@ function CreatePost() {
 
        </div>
       </div>
-
          <div className='grid grid-cols-2'>  
          <font className='self-center text-2xl'>Processor :</font> 
   <select name="cars" defaultValue='makeChoice' value={processorName} onChange={(e) => setProcessorName(e.target.value) } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
@@ -177,10 +194,10 @@ function CreatePost() {
      </textarea>
     </div>
     <div className='flex justify-center'>
-    <button onClick={()=>on} className='bg-indigo-500 px-4 py-2 rounded-2xl'> 
+    <button onClick={ () => onPostClick() } className='bg-indigo-500 px-4 py-2 rounded-2xl'> 
     Post
     </button>
-    <button onClick={()=>onAddGcamClick()} className='bg-indigo-500 mx-2 px-4 py-2 rounded-2xl'> 
+    <button onClick={ () => onAddGcamClick() } className='bg-indigo-500 mx-2 px-4 py-2 rounded-2xl'> 
     Add Gcam
     </button>
     </div>

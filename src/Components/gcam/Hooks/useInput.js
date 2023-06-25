@@ -6,7 +6,7 @@ function  useInput() {
         setName(e.target.value)
         // setName(name.trim())
     }
-    function changeList(){
+    function changeList(e){
         setList([...list , name])
     }
     return [name , list , changeName , changeList]

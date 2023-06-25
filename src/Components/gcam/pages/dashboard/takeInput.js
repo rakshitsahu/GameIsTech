@@ -1,12 +1,11 @@
 import React from 'react'
 import useInput from '../../Hooks/useInput';
 import { Button } from 'react-bootstrap'
-import CreatePageStateManager from '../../../../../GCAM/createPageStateManager';
 import { CreatePageState } from '../../EnumStates';
 
 import axios from 'axios';
 let AndroidStructure = { 
-  version : ''
+  name : ''
 }
 let PhoneBrandsStructure = {
   name : ''
@@ -44,15 +43,14 @@ const TakeInput =  ({State , SetName}) => {
       default:
         break;
     }
-    const config = {
-      headers : {
-        data : JSON.stringify(data) ,
-        state : State
-      }
+    const stateAndData = {
+      data : data,
+      state : State
     }
+
     // console.log('data is ', data)
     console.log('inserted again')
-   await axios.get('http://localhost:3000/api/gcam/check' , config).then(
+   await axios.post('http://localhost:3000/api/gcam/check' , stateAndData).then(
    async (e) =>{ 
    
   //  console.log('completed')

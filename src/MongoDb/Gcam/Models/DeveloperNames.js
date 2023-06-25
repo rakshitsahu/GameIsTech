@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 
 const DeveloperNamesSchema = new mongoose.Schema({
     name : String,
-    gcams : [String],
+    // gcams : [String],
     date : {
         type : Date,
         default : Date.now

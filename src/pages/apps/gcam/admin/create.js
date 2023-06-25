@@ -72,7 +72,7 @@ function CreatePost() {
         console.log('result is ' , result);
         return result
       }
-    ).catch()
+    ).catch(() =>{})
   }
 
   async function onAddGcamClick(){
@@ -158,7 +158,7 @@ function CreatePost() {
      <font className='place-self-center text-3xl font-thin mt-3  '>Google Camera Details</font>
     <div id = 'test' className='grid grid-cols-2'>
     <font className='self-center text-2xl'>Developer Name : </font>
-    <select name="cars" defaultValue='makeChoice' value={processorName} onChange={(e)=> setGcamDeveloperName(e.target.value)} className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
+    <select name="cars" defaultValue='makeChoice' value={gcamDeveloperName} onChange={(e)=> setGcamDeveloperName(e.target.value)} className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
   {Object.keys(developersJson).map(  (index) => {
       //console.log ( 'the brand is ', developersJson.index)
         return (

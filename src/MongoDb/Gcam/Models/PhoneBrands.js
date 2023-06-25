@@ -2,7 +2,7 @@ import mongoose from "mongoose"
 
 const PhoneBrandsSchema = new mongoose.Schema({
     name : String,
-    phones : [String],
+    // phones : [String],
     date : {
         type : Date,
         default : Date.now

@@ -6,6 +6,7 @@ import { ProcessorBrandsModel } from '@/MongoDb/Gcam/Models/ProcessorBrands'
 import { DeveloperNamesModel } from '@/MongoDb/Gcam/Models/DeveloperNames'
 import { GcamModel } from '@/MongoDb/Gcam/Models/Gcam'
 import { GcamPostModel } from '@/MongoDb/Gcam/Models/GcamPost'
+import { GcamVersionModel } from '@/MongoDb/Gcam/Models/GcamVersions'
 const testSchema = new mongoose.Schema({
     name : {
         type: String
@@ -51,8 +52,16 @@ async function DeveloperNamesRun(data){
     } )
     console.log('inserted')
 }
+async function AddGcamVersion(data){
+    const model = GcamVersionModel
+    model.collection.findOne({name : data.name}, async (error , result)=>{
+        if(!result)
+            await model.collection.insertOne(data)
+    } )
+    console.log('inserted')
+}
 
-export {Androidversionrun, PhoneBrandsRun , ProcessorBrandsRun,DeveloperNamesRun  }
+export {Androidversionrun, PhoneBrandsRun , ProcessorBrandsRun,DeveloperNamesRun , AddGcamVersion  }
 // run()
 
 

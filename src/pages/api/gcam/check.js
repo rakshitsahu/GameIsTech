@@ -4,6 +4,7 @@ import { Androidversionrun , PhoneBrandsRun , ProcessorBrandsRun , DeveloperName
 import { CreatePageState } from '@/Components/gcam/EnumStates';
 // import CreatePageStateManager from '../../../../GCAM/createPageStateManager'
 import AndroidVersionModel from '@/MongoDb/Gcam/Models/AndroidVersion'
+import { AddGcamVersion } from '@/Components/gcam/useModels';
 export async function handler (req , res) {
 
 
@@ -26,6 +27,10 @@ export async function handler (req , res) {
         case CreatePageState.DeveloperNames:
             console.log('Developer Names called' , data)
             await DeveloperNamesRun(data)
+            break;
+        case CreatePageState.GcamVersion:
+            console.log('Developer Names called' , data)
+            await AddGcamVersion(data)
             break;
         default:
             break;

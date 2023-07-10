@@ -4,6 +4,9 @@ import { useState ,useEffect } from "react";
 import { Button } from "react-bootstrap";
 import TakeInput from "@/Components/gcam/pages/dashboard/takeInput";
 import AndroidVersionModel from "@/MongoDb/Gcam/Models/AndroidVersion";
+import { PhoneBrandsModel } from "@/MongoDb/Gcam/Models/PhoneBrands";
+import { ProcessorBrandsModel } from "@/MongoDb/Gcam/Models/ProcessorBrands";
+import { DeveloperNamesModel } from "@/MongoDb/Gcam/Models/DeveloperNames";
 import { CreatePageState } from "@/Components/gcam/EnumStates";
 import { IoCloseCircle } from "react-icons/io5";
 import axios from "axios";
@@ -38,6 +41,10 @@ const options = [
   {
     name : 'Developer Names',
     url : 'http://localhost:3000/api/gcam/developernames'
+  },
+  {
+    name : 'Gcam Versions',
+    url : 'http://localhost:3000/api/gcam/gcamversion'
   }
 
 ]
@@ -67,11 +74,21 @@ const Dashboard = () => {
     setCurrentOption(newOption)
   }
 
-  function  deleteItem(item){
+  function  deleteItem(item , revert){
     document.getElementById(item.name).classList.remove('bg-teal-500')
     document.getElementById(item.name).classList.add('bg-red-400')
+    if(!deletedList.includes(item))
     setDeletedList([...deletedList, item])
   }
+
+  async function deleteListItems(){
+    const data = {
+      option : currentOption,
+      deletedList : deletedList
+    }
+    await axios.post('http://localhost:3000/api/gcam/deleteitems',data)
+  }
+
   useEffect( () => {
     console.log(URL)
     const data = makeRequest(URL)
@@ -97,6 +114,8 @@ const Dashboard = () => {
       <TakeInput State = {CreatePageState.PhoneBrands} SetName = 'name'/>
       <font> Enter The Developer Name  </font>
       <TakeInput State = {CreatePageState.DeveloperNames} SetName = 'name'/>
+      <font> Enter The Gcam Version  </font>
+      <TakeInput State = {CreatePageState.GcamVersion} SetName = 'name'/>
       </div>
       </div>
       </div>
@@ -136,7 +155,7 @@ const Dashboard = () => {
       }) }
       
       </div>
-      <button className="p-3 w-32 rounded-3xl bg-emerald-500 hover:bg-emerald-800 ">Delete</button>
+      <button className="p-3 w-32 rounded-3xl bg-emerald-500 hover:bg-emerald-800 " onClick={deleteListItems}>Delete</button>
       </div>
       
       </div>

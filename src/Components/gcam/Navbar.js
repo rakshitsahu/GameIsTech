@@ -1,17 +1,70 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { useEffect } from 'react'
 import {GiTrophyCup,GiTrapMask} from 'react-icons/gi'
 import {TbMapSearch} from 'react-icons/tb'
 import Link from 'next/link'
 import {IoSparklesSharp} from 'react-icons/io5'
-function Navbar() {
+import axios from 'axios'
+let thedata 
+
+
+export default function Navbar({brands,developers}) {
+  // const [brands ,setBrands] = useState([])
+  // useEffect(async () => {
+  //   const result = await axios.get('http://localhost:3000/api/gcam/phonebrands').then(response => {
+  //     setBrands(response.data)
+  //     return response.data
+  //   })
+  //   console.log('result is ', result)
+  //   }, [])
   return (
-    <nav className='flex flex-wrap w-full bg-gray-700 text-white p-5 gap-3'>
-    <Link href='http://localhost:3000/tracker/valorant/agents'> <span className='flex gap-2'> Gcam </span></Link>
-   <Link href='http://localhost:3000/tracker/valorant/maps'> <span className='flex gap-2'> Developers </span></Link>
-   <Link href='http://localhost:3000/tracker/valorant/skins'> <span className='flex gap-2'> Devices </span></Link>
-   <Link href='http://localhost:3000/tracker/valorant/leaderboard'> <span className='flex gap-2'> Find For Device </span></Link>
+    <nav className="sticky top-0 z-10 bg-white  backdrop-filter backdrop-blur-sm bg-opacity-30 border-b border-gray-200">
+    <div className="max-w-5xl mx-auto px-4">
+      <div className="flex items-center justify-between h-16">
+        
+        <div className="flex space-x-4 text-gray-900  font-semibold">
+        
+         <Link href='http://localhost:3000/tracker/valorant/agents'>
+          <div className='group/item ' href="#">Devices
+          <div className='bg-white rounded-2xl group/edit invisible group-edit/item:text-gray-700  group-hover/item:visible absolute'>
+          <ul className=''>
+          {
+            // console.log('the data found is ',brands)
+            Object.keys(brands).map(  (index) => {
+            return (
+              
+              <li key={index} id= {brands[index].name} className='p-3 border-b-4 hover:bg-blue-500 contrast-125 rounded-xl font-thin hover:text-white'>{brands[index].name}</li>
+
+
+            );
+          })
+        }
+          </ul>
+          </div>
+          </div></Link>
+          <Link href='http://localhost:3000/tracker/valorant/agents'>
+          <div className='group/item ' href="#">Developers
+          <div className=' rounded-2xl bg-white group/edit invisible group-edit/item:text-gray-700 group-hover/item:visible absolute'>
+          <ul className=''>
+          {
+            // console.log('the data found is ',brands)
+            Object.keys(developers).map(  (index) => {
+            return (
+              
+              <li key={index} id= {developers[index].name} className='p-3 border-b-4 hover:bg-blue-500 contrast-125 rounded-xl font-thin hover:text-white'>{developers[index].name}</li>
+
+
+            );
+          })
+        }
+          </ul>
+          </div>
+          </div></Link>
+
+
+        </div>
+      </div>
+    </div>
     </nav>
   )
 }
-
-export default Navbar

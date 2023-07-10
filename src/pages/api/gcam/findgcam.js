@@ -17,17 +17,8 @@ export async function handler(req , res){
         if(error)
         res.status(ResponseStatus.Error_Ocurred).json({ message : "Error occured while finding the Gcam by download link" })
         if(result)
-        return result._id
-        console.log('working ill here')
-        await model.collection.insertOne(data ,(error , result) =>{
-            if(error)
-             res.status(400).json({message : 'error occured'});
-             else if(!result)
-             res.status(400).json({message : 'error occured'});
-            else
-            res.status(200).json({gcamId : data._id});
+        return res.send(result)
 
-        }) ;
     } )
 }
 

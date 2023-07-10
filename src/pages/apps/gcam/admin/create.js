@@ -10,14 +10,19 @@ function CreatePost() {
   const [gcamName , setGcamName] = useState('')
   const [gcamDownloadLink , setGcamDownloadLink] = useState('')
   const [gcamVersion , setGcamVersion] = useState('')
-  const [gcamDescription , setGcamDescription] = useState('')
+  const [gcamRequiredAndroid , setgcamRequiredAndroid] = useState('')
   const [gcamDeveloperName , setGcamDeveloperName] = useState('')
   const [processorName , setProcessorName] =  useState('')
   const [deviceBrand , setDeviceBrand] = useState('')
+  const [gcamDate , setGcamDate] = useState('')
   const [processsorsJson , setProcessorJson] = useState([])
   const [brandsjson , setBrandsJson] = useState([])
   const [developersJson , setDevelopersJson]= useState([])
   const [androidVersionsJson , setAndroidVersionsJson]= useState([])
+  const [gcamVersions , setGcamVersionsJson]= useState([])
+  const [gcamProcessorsList , setGcamProcessorsList] = useState([])
+  const [gcamBrandsList , setGcamBrandsList] = useState([])
+  const [xdaThread , setXdaThread] = useState('')
   async function getData(){
     await axios.get('http://localhost:3000/api/gcam/androidversion').then(
       (res)=> setAndroidVersionsJson(res.data)
@@ -35,7 +40,16 @@ function CreatePost() {
       (res)=> setProcessorJson(res.data)
     ).catch((err)=>{})
 
+    await axios.get('http://localhost:3000/api/gcam/gcamversion').then(
+      (res)=> setGcamVersionsJson(res.data)
+    ).catch((err)=>{})
 
+
+  }
+
+  function handleCurrentOption(newOption){
+      document.getElementById(newOption).classList.remove('bg-teal-500')
+      document.getElementById(newOption).classList.add('bg-red-500')
   }
 
   useEffect( () => {
@@ -51,13 +65,13 @@ function CreatePost() {
     const Post = {
       name : deviceName,
       processor : processorName,
-      brand : gcamDeveloperName,
+      brand : deviceBrand,
       downloadLink : gcamDownloadLink
     }
     const gcamData = {
       developerName : gcamDeveloperName,
       name :gcamName,
-      version : parseInt(gcamVersion),
+      version : parseFloat(gcamVersion),
       downloadLink : gcamDownloadLink,
       description : document.getElementById('gcam').value
     }
@@ -72,7 +86,7 @@ function CreatePost() {
         console.log('result is ' , result);
         return result
       }
-    ).catch(() =>{})
+    ).catch()
   }
 
   async function onAddGcamClick(){
@@ -80,11 +94,16 @@ function CreatePost() {
     const gcamData = {
       developerName : gcamDeveloperName,
       name :gcamName,
-      version : parseInt(gcamVersion),
+      version : parseFloat(gcamVersion),
       downloadLink : gcamDownloadLink,
-      description : document.getElementById('gcam').value
+      description : document.getElementById('gcam').value,
+      releaseDate : gcamDate,
+      deviceBrands : gcamBrandsList,
+      processors :gcamProcessorsList,
+      requiredAndroid: parseFloat(gcamRequiredAndroid),
+      xdaThread : xdaThread
     }
-    // console.log(gcamData)
+    console.log(gcamData)
     // const stringJson = JSON.stringify(gcamData)
     // const config = {
     //   headers :  {
@@ -180,13 +199,39 @@ function CreatePost() {
      
     <div id = 'test' className='grid grid-cols-2'>
     <font className='self-center text-2xl'>Gcam Version : </font>
-    <input type='text' onChange={(e)=>setGcamVersion(e.target.value)} className='w-72 h-12 rounded-lg text-lg text-black'/>
+    <select name="cars" defaultValue='makeChoice' value={gcamVersion} onChange={(e) => setGcamVersion(e.target.value) } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
+    {Object.keys(gcamVersions).map(  (index) => {
+      //console.log ( 'the brand is ', gcamVersions.index)
+        return (
+          <option key={index} value={gcamVersions[index].name}>{gcamVersions[index].name}</option>
+
+        );
+      })}
+  </select>
      </div>
+
+     <div id = 'test' className='grid grid-cols-2'>
+     <font className='self-center text-2xl'>Required Android : </font>
+     <select name="cars" defaultValue='makeChoice' value={gcamVersion} onChange={(e) => setgcamRequiredAndroid(e.target.value) } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
+     {Object.keys(androidVersionsJson).map(  (index) => {
+       //console.log ( 'the brand is ', gcamVersions.index)
+         return (
+           <option key={index} value={androidVersionsJson[index].name}>{androidVersionsJson[index].name}</option>
+ 
+         );
+       })}
+   </select>
+      </div>
 
      <div id = 'test' className='grid grid-cols-2'>
      <font className='self-center text-2xl'>Gcam Download Link : </font>
      <input type='text' onChange={(e)=>setGcamDownloadLink(e.target.value)} className='w-72 h-12 rounded-lg text-lg text-black'/>
       </div>
+
+      <div id = 'test' className='grid grid-cols-2'>
+      <font className='self-center text-2xl'>Release Date : </font>
+      <input type='text' onChange={(e)=>setGcamDate(e.target.value)} className='w-72 h-12 rounded-lg text-lg text-black'/>
+       </div>
 
     <div className='grid grid-cols-2'>
     <font className='self-center text-2xl'> Description :</font> 
@@ -194,6 +239,54 @@ function CreatePost() {
     At w3schools.com you will learn how to make a website. They offer free tutorials in all web development technologies.
      </textarea>
     </div>
+
+    <div className='grid grid-cols-2'>
+    <font className='self-center text-2xl'>Compatible Processors</font> 
+    <div className='flex flex-wrap gap-4'> 
+    { Object.keys(processsorsJson).map(  (iterator) => {
+
+      return <button key={iterator} id={processsorsJson[iterator].name} onClick={()=>{
+        if(!gcamProcessorsList.includes(processsorsJson[iterator].name))
+        setGcamProcessorsList( [...gcamProcessorsList ,processsorsJson[iterator].name])
+        handleCurrentOption(processsorsJson[iterator].name)
+      }} className="grid bg-teal-500 p-2 drop-shadow-2xl rounded-xl">
+      <button className="justify-self-end"></button>
+      <span className="justify-self-center">
+      {processsorsJson[iterator].name}
+      </span>
+      
+      </button>
+
+  }) }
+    </div>
+    </div>
+
+    <div className='grid grid-cols-2'>
+    <font className='self-center text-2xl'>Compatible Brands</font> 
+    <div className='flex flex-wrap gap-4'> 
+    { Object.keys(brandsjson).map(  (iterator) => {
+
+      return <button key={iterator} id={brandsjson[iterator].name} onClick={()=>{
+        if(!gcamBrandsList.includes(brandsjson[iterator].name))
+        setGcamBrandsList( [...gcamBrandsList ,brandsjson[iterator].name])
+        handleCurrentOption(brandsjson[iterator].name)
+      }} className="grid   bg-teal-500 p-2 drop-shadow-2xl rounded-xl">
+      <button className="justify-self-end"></button>
+      <span className="justify-self-center">{brandsjson[iterator].name}
+      
+      </span>
+      
+      </button>
+
+  }) }
+    </div>
+    </div>
+
+     
+    <div id = 'test' className='grid grid-cols-2'>
+    <font className='self-center text-2xl'>Xda Thread : </font>
+    <input type='text' onChange={(e)=> setXdaThread(e.target.value)} className='w-72 h-12 rounded-lg text-lg text-black'/>
+     </div>
     <div className='flex justify-center'>
     <button onClick={ () => onPostClick() } className='bg-indigo-500 px-4 py-2 rounded-2xl'> 
     Post

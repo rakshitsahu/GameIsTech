@@ -1,10 +1,16 @@
+import { Double } from "mongodb";
 import mongoose from "mongoose"
 const GcamSchema = new mongoose.Schema({
     name : String,
     version : Number,
-    developer : String,
+    developerName : String,
     downloadLink : String,
     description : String,
+    releaseDate : String,
+    deviceBrands : [String],
+    processors : [String],
+    requiredAndroid :  Number,
+    xdaThread : String,
     date : {
         type : Date,
         default : Date.now

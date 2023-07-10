@@ -16,6 +16,10 @@ let ProcessorBrandStructure = {
 let DeveloperNamesStructure= {
   name : ''
 }
+let GcamVersionStructure = {
+  name : '',
+  gcamIds : []
+}
 const TakeInput =  ({State , SetName}) => {
   const [name , list , changeName , changeList] = useInput();
 
@@ -40,6 +44,10 @@ const TakeInput =  ({State , SetName}) => {
         DeveloperNamesStructure[SetName] = trimmed
         data = DeveloperNamesStructure
         break;
+      case CreatePageState.GcamVersion:
+        GcamVersionStructure[SetName] = trimmed
+        data = GcamVersionStructure
+        console.log('gcam version structure is', data )
       default:
         break;
     }

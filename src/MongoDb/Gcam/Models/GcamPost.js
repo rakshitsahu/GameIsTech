@@ -5,7 +5,7 @@ const GcamPostSchema = new mongoose.Schema({
     deviceName : String,
     brand : String,
     processor : String,
-    gcamIds : [ObjectId],
+    gcams : [String],
     date : {
         type : Date,
         default : Date.now

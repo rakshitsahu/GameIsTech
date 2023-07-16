@@ -6,7 +6,7 @@ import {GiProcessor} from "react-icons/gi"
 import DisplayProcessors from '@/Components/gcam/displayProcessorsLogo'
 import DisplayDeviceBrandLogo from './displayDeviceBrandLogo';
 import Link from 'next/link';
-export default function GcamColorfulPoster({gcams, heading , prefix }) {
+export default function GcamColorfulPoster({gcams, heading , prefix , download }) {
     const colors = ['from-pink-500 to-violet-500', 'from-green-500 to-violet-500' , 'from-violet-500 to-pink-500' 
    , 'from-pink-500 to-green-500' , 'from-violet-500 to-red-500' , 'from-violet-500 to-green-500'
 ]
@@ -65,8 +65,20 @@ export default function GcamColorfulPoster({gcams, heading , prefix }) {
                     </tr>
                 </tbody>
                 </table>
-
-             
+                {
+                  download &&
+                  <div className='m-2 grid items-center justify-items-center'>
+                  <center><div className='font-mono text-2xl flex p-3'> description</div></center>
+                  <div className='flex flex-grow-0'>{gcams[index].description}</div>
+                  </div>
+                }
+                {
+                  download &&
+                  <center> <button hr className='bg-purple-500 active:bg-purple-800 hover:ring-2 rounded-r-full rounded-l-full p-4 text-white'>
+                  
+                  <a target="_blank" class="fcc-btn" href="https://www.freecodecamp.org/">Download</a> 
+                  </button> </center>     
+                }        
             </div>
             </Link>
 

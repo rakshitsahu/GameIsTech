@@ -6,7 +6,7 @@ export default function Footer() {
     <div className='DESCRIPTION flex flex-wrap font-light text-lg'>
     Thanks for visiting Game is tech. In this Application we aim to provide the best Google Camera port for your device.  
     We have made powerful filters to find the most compatible Gcam for your device and we are working on it to make it more better.
-    We have made this application considering what the user wants & we make sure that we won't spam "Google Camera or Gcam" million times.
+    
 
     After <font className = 'underline underline-offset-2 decoration-emerald-500'>celsoazevedo</font> , we are the best place to visit for Google Camera ports. Thanks again for visiting us.
     </div>

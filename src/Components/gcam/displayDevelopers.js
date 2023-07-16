@@ -1,4 +1,5 @@
 import React from 'react'
+import Link from 'next/link'
 
 export default function DisplayDevelopers({developers}) {
   const colors = ['from-pink-500 to-violet-500', 'from-green-500 to-violet-500' , 'from-violet-500 to-pink-500' 
@@ -13,8 +14,8 @@ let color = Math.floor(Math.random() * colors.length)
         Object.keys(developers).map(  (index) => {
         //console.log ( 'the brand is ', brands.index)
           return (
-
-            <div key={index} value={developers[index].name} className='grid group/item bg-white rounded-full p-4'>
+            <Link key={index} value={developers[index].name} href ={`http://localhost:3000/apps/gcam/developer/{developers[index].name}`}>
+            <div  className='grid group/item bg-white rounded-full p-4'>
             <div  className={`flex justify-center bg-black text-3xl font-extrabold drop-shadow-2xl rounded-3xl p-5 bg-clip-text text-transparent bg-gradient-to-r ${colors[color++ % colors.length]}`}>
              {developers[index].name}  
              </div>
@@ -22,6 +23,8 @@ let color = Math.floor(Math.random() * colors.length)
              Gcam Ports developed By {developers[index].name}
              </div>
             </div>
+            </Link>
+
 
           );
         })

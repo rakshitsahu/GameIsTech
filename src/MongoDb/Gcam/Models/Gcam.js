@@ -11,6 +11,7 @@ const GcamSchema = new mongoose.Schema({
     processors : [String],
     requiredAndroid :  Number,
     xdaThread : String,
+    isGeneric : Boolean,
     date : {
         type : Date,
         default : Date.now

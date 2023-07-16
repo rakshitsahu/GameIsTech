@@ -4,8 +4,21 @@ import { Button } from 'react-bootstrap'
 import AdminNavbar from '@/Components/gcam/adminNavbar'
 import { version } from 'mongoose'
 import axios from 'axios'
+import GCAM_API_STATE from '@/Components/API/API_States'
+import { GCAM_GET_REQUEST } from '@/Components/API/API_Manager'
+import { setCookie , getCookie , hasCookie } from "cookies-next";
+export const getServerSideProps = async ({ req , res }) =>{
+  // Fetch data from external API
+  const authentication = await axios.post('http://localhost:3000/api/gcam/authorization',{
+    token : getCookie('Token',{ req, res})
+}).then( (response) => {return response.data} )
+   
+  return { props: { authentication } }
+}
 
-function CreatePost() {
+function CreatePost({authentication}) {
+
+  
   const [deviceName , setDeviceName] = useState('')
   const [gcamName , setGcamName] = useState('')
   const [gcamDownloadLink , setGcamDownloadLink] = useState('')
@@ -23,26 +36,28 @@ function CreatePost() {
   const [gcamProcessorsList , setGcamProcessorsList] = useState([])
   const [gcamBrandsList , setGcamBrandsList] = useState([])
   const [xdaThread , setXdaThread] = useState('')
+  const [isGeneric, setIsGeneric] = useState(false)
+  useEffect( () => {
+    getData()
+  }, []);
+  if(authentication.status != 200)
+  return <div> user is not authorized </div>
   async function getData(){
-    await axios.get('http://localhost:3000/api/gcam/androidversion').then(
-      (res)=> setAndroidVersionsJson(res.data)
-    ).catch((err)=> {})
+    var response
+    response = await GCAM_GET_REQUEST(GCAM_API_STATE.Androidversions)
+    setAndroidVersionsJson(response)
+    
+    response = await GCAM_GET_REQUEST(GCAM_API_STATE.DeveloperNames)
+    setDevelopersJson(response)
 
-    await axios.get('http://localhost:3000/api/gcam/developernames').then(
-      (res) => setDevelopersJson(res.data)
-    ).catch((err)=>{})
+    response = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneBrands)
+    setBrandsJson(response)
 
-    await axios.get('http://localhost:3000/api/gcam/phonebrands').then(
-      (res)=> setBrandsJson(res.data)
-    ).catch((err)=>{})
+    response = await GCAM_GET_REQUEST(GCAM_API_STATE.ProcessorBrands)
+    setProcessorJson(response)
 
-    await axios.get('http://localhost:3000/api/gcam/processorbrands').then(
-      (res)=> setProcessorJson(res.data)
-    ).catch((err)=>{})
-
-    await axios.get('http://localhost:3000/api/gcam/gcamversion').then(
-      (res)=> setGcamVersionsJson(res.data)
-    ).catch((err)=>{})
+    response = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions)
+    setGcamVersionsJson(response)
 
 
   }
@@ -52,9 +67,7 @@ function CreatePost() {
       document.getElementById(newOption).classList.add('bg-red-500')
   }
 
-  useEffect( () => {
-    getData()
-  }, []);
+
 
   function onDeviceNameChange(e){
     setDeviceName(e.target.value)
@@ -73,7 +86,13 @@ function CreatePost() {
       name :gcamName,
       version : parseFloat(gcamVersion),
       downloadLink : gcamDownloadLink,
-      description : document.getElementById('gcam').value
+      description : document.getElementById('gcam').value,
+      releaseDate : gcamDate,
+      deviceBrands : gcamBrandsList,
+      processors :gcamProcessorsList,
+      requiredAndroid: parseFloat(gcamRequiredAndroid),
+      xdaThread : xdaThread,
+      isGeneric : isGeneric
     }
     const PostData = {
       post : Post,
@@ -101,9 +120,11 @@ function CreatePost() {
       deviceBrands : gcamBrandsList,
       processors :gcamProcessorsList,
       requiredAndroid: parseFloat(gcamRequiredAndroid),
-      xdaThread : xdaThread
+      xdaThread : xdaThread,
+      isGeneric : isGeneric
     }
-    console.log(gcamData)
+
+    console.log( 'the gcam data is', gcamData)
     // const stringJson = JSON.stringify(gcamData)
     // const config = {
     //   headers :  {
@@ -119,6 +140,7 @@ function CreatePost() {
     return res;
 
   }
+
 
 
   return (
@@ -196,9 +218,14 @@ function CreatePost() {
     <input type='text' onChange={(e)=> setGcamName(e.target.value)} className='w-72 h-12 rounded-lg text-lg text-black'/>
      </div>
 
+     <div id = 'test' className='grid grid-cols-2'>
+     <font className='self-center text-2xl'>Is Generic : </font>
+     <input onClick={(e)=>{setIsGeneric(!isGeneric)}} type="checkbox" id="generic" name="generic" value="No"/>
+      </div>
      
     <div id = 'test' className='grid grid-cols-2'>
     <font className='self-center text-2xl'>Gcam Version : </font>
+    {console.log('gcam version' , gcamVersions)}
     <select name="cars" defaultValue='makeChoice' value={gcamVersion} onChange={(e) => setGcamVersion(e.target.value) } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
     {Object.keys(gcamVersions).map(  (index) => {
       //console.log ( 'the brand is ', gcamVersions.index)

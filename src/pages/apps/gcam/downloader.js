@@ -1,20 +1,16 @@
 import React from 'react'
 import axios from 'axios'
 import Navbar from '@/Components/gcam/Navbar'
+import { GCAM_GET_REQUEST } from '@/Components/API/API_Manager'
+import GCAM_API_STATE from '@/Components/API/API_States'
 export async function getStaticProps(){
     // const data = {
     //     name : 'hello'
     // }
     // console.log('working till heere')
 
-      const developers = await axios.get('http://localhost:3000/api/gcam/developernames').then(response => {
-        console.log(response.data)
-        return response.data
-      })
-      const brands = await axios.get('http://localhost:3000/api/gcam/phonebrands').then(response => {
-        console.log(response.data)
-        return response.data
-      })
+    const developers = await GCAM_GET_REQUEST(GCAM_API_STATE.DeveloperNames)
+    const brands = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneBrands)
 
       return {
         props :{

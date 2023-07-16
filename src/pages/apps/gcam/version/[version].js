@@ -1,14 +1,12 @@
 import React from 'react'
 import axios from 'axios'
 import Navbar from '@/Components/gcam/Navbar'
-
+import { GCAM_GET_REQUEST } from '@/Components/API/API_Manager'
+import GCAM_API_STATE from '@/Components/API/API_States'
+import Head from 'next/head'
 import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
 export async function getStaticPaths(){
-    const res  = await axios.get('http://localhost:3000/api/gcam/gcamversion').then(
-        (result)=>{
-          return result.data
-        }
-      )
+    const res  = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions)
     //   console.log( 'gcam versions are', res)
       const paths = res.map( (element)=>{
         return {
@@ -38,27 +36,59 @@ export async function getStaticProps(context){
           return result.data
         }
       )
-      const developers = await axios.get('http://localhost:3000/api/gcam/developernames').then(response => {
-        console.log(response.data)
-        return response.data
-      })
-      const brands = await axios.get('http://localhost:3000/api/gcam/phonebrands').then(response => {
-        console.log(response.data)
-        return response.data
-      })
+      const developers = await GCAM_GET_REQUEST(GCAM_API_STATE.DeveloperNames)
+      const brands = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneBrands)
 
       return {
         props :{
             data ,
             brands,
-            developers
+            developers,
+            version
         }
       }
 }
-export default function Version({data , brands, developers}) {
+export default function Version({data , brands, developers, version}) {
   const GcamJson = data;
+  const description = `Download Gcam ${version} APKs by various developer. Google Camera ${version} APK Download`
+  const title = `Gcam ${version} APKs Download | Google Camera ${version} APK`
+  function addPageInfo() {
+    return {
+      __html: `
+      {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "name": "Google Camera Ports",
+    
+        "description": ${description} ,
+        "brand": {
+          "@type": "Brand",
+          "name": "Gcam APK"
+        }
+        ,
+          "author": {
+            "@type": "Person",
+            "name": "Rakshit Sahu"
+          }
+      }
+  `
+  };
+}
   return (
     <>
+    <Head>
+    <title>{title}</title>
+    <meta
+      name="description"
+      content= {description}
+      key="desc"
+    />
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={addPageInfo()}
+      key="product-jsonld"
+    />
+  </Head>
     <Navbar brands={brands} developers = {developers}/>
     {console.log(GcamJson)}
     <GcamColorfulPoster gcams = {GcamJson} heading = {'name'}/>

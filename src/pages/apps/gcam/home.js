@@ -9,40 +9,29 @@ import DisplayAndroidVersions from '@/Components/gcam/displayAndroidVersions'
 import DisplayGcamVersions from '@/Components/gcam/displayGcamVersions'
 import DisplayGcamForDevices from '@/Components/gcam/displayGcamPost'
 import Footer from '@/Components/gcam/footer'
+import { GCAM_GET_REQUEST } from '@/Components/API/API_Manager'
+import GCAM_API_STATE from '@/Components/API/API_States'
+import Head from 'next/head'
+import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
 export async function getStaticProps() {
   // Call an external API endpoint to get posts.
   // You can use any data fetching library
-  const brands = await axios.get('http://localhost:3000/api/gcam/phonebrands').then(response => {
-    // console.log(response.data)
-    return response.data
-  })
+  const brands = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneBrands)
  
   // By returning { props: { posts } }, the Blog component
   // will receive `posts` as a prop at build time
-  const developers = await axios.get('http://localhost:3000/api/gcam/developernames').then(response => {
-  // console.log(response.data)
-  return response.data
-})
+  const developers = await GCAM_GET_REQUEST(GCAM_API_STATE.DeveloperNames)
 
-const processorbrands = await axios.get('http://localhost:3000/api/gcam/processorbrands').then(response => {
-// console.log( 'the processor json is ', response.data)
-return response.data
-})
+const processorbrands = await GCAM_GET_REQUEST(GCAM_API_STATE.ProcessorBrands)
 
-const androidVersions = await axios.get('http://localhost:3000/api/gcam/androidversion').then(response => {
-// console.log( 'the android version json is ', response.data)
-return response.data
-})
+const androidVersions = await GCAM_GET_REQUEST(GCAM_API_STATE.Androidversions)
 
-const gcamVersions = await axios.get('http://localhost:3000/api/gcam/gcamversion').then(response => {
-// console.log( 'the gcam versions json is ', response.data)
-return response.data
-})
+const gcamVersions = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions)
 
-const gcamPosts = await axios.get('http://localhost:3000/api/gcam/getgcamposts').then(response => {
-// console.log( 'the gcam Posts json is ', response.data)
-return response.data
-})
+const gcamPosts = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamPost)
+
+const genericGcams = await GCAM_GET_REQUEST(GCAM_API_STATE.Generic)
+console.log('generic gcams are', genericGcams)
 
   const postMap = {}
   gcamPosts.forEach( (post)=>{
@@ -60,13 +49,53 @@ console.log('the map is ' , postMap)
       processorbrands,
       androidVersions,
       gcamVersions,
-      postMap
+      postMap,
+      genericGcams
     },
   }
 }
-export default function home({brands , developers,processorbrands , androidVersions , gcamVersions, phonebrands , postMap }) {
+export default function home({brands , genericGcams, developers,processorbrands , androidVersions , gcamVersions, phonebrands , postMap }) {
+  const description = ` We are the best place to download Gcam APKS. 
+  We have clean and best UI with powerful fiters which helps you to find Google Camera Port 
+  in no time
+  `
+  function addPageInfo() {
+    return {
+      __html: `
+      {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "name": "Google Camera Ports",
+    
+        "description": ${description} ,
+        "brand": {
+          "@type": "Brand",
+          "name": "Gcam APK"
+        }
+        ,
+          "author": {
+            "@type": "Person",
+            "name": "Rakshit Sahu"
+          }
+      }
+  `
+  };
+}
   return (
     <>
+    <Head>
+    <title>An App For Gcam APKs | Google Camera Ports</title>
+    <meta
+      name="description"
+      content= {description}
+      key="desc"
+    />
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={addPageInfo()}
+      key="product-jsonld"
+    />
+  </Head>
       <Navbar brands={brands} developers = {developers}/>
       <article className='grid'>
       <center className='mt-7'>
@@ -81,6 +110,16 @@ export default function home({brands , developers,processorbrands , androidVersi
     <div className='m-3'>
     <DisplayGcamVersions gcamVersions={developers} heading = {'name'} />
     
+    </div>
+
+    <div className='m-3'>
+    <center className='mt-7'>
+    <font className='font-thin text-3xl hover:underline transition delay-500 decoration-blue-600 underline-offset-4'> Generic Google Camera APKs </font>
+    </center>
+
+    <div class=" m-3">
+    <GcamColorfulPoster gcams={genericGcams} heading = {'name'}/>
+   </div>
     </div>
 
     <center className='mt-7'>

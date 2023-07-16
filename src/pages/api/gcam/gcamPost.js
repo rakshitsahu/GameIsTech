@@ -18,19 +18,19 @@ async function handler(req , res){
     await axios.post('http://localhost:3000/api/gcam/gcamcheck',Gcam).then(
         (result) =>{
 
-            const objectID = result.data.gcamId
+            const downloadLink = result.data.downloadLink
             
-            console.log('the object id is' , objectID)
+            console.log('the download link is' , downloadLink)
             model.collection.findOne({name : Post.name} , 
                 async (error , result) => {
                 if(result)
                 {
                     model.collection.updateOne({ name : Post.name } , {
-                        $addToSet : { gcamIds : objectID }
+                        $addToSet : { gcams : downloadLink }
                     } ).catch( () =>res.status(ResponseStatus.Error_Ocurred).json({ message : "Post found but unable to fetch gcamId" }) )
                 }
                 else{
-                    Post.gcamIds = [objectID]
+                    Post.gcams = [downloadLink]
                     model.collection.insertOne(Post, (error , res)=>{
                         if(error)
                         return ;
@@ -45,7 +45,7 @@ async function handler(req , res){
             }).catch( () => res.status(ResponseStatus.Error_Ocurred).json({ message : "Error in finding the gcam Post by name" }) )
 
             DeveloperNamesModel.collection.updateOne({ name : Gcam.developerName } , {
-                $addToSet : { gcams : objectID }
+                $addToSet : { gcams : downloadLink }
             } ).catch( () =>res.status(ResponseStatus.Error_Ocurred).json({ message : "Post found but unable to fetch gcamId" }) )
 
             res.status(ResponseStatus.Sucsess).json({ message : "Post has been Published" })

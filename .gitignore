@@ -1,5 +1,9 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+BROWSER_KEY=kyhkiuygkiuygbnkiuytrfghtredcvghtredcvbjkiuyghkoiuyghkoiuygbnjytrdcvhytrdcvbhytrdcvbhtfvbhg
+DATABASE_KEY=kyfvbkgbnmkiuygvbnmkgvbnjfvbnjfvbnkuyjhjkliuhgjkliouygfdsffghjkuytredfghjuytrfghjytrfdghjy 
+JWT_SECRET_KEY=oiuyfghjiokjhgvvbnmkuytfcvbnhgfcvb
+USER=RAKSHIT
 # dependencies
 /node_modules
 /.pnp

@@ -4,11 +4,11 @@ import { useEffect } from 'react'
 import axios from 'axios'
 import Navbar from '@/Components/gcam/Navbar'
 import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
+import GCAM_API_STATE from '@/Components/API/API_States'
+import { GCAM_GET_REQUEST } from '@/Components/API/API_Manager'
+import Head from 'next/head'
 export async function getStaticPaths(){
-  const gcamJson = await axios.get('http://localhost:3000/api/gcam/gcam').then(response => {
-    console.log(response.data)
-    return response.data
-  })
+  const gcamJson = await GCAM_GET_REQUEST(GCAM_API_STATE.Gcam)
   const paths =  gcamJson.map((gcam) =>{
     return {
       params: {
@@ -33,28 +33,62 @@ export async function getStaticProps(context){
         return result.data
       }
     )
-    const developers = await axios.get('http://localhost:3000/api/gcam/developernames').then(response => {
-      // console.log(response.data)
-      return response.data
-    })
-    const brands = await axios.get('http://localhost:3000/api/gcam/phonebrands').then(response => {
-      // console.log(response.data)
-      return response.data
-    })
+    const developers = await GCAM_GET_REQUEST(GCAM_API_STATE.DeveloperNames)
+    const brands = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneBrands)
 
     return {
       props :{
           data ,
           brands,
-          developers
+          developers,
+          gcamParams
       }
     }
 }
-export default function GcamDownload({data , brands, developers}) {
+export default function GcamDownload({data , brands, developers , gcamParams}) {
 
   const GcamJson = data;
+  const developer = gcamParams[0].replaceAll('-', ' ')
+  const apkName = gcamParams[1].replaceAll('-', ' ')
+  const description = `Download ${apkName} APK developed by ${developer}`
+  const title = `${developer} - ${apkName} | Google Camera Ports`
+  function addPageInfo() {
+    return {
+      __html: `
+      {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "name": "Google Camera Ports",
+    
+        "description": ${description} ,
+        "brand": {
+          "@type": "Brand",
+          "name": "Gcam APK"
+        }
+        ,
+          "author": {
+            "@type": "Person",
+            "name": "Rakshit Sahu"
+          }
+      }
+  `
+  };
+}
   return (
     <>
+    <Head>
+    <title>{title}</title>
+    <meta
+      name="description"
+      content= {description}
+      key="desc"
+    />
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={addPageInfo()}
+      key="product-jsonld"
+    />
+  </Head>
     <Navbar brands={brands} developers = {developers}/>
     Hello there page has been loaded successfully
     {console.log(GcamJson)}

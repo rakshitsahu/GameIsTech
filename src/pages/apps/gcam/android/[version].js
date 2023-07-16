@@ -1,14 +1,13 @@
 import React from 'react'
 import axios from 'axios'
 import Navbar from '@/Components/gcam/Navbar'
-
+import GCAM_API_STATE from '@/Components/API/API_States'
+import { GCAM_GET_REQUEST } from '@/Components/API/API_Manager'
 import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
+import Head from 'next/head'
 export async function getStaticPaths(){
-    const res  = await axios.get('http://localhost:3000/api/gcam/androidversion').then(
-        (result)=>{
-          return result.data
-        }
-      )
+  console.log('building this page')
+    const res  = await GCAM_GET_REQUEST(GCAM_API_STATE.Androidversions)
     //   console.log( 'gcam versions are', res)
       const paths = res.map( (element)=>{
         return {
@@ -20,7 +19,7 @@ export async function getStaticPaths(){
       console.log( 'paths are' , paths )
       return {
         paths ,
-        fallback: 'blocking'
+        fallback: true
       }
 }
 
@@ -40,27 +39,61 @@ export async function getStaticProps(context){
           return result.data
         }
       )
-      const developers = await axios.get('http://localhost:3000/api/gcam/developernames').then(response => {
-        console.log(response.data)
-        return response.data
-      })
-      const brands = await axios.get('http://localhost:3000/api/gcam/phonebrands').then(response => {
-        console.log(response.data)
-        return response.data
-      })
+      const developers = await GCAM_GET_REQUEST(GCAM_API_STATE.DeveloperNames)
+      const brands = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneBrands)
 
       return {
         props :{
             data ,
             brands,
-            developers
+            developers,
+            version
         }
       }
 }
-export default function Version({data , brands, developers}) {
+export default function Version({data , brands, developers , version}) {
   const GcamJson = data;
+  const description = ` Download All the Google Camera ports for Android version ${version} .
+  Gcam apk for Android ${version} download.
+  `
+  const title =`Download Gcam Ports For Android ${version} | Google Camera Ports`
+  function addPageInfo() {
+    return {
+      __html: `
+      {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "name": "Google Camera Ports",
+    
+        "description": ${description} ,
+        "brand": {
+          "@type": "Brand",
+          "name": "Gcam APK"
+        }
+        ,
+          "author": {
+            "@type": "Person",
+            "name": "Rakshit Sahu"
+          }
+      }
+  `
+  };
+}
   return (
     <>
+    <Head>
+    <title> ${title} </title>
+    <meta
+      name="description"
+      content= {description}
+      key="desc"
+    />
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={addPageInfo()}
+      key="product-jsonld"
+    />
+  </Head>
     <Navbar brands={brands} developers = {developers}/>
     {console.log(GcamJson)}
     <GcamColorfulPoster gcams = {GcamJson} heading = {'requiredAndroid'} prefix = 'Android Version '/>

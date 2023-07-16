@@ -9,7 +9,11 @@ import { ProcessorBrandsModel } from "@/MongoDb/Gcam/Models/ProcessorBrands";
 import { DeveloperNamesModel } from "@/MongoDb/Gcam/Models/DeveloperNames";
 import { CreatePageState } from "@/Components/gcam/EnumStates";
 import { IoCloseCircle } from "react-icons/io5";
+import { setCookie , getCookie , hasCookie } from "cookies-next";
 import axios from "axios";
+import { GCAM_GET_REQUEST } from "@/Components/API/API_Manager";
+import GCAM_API_STATE from "@/Components/API/API_States";
+
 function getButton(label){
   return <Button
   className="bg-blue-600 p-3 rounded-lg m-3"
@@ -48,13 +52,33 @@ const options = [
   }
 
 ]
+export const getServerSideProps = async ({ req , res }) =>{
+  // Fetch data from external API
+  const authentication = await axios.post('http://localhost:3000/api/gcam/authorization',{
+    token : getCookie('Token',{ req, res})
+}).then( (response) => {
+  return response.data
+} )
 
-const Dashboard = () => {
+  return { props: { authentication } }
+}
+const Dashboard = ( {authentication} ) => {
   const [URL, setURL] = useState('')
   const [list , setList] = useState({})
   const [deletedList , setDeletedList] = useState([])
   const [name , setName] = useState('')
   const [currentOption , setCurrentOption] = useState('')
+  useEffect( () => {
+    console.log(URL)
+    const data = makeRequest(URL)
+    data.then((res)=>{
+      setList(res)
+      console.log(res)
+    })
+  }, [URL]);
+  if(authentication.status != 200)
+  return <div> user is not authorized </div>
+  
   async function makeRequest(url){
     const res = await axios.get(url)
     return res.data
@@ -89,14 +113,7 @@ const Dashboard = () => {
     await axios.post('http://localhost:3000/api/gcam/deleteitems',data)
   }
 
-  useEffect( () => {
-    console.log(URL)
-    const data = makeRequest(URL)
-    data.then((res)=>{
-      setList(res)
-      console.log(res)
-    })
-  }, [URL]);
+
 
   return (
     <>

@@ -45,7 +45,7 @@ export default function PhoneBrandsGcam({gcams, heading , prefix }) {
                     </tr>
                     <tr >
                     <td className='font-mono text-2xl flex p-3'>Gcams <FcMultipleSmartphones className='text-rose-800 justify-self-center m-1'/></td>
-                    <td> { gcams[index].gcamIds.length } </td>
+                    <td> {  } </td>
                     </tr>
                 </tbody>
                 </table>

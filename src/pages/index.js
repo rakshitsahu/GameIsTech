@@ -149,7 +149,7 @@ export default function Home() {
             Aim to share and provide the best & accurate stats of Sports and
             video Games..
             <br />
-            Do not forget to Connect with Us on Social Media in case you haven't
+            Do not forget to Connect with Us on Social Media in case you haven&apos;t
           </p>
           <SocialIcons />
         </div>

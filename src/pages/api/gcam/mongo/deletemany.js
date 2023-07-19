@@ -15,7 +15,8 @@ export async function handler(req , res){
           deprecationErrors: true,
         }
       });
-    const data = await client.db('Gcam').collection(collection).deleteOne(filter);
+      console.log('the collectiona nd filter is', collection , filter)
+    const data = await client.db('Gcam').collection(collection).deleteMany(filter);
     res.send(data)
 
 }

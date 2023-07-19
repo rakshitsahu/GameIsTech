@@ -10,6 +10,7 @@ import { DeveloperNamesModel } from "@/MongoDb/Gcam/Models/DeveloperNames";
 import { CreatePageState } from "@/Components/gcam/EnumStates";
 import { IoCloseCircle } from "react-icons/io5";
 import { setCookie , getCookie , hasCookie } from "cookies-next";
+import { DeleteMany , FindAllOperation } from "@/Components/API/POST_API_Manager";
 import axios from "axios";
 import { GCAM_GET_REQUEST } from "@/Components/API/GET_API_Manager";
 import GCAM_API_STATE from "@/Components/API/API_States";
@@ -32,28 +33,28 @@ const options = [
   {
     name : 'Android Versions',
     url : 'http://localhost:3000/api/gcam/androidversion',
-    DbName : GCAM_DB_COLLECTION.Android_Versions
+    collection : GCAM_DB_COLLECTION.Android_Versions
   }
   ,
   {
     name : 'Phone Brands',
     url : 'http://localhost:3000/api/gcam/phonebrands',
-    DbName : GCAM_DB_COLLECTION.Phone_Brands
+    collection : GCAM_DB_COLLECTION.Phone_Brands
   },
   {
     name : 'Processor Brands',
     url : 'http://localhost:3000/api/gcam/processorbrands',
-    DbName : GCAM_DB_COLLECTION.Processor_Brands
+    collection : GCAM_DB_COLLECTION.Processor_Brands
   },
   {
     name : 'Developer Names',
     url : 'http://localhost:3000/api/gcam/developernames',
-    DbName : GCAM_DB_COLLECTION.Developer_Names
+    collection : GCAM_DB_COLLECTION.Developer_Names
   },
   {
     name : 'Gcam Versions',
     url : 'http://localhost:3000/api/gcam/gcamversion',
-    DbName : GCAM_DB_COLLECTION.Gcam_Version
+    collection : GCAM_DB_COLLECTION.Gcam_Version
   }
 
 ]
@@ -72,21 +73,23 @@ const Dashboard = ( {authentication} ) => {
   const [list , setList] = useState({})
   const [deletedList , setDeletedList] = useState([])
   const [name , setName] = useState('')
+  const [collection , setCollection] = useState(GCAM_DB_COLLECTION.Android_Versions)
   const [currentOption , setCurrentOption] = useState('')
   useEffect( () => {
-    console.log(URL)
-    const data = makeRequest(URL)
+    console.log(collection)
+    const data = makeRequest(collection)
     data.then((res)=>{
       setList(res)
       console.log(res)
     })
-  }, [URL]);
+  }, [collection]);
   if(authentication.status != 200)
   return <div> user is not authorized </div>
   
-  async function makeRequest(url){
-    const res = await axios.get(url)
-    return res.data
+  async function makeRequest(){
+    const res = await FindAllOperation(collection)
+    console.log('the result is', res)
+    return res
   }
 
   function handleCurrentOption(newOption){
@@ -106,8 +109,8 @@ const Dashboard = ( {authentication} ) => {
   function  deleteItem(item , revert){
     document.getElementById(item.name).classList.remove('bg-teal-500')
     document.getElementById(item.name).classList.add('bg-red-400')
-    if(!deletedList.includes(item))
-    setDeletedList([...deletedList, item])
+    if(!deletedList.includes(item.name))
+    setDeletedList([...deletedList, item.name])
   }
 
   async function deleteListItems(){
@@ -115,7 +118,7 @@ const Dashboard = ( {authentication} ) => {
       option : currentOption,
       deletedList : deletedList
     }
-    await axios.post('http://localhost:3000/api/gcam/deleteitems',data)
+    await DeleteMany(collection , { name : { $in : deletedList }})
   }
 
 
@@ -148,12 +151,13 @@ const Dashboard = ( {authentication} ) => {
           
           <button key={option} id= {options[option].name} className="bg-emerald-500  p-2 drop-shadow-2xl rounded-xl" onClick={() =>{
              setName(options[option].name) ,
-             setURL(options[option].url),
+             setCollection(options[option].collection),
+             console.log('the collection is', options[option].collection),
              handleCurrentOption(options[option].name)
              setDeletedList([])
             //  document.getElementById(options[option].name).classList.remove('bg-emerald-500')
             }} >
-           {options[option].name} 
+           {options[option].name + 'heer'} 
            </button>
         );
       })}
@@ -164,7 +168,7 @@ const Dashboard = ( {authentication} ) => {
       
       { Object.keys(list).map(  (iterator) => {
 
-        if(URL){
+        if(URL || collection){
           return <span key={iterator} id={list[iterator].name} className="grid   bg-teal-500 p-2 drop-shadow-2xl rounded-xl">
           <button className="justify-self-end" onClick={()=>{deleteItem(list[iterator])}}><IoCloseCircle/></button>
           <span className="justify-self-center">{list[iterator].name}

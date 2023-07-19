@@ -5,7 +5,7 @@ import PhoneBrandsGcam from '@/Components/gcam/phoneBrandsGcam'
 import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
 import DisplayDevelopers from '@/Components/gcam/displayDevelopers'
 import DisplayGcamVersions from '@/Components/gcam/displayGcamVersions'
-import { GCAM_GET_REQUEST } from '@/Components/API/API_Manager'
+import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
 import GCAM_API_STATE from '@/Components/API/API_States'
 import Head from 'next/head'
 export async function getStaticPaths(){
@@ -23,8 +23,8 @@ export async function getStaticPaths(){
 
   // console.log('the paths are ' , paths)
     return {
-        paths,
-        fallback: false
+        paths : [],
+        fallback: true
     }
 }
 
@@ -73,7 +73,7 @@ export async function getStaticProps(context){
     }
 }
 export default function GcamDownloadForPhone({data , genericGcams , gcamJson, phoneBrand, phoneModel, brands,developers,gcamVersions}) {
-  const gcam = data[0]
+  const gcam = data ? data[0] : []
   console.log('gcam json is', data)
   const GcamDescription = `If you are looking for working Gcam for ${phoneModel}. 
    You are at the best place. we have variety of Google Camera Ports.

@@ -1,5 +1,5 @@
 import GCAM_API_STATE from "@/Components/API/API_States";
-import { GCAM_GET_REQUEST } from "@/Components/API/API_Manager";
+import { GCAM_GET_REQUEST } from "@/Components/API/GET_API_Manager";
 import GCAM_URL_STATE from "@/Components/gcam/URLs/GCAM_URL_STATE";
 import { GCAM_URLS } from "@/Components/gcam/URLs/GCAM_URL_MANAGER";
 

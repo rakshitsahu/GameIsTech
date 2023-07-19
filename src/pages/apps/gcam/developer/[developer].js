@@ -3,7 +3,7 @@ import axios from 'axios'
 import Navbar from '@/Components/gcam/Navbar'
 import Head from 'next/head'
 import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
-import { GCAM_GET_REQUEST } from '@/Components/API/API_Manager'
+import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
 import GCAM_API_STATE from '@/Components/API/API_States'
 export async function getStaticPaths(){
     const res  = await GCAM_GET_REQUEST(GCAM_API_STATE.DeveloperNames)
@@ -17,8 +17,8 @@ export async function getStaticPaths(){
       })
       console.log( 'paths are' , paths )
       return {
-        paths ,
-        fallback: 'blocking'
+        paths : [],
+        fallback: true
       }
 }
 
@@ -49,6 +49,8 @@ export async function getStaticProps(context){
       }
 }
 export default function Developer({data , brands, developers,developer}) {
+  if(!data)
+  data = []
   const GcamJson = data;
   const description = `Download all Gcam ports made by ${developer}. We have ${GcamJson.length} Google Camera Ports that are
   made by ${developer}.`

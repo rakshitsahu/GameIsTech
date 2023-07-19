@@ -1,4 +1,4 @@
-import { GCAM_GET_REQUEST } from '@/Components/API/API_Manager'
+import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
 import GCAM_API_STATE from '@/Components/API/API_States'
 import axios from 'axios'
 import React, { useState } from 'react'

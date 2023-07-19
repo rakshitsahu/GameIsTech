@@ -2,7 +2,8 @@ import Link from 'next/link'
 import React from 'react'
 
 export default function DisplayGcamVersions({gcamVersions, heading }) {
-
+  if(!gcamVersions)
+  gcamVersions = true
     const colors = ['from-pink-500 to-violet-500', 'from-green-500 to-violet-500' , 'from-violet-500 to-pink-500' 
    , 'from-pink-500 to-green-500' , 'from-violet-500 to-red-500' , 'from-violet-500 to-green-500'
 ]

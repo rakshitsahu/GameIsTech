@@ -7,6 +7,8 @@ import DisplayProcessors from '@/Components/gcam/displayProcessorsLogo'
 import DisplayDeviceBrandLogo from './displayDeviceBrandLogo';
 import Link from 'next/link';
 export default function PhoneBrandsGcam({gcams, heading , prefix }) {
+  if(!gcams)
+  gcams = []
     const colors = ['from-pink-500 to-violet-500', 'from-green-500 to-violet-500' , 'from-violet-500 to-pink-500' 
    , 'from-pink-500 to-green-500' , 'from-violet-500 to-red-500' , 'from-violet-500 to-green-500'
 ]

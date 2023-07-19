@@ -11,9 +11,9 @@ import { CreatePageState } from "@/Components/gcam/EnumStates";
 import { IoCloseCircle } from "react-icons/io5";
 import { setCookie , getCookie , hasCookie } from "cookies-next";
 import axios from "axios";
-import { GCAM_GET_REQUEST } from "@/Components/API/API_Manager";
+import { GCAM_GET_REQUEST } from "@/Components/API/GET_API_Manager";
 import GCAM_API_STATE from "@/Components/API/API_States";
-
+import GCAM_DB_COLLECTION from "@/Components/gcam/mongodb/DB_Name_State";
 function getButton(label){
   return <Button
   className="bg-blue-600 p-3 rounded-lg m-3"
@@ -31,24 +31,29 @@ function getButton(label){
 const options = [
   {
     name : 'Android Versions',
-    url : 'http://localhost:3000/api/gcam/androidversion'
+    url : 'http://localhost:3000/api/gcam/androidversion',
+    DbName : GCAM_DB_COLLECTION.Android_Versions
   }
   ,
   {
     name : 'Phone Brands',
-    url : 'http://localhost:3000/api/gcam/phonebrands'
+    url : 'http://localhost:3000/api/gcam/phonebrands',
+    DbName : GCAM_DB_COLLECTION.Phone_Brands
   },
   {
     name : 'Processor Brands',
-    url : 'http://localhost:3000/api/gcam/processorbrands'
+    url : 'http://localhost:3000/api/gcam/processorbrands',
+    DbName : GCAM_DB_COLLECTION.Processor_Brands
   },
   {
     name : 'Developer Names',
-    url : 'http://localhost:3000/api/gcam/developernames'
+    url : 'http://localhost:3000/api/gcam/developernames',
+    DbName : GCAM_DB_COLLECTION.Developer_Names
   },
   {
     name : 'Gcam Versions',
-    url : 'http://localhost:3000/api/gcam/gcamversion'
+    url : 'http://localhost:3000/api/gcam/gcamversion',
+    DbName : GCAM_DB_COLLECTION.Gcam_Version
   }
 
 ]
@@ -124,7 +129,7 @@ const Dashboard = ( {authentication} ) => {
       <div className="flex justify-center inline-block">
       <div >
       <font> Enter The Android version  </font>
-      <TakeInput  State = {CreatePageState.Androidversion} SetName = 'name' />
+      <TakeInput  State = {CreatePageState.Androidversion} SetName = 'name' DbName />
       <font> Enter The processor Brand  </font>
       <TakeInput State = {CreatePageState.ProcessorBrands} SetName = 'name'/>
       <font> Enter The Phone Brands  </font>

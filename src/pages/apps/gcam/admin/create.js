@@ -5,7 +5,7 @@ import AdminNavbar from '@/Components/gcam/adminNavbar'
 import { version } from 'mongoose'
 import axios from 'axios'
 import GCAM_API_STATE from '@/Components/API/API_States'
-import { GCAM_GET_REQUEST } from '@/Components/API/API_Manager'
+import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
 import { setCookie , getCookie , hasCookie } from "cookies-next";
 export const getServerSideProps = async ({ req , res }) =>{
   // Fetch data from external API

@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import Navbar from '@/Components/gcam/Navbar'
-import { GCAM_GET_REQUEST } from '@/Components/API/API_Manager'
+import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
 import GCAM_API_STATE from '@/Components/API/API_States'
 import Head from 'next/head'
 import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
@@ -17,8 +17,8 @@ export async function getStaticPaths(){
       })
       console.log( 'paths are' , paths )
       return {
-        paths ,
-        fallback: 'blocking'
+        paths : [],
+        fallback: true
       }
 }
 

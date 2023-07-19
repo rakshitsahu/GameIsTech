@@ -17,6 +17,10 @@ export default function Navbar({brands,developers}) {
   //   })
   //   console.log('result is ', result)
   //   }, [])
+  if(!brands)
+  brands = []
+  if(!developers)
+  developers = []
   return (
     <nav className="sticky top-0 z-10 bg-white  backdrop-filter backdrop-blur-sm bg-opacity-30 border-b border-gray-200">
     <div className="max-w-5xl mx-auto px-4">

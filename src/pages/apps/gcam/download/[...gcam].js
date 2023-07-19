@@ -5,7 +5,7 @@ import axios from 'axios'
 import Navbar from '@/Components/gcam/Navbar'
 import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
 import GCAM_API_STATE from '@/Components/API/API_States'
-import { GCAM_GET_REQUEST } from '@/Components/API/API_Manager'
+import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
 import Head from 'next/head'
 export async function getStaticPaths(){
   const gcamJson = await GCAM_GET_REQUEST(GCAM_API_STATE.Gcam)
@@ -17,8 +17,8 @@ export async function getStaticPaths(){
     }
   })
     return {
-        paths,
-        fallback: false
+        paths : [],
+        fallback: true
     }
 }
 
@@ -48,8 +48,8 @@ export async function getStaticProps(context){
 export default function GcamDownload({data , brands, developers , gcamParams}) {
 
   const GcamJson = data;
-  const developer = gcamParams[0].replaceAll('-', ' ')
-  const apkName = gcamParams[1].replaceAll('-', ' ')
+  const developer = gcamParams ? gcamParams[0].replaceAll('-', ' '):''
+  const apkName = gcamParams ? gcamParams[1].replaceAll('-', ' '):''
   const description = `Download ${apkName} APK developed by ${developer}`
   const title = `${developer} - ${apkName} | Google Camera Ports`
   function addPageInfo() {

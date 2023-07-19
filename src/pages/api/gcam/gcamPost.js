@@ -27,7 +27,7 @@ async function handler(req , res){
                 {
                     model.collection.updateOne({ name : Post.name } , {
                         $addToSet : { gcams : downloadLink }
-                    } ).catch( () =>res.status(ResponseStatus.Error_Ocurred).json({ message : "Post found but unable to fetch gcamId" }) )
+                    } ).catch( () =>res.status(ResponseStatus.Error_Ocurred).json({ message : "Post found but unable to fetch gcamId" }))
                 }
                 else{
                     Post.gcams = [downloadLink]

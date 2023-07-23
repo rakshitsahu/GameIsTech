@@ -15,8 +15,20 @@ export async function handler(req , res){
           deprecationErrors: true,
         }
       });
-    const data = await client.db('Gcam').collection(collection).find(filter).toArray();
-    res.send(data)
+      try {
+        await client.connect().catch( async (err) => { 
+          console.log('the error occurred is', err)
+          await client.close() 
+        }
+           )
+        console.log('request has been fetched successfully')
+        const data = await client.db('Gcam').collection(collection).find(filter).toArray();
+        await client.close()
+        res.send(data)
+      } catch (error) {
+        console.log('error fetching data')
+        await client.close()
+      }
 
 }
-export default connectMongo(handler)
+export default handler

@@ -15,6 +15,11 @@ async function handler(req , res){
         $addToSet : { phones : Post.name }
     } ).catch( () =>res.status(ResponseStatus.Error_Ocurred).json({ message : "Post found but unable to fetch gcamId" }) )
 
+    
+
+
+
+    
     await axios.post('http://localhost:3000/api/gcam/gcamcheck',Gcam).then(
         (result) =>{
 

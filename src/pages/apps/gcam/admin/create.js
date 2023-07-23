@@ -6,7 +6,9 @@ import { version } from 'mongoose'
 import axios from 'axios'
 import GCAM_API_STATE from '@/Components/API/API_States'
 import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
+import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
 import { setCookie , getCookie , hasCookie } from "cookies-next";
+import { UpdateOne , FindAllOperation , InsertOperation } from '@/Components/API/POST_API_Manager'
 export const getServerSideProps = async ({ req , res }) =>{
   // Fetch data from external API
   const authentication = await axios.post('http://localhost:3000/api/gcam/authorization',{
@@ -72,19 +74,57 @@ function CreatePost({authentication}) {
   function onDeviceNameChange(e){
     setDeviceName(e.target.value)
   }
-
-  async function onPostClick(){
-    
-    const Post = {
-      name : deviceName,
-      processor : processorName,
-      brand : deviceBrand,
-      downloadLink : gcamDownloadLink
+  async function InsertGcam(gcamData , callback = null){
+    const resultJson = await FindAllOperation(GCAM_DB_COLLECTION.Gcam , {downloadLink : gcamData.downloadLink}).catch( err => {return {}} )
+    if( resultJson.length == 0 )
+    {
+      await InsertOperation(GCAM_DB_COLLECTION.Gcam , gcamData).then( (value) =>{
+        if(callback)
+        callback()
+        return gcamData.downloadLink
+      } ) .catch( err => { return null })
     }
+    else
+    {
+      if(callback)
+      callback()
+      return gcamData.downloadLink
+    }
+    
+  }
+
+async function CreatePost(Post , gcamData){
+
+const downloadLink = await InsertGcam(gcamData)
+if(downloadLink){
+  const response = await UpdateOne(GCAM_DB_COLLECTION.Phone_Brands , {name : Post.brand} , {
+    $addToSet : { phones : Post.name }
+} )
+
+}
+const resultJson = await FindAllOperation(GCAM_DB_COLLECTION.Gcam_Post , {downloadLink : gcamData.downloadLink}).catch( err => {return {}} )
+console.log( 'the result json is', resultJson)
+if( resultJson.length != 0 ){
+  await UpdateOne(GCAM_DB_COLLECTION.Gcam_Post , {gcams : gcamData.downloadLink} , {
+    $addToSet : {gcams : gcamData.downloadLink}
+  } )
+}
+else
+{
+  console.log('insertion function called')
+  await InsertOperation(GCAM_DB_COLLECTION.Gcam_Post , Post).catch( err => { 
+    console.log('error occured while creating the post')
+   })
+}
+
+}
+  async function onPostClick(){
+    if( !deviceName || !processorName || !deviceBrand || !gcamDownloadLink )
+    return {message :"fields can not be empty"}
     const gcamData = {
       developerName : gcamDeveloperName,
       name :gcamName,
-      version : parseFloat(gcamVersion),
+      version : gcamVersion,
       downloadLink : gcamDownloadLink,
       description : document.getElementById('gcam').value,
       releaseDate : gcamDate,
@@ -94,18 +134,25 @@ function CreatePost({authentication}) {
       xdaThread : xdaThread,
       isGeneric : isGeneric
     }
+    const Post = {
+      name : deviceName,
+      processor : processorName,
+      brand : deviceBrand,
+      downloadLink : gcamDownloadLink,
+      gcams : [gcamData.downloadLink]
+    }
     const PostData = {
       post : Post,
       gcam : gcamData
     }
     console.log(PostData)
-
-    await axios.post('http://localhost:3000/api/gcam/gcampost',PostData).then(
-      (result)=>{
-        console.log('result is ' , result);
-        return result
-      }
-    ).catch()
+    await CreatePost(Post , gcamData)
+    // await axios.post('http://localhost:3000/api/gcam/gcampost',PostData).then(
+    //   (result)=>{
+    //     console.log('result is ' , result);
+    //     return result
+    //   }
+    // ).catch()
   }
 
   async function onAddGcamClick(){
@@ -113,7 +160,7 @@ function CreatePost({authentication}) {
     const gcamData = {
       developerName : gcamDeveloperName,
       name :gcamName,
-      version : parseFloat(gcamVersion),
+      version : gcamVersion,
       downloadLink : gcamDownloadLink,
       description : document.getElementById('gcam').value,
       releaseDate : gcamDate,
@@ -123,21 +170,36 @@ function CreatePost({authentication}) {
       xdaThread : xdaThread,
       isGeneric : isGeneric
     }
+    if( !gcamDeveloperName ||  !gcamName || !gcamDownloadLink
+       || !gcamVersion || !gcamBrandsList.length || !gcamProcessorsList.length || !gcamRequiredAndroid )
+       {
+        return {message : 'field can not be empty'}
+       }
+    console.log(gcamData)
+    await InsertGcam(gcamData , async () =>{
+      await UpdateOne(GCAM_DB_COLLECTION.Developer_Names , {name : gcamData.developerName} , {
+        $addToSet : { gcams : gcamData.downloadLink }
+      } )
+      await UpdateOne(GCAM_DB_COLLECTION.Gcam_Version , {name : gcamData.version} , {
+        $addToSet : { gcams : gcamData.downloadLink }
+      } )
+    } )
 
-    console.log( 'the gcam data is', gcamData)
-    // const stringJson = JSON.stringify(gcamData)
-    // const config = {
-    //   headers :  {
-    //     data : stringJson
+
+    // console.log( 'the gcam data is', gcamData)
+    // // const stringJson = JSON.stringify(gcamData)
+    // // const config = {
+    // //   headers :  {
+    // //     data : stringJson
+    // //   }
+    // // }
+    // const res  = await axios.post('http://localhost:3000/api/gcam/gcamcheck', gcamData).then(
+    //   (result)=>{
+    //     // console.log('result is ' , result);
+    //     return result
     //   }
-    // }
-    const res  = await axios.post('http://localhost:3000/api/gcam/gcamcheck', gcamData).then(
-      (result)=>{
-        // console.log('result is ' , result);
-        return result
-      }
-    )
-    return res;
+    // )
+    // return res;
 
   }
 
@@ -167,6 +229,7 @@ function CreatePost({authentication}) {
     <font className = 'self-center text-2xl'>Brand : </font> 
 
     <select name="cars" defaultValue='makeChoice' value={deviceBrand} onChange={(e) => setDeviceBrand(e.target.value) } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
+    <option value=''></option>
     {Object.keys(brandsjson).map(  (index) => {
       //console.log ( 'the brand is ', brandsjson.index)
         return (
@@ -186,6 +249,7 @@ function CreatePost({authentication}) {
          <div className='grid grid-cols-2'>  
          <font className='self-center text-2xl'>Processor :</font> 
   <select name="cars" defaultValue='makeChoice' value={processorName} onChange={(e) => setProcessorName(e.target.value) } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
+  <option value=''></option>
   {Object.keys(processsorsJson).map(  (index) => {
       //console.log ( 'the brand is ', processsorsJson.index)
         return (
@@ -200,7 +264,8 @@ function CreatePost({authentication}) {
     <div id = 'test' className='grid grid-cols-2'>
     <font className='self-center text-2xl'>Developer Name : </font>
     <select name="cars" defaultValue='makeChoice' value={gcamDeveloperName} onChange={(e)=> setGcamDeveloperName(e.target.value)} className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
-  {Object.keys(developersJson).map(  (index) => {
+    <option value=''></option>
+    {Object.keys(developersJson).map(  (index) => {
       //console.log ( 'the brand is ', developersJson.index)
         return (
           <option key={index} value={developersJson[index].name}>{developersJson[index].name}</option>
@@ -226,7 +291,11 @@ function CreatePost({authentication}) {
     <div id = 'test' className='grid grid-cols-2'>
     <font className='self-center text-2xl'>Gcam Version : </font>
     {console.log('gcam version' , gcamVersions)}
-    <select name="cars" defaultValue='makeChoice' value={gcamVersion} onChange={(e) => setGcamVersion(e.target.value) } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
+    <select name="cars" defaultValue='makeChoice' value={gcamVersion} onChange={(e) => {
+      setGcamVersion(e.target.value)
+      console.log('gcam version is changed')
+    }  } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
+    <option value=''></option>
     {Object.keys(gcamVersions).map(  (index) => {
       //console.log ( 'the brand is ', gcamVersions.index)
         return (
@@ -239,7 +308,8 @@ function CreatePost({authentication}) {
 
      <div id = 'test' className='grid grid-cols-2'>
      <font className='self-center text-2xl'>Required Android : </font>
-     <select name="cars" defaultValue='makeChoice' value={gcamVersion} onChange={(e) => setgcamRequiredAndroid(e.target.value) } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
+     <select name="cars" defaultValue='makeChoice' value={gcamRequiredAndroid} onChange={(e) => {setgcamRequiredAndroid(e.target.value)} } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
+     <option value=''></option>
      {Object.keys(androidVersionsJson).map(  (index) => {
        //console.log ( 'the brand is ', gcamVersions.index)
          return (
@@ -315,10 +385,10 @@ function CreatePost({authentication}) {
     <input type='text' onChange={(e)=> setXdaThread(e.target.value)} className='w-72 h-12 rounded-lg text-lg text-black'/>
      </div>
     <div className='flex justify-center'>
-    <button onClick={ () => onPostClick() } className='bg-indigo-500 px-4 py-2 rounded-2xl'> 
+    <button onClick={ () => onPostClick() } className='bg-indigo-500 active:bg-indigo-800 hover:ring-1 px-4 py-2 rounded-2xl'> 
     Post
     </button>
-    <button onClick={ () => onAddGcamClick() } className='bg-indigo-500 mx-2 px-4 py-2 rounded-2xl'> 
+    <button onClick={ () => onAddGcamClick() } className='bg-indigo-500 active:bg-indigo-800 hover:ring-1 mx-2 px-4 py-2 rounded-2xl'> 
     Add Gcam
     </button>
     </div>

@@ -6,7 +6,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
 export async function handler(req , res){
-    const Collection = req.body.Collection
+    const collection = req.body.collection
     const filter = req.body.filter
     const Data = req.body.data
     const client = new MongoClient(uri, {
@@ -16,8 +16,15 @@ export async function handler(req , res){
           deprecationErrors: true,
         }
       });
-    const data = await client.db('Gcam').collection(Collection).updateOne( data );
-    res.send(data)
+      try {
+        await client.connect().catch( async (err) => { await client.close(true) } )
+        console.log('the collection and filter is', collection , filter , Data)
+        const data = await client.db('Gcam').collection(collection).updateOne( filter , Data );
+        res.send(data)
+        await client.close(true)
+      } catch (error) {
+        await client.close(true)
+      }
 
 }
-export default connectMongo(handler)
+export default handler

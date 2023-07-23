@@ -16,30 +16,36 @@ export async function handler(req , res){
           deprecationErrors: true,
         }
       });
-    if(!filter)
-    {
-      await client.db('Gcam').collection(Collection).insertOne(data).then( (result) =>{
-        res.send({message :"data has been inserted"})
-      } ).catch((err)=> {
-        console.log(err)
-        res.send({message :"Error occured while inserting the data"})
-       })
-      
-    }
-    else
-    {
-      const result = await client.db('Gcam').collection(Collection).findOne(filter)
-      if(!result)
-      {
-        await client.db('Gcam').collection(Collection).insertOne(data)
-        res.send({message :"data has been inserted"})
+      try {
+        await client.connect().catch( async (err) => { await client.close(true) } )
+        if(!filter)
+        {
+          await client.db('Gcam').collection(Collection).insertOne(data).then( (result) =>{
+            res.send({message :"data has been inserted"})
+          } ).catch((err)=> {
+            console.log(err)
+            res.send({message :"Error occured while inserting the data"})
+           })
+          
+        }
+        else
+        {
+          const result = await client.db('Gcam').collection(Collection).findOne(filter)
+          if(!result)
+          {
+            await client.db('Gcam').collection(Collection).insertOne(data)
+            res.send({message :"data has been inserted"})
+          }
+          else
+          {
+            res.send({message :"Already exists"})
+          }
+        }
+        await client.close(true)
+      } catch (error) {
+        await client.close(true)
       }
-      else
-      {
-        res.send({message :"Already exists"})
-      }
-    }
 
 
 }
-export default connectMongo(handler)
+export default handler

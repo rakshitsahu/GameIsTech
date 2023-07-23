@@ -7,12 +7,16 @@ import DisplayDevelopers from '@/Components/gcam/displayDevelopers'
 import DisplayGcamVersions from '@/Components/gcam/displayGcamVersions'
 import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
 import GCAM_API_STATE from '@/Components/API/API_States'
+import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
+import { FindAllOperation } from '@/Components/API/POST_API_Manager'
 import Head from 'next/head'
 export async function getStaticPaths(){
-  const gcamPosts = await axios.get('http://localhost:3000/api/gcam/getgcamposts').then(response => {
-    // console.log(response.data)
-    return response.data
-  })
+  const gcamPosts = await FindAllOperation (GCAM_DB_COLLECTION.Gcam_Post , { }).catch( err => {return {}} )
+  console.log('the new gcamPosts is', gcamPosts)
+  // const gcamPosts = await axios.get('http://localhost:3000/api/gcam/getgcamposts').then(response => {
+  //   // console.log(response.data)
+  //   return response.data
+  // })
   const paths =  gcamPosts.map((post) =>{
     return {
       params: {
@@ -23,8 +27,8 @@ export async function getStaticPaths(){
 
   // console.log('the paths are ' , paths)
     return {
-        paths : [],
-        fallback: true
+        paths : paths,
+        fallback: "blocking"
     }
 }
 
@@ -34,23 +38,31 @@ export async function getStaticProps(context){
   // console.log('working here',phone[0], phone[1])
   const phoneBrand = phone[0].replaceAll("-", " ");
   const phoneModel = phone[1].replaceAll("-", " ");
-  
-    const data  = await axios.post(`http://localhost:3000/api/gcam/filtergcampost`,{
-      name : phoneModel,
-      brand : phoneBrand,
-  }).then(
-      (result)=>{
-        // console.log('result found is',result.data)
-        return result.data
-      }
-    )
-    console.log('data found is', data)
-    const gcamJson = await axios.post(`http://localhost:3000/api/gcam/filtergcam`, { downloadLink : {$in : data[0].gcams} } ).then(
-      (result)=>{
-        // console.log('result found is',result.data)
-        return result.data
-      }
-    )
+  const data = await FindAllOperation (GCAM_DB_COLLECTION.Gcam_Post , { name : phoneModel, brand : phoneBrand }).catch( err => {return {}} )
+  console.log('the new data is', data)  
+  if(data.length == 0)
+  {
+    return {
+      notFound: true,
+    }
+  }
+  //   const data  = await axios.post(`http://localhost:3000/api/gcam/filtergcampost`,{
+  //     name : phoneModel,
+  //     brand : phoneBrand,
+  // }).then(
+  //     (result)=>{
+  //       // console.log('result found is',result.data)
+  //       return result.data
+  //     }
+  //   )
+  const gcamJson = await FindAllOperation (GCAM_DB_COLLECTION.Gcam , { downloadLink : {$in : data[0].gcams} }).catch( err => {return {}} )
+  console.log('the new gcamJson is', gcamJson) 
+    // const gcamJson = await axios.post(`http://localhost:3000/api/gcam/filtergcam`, { downloadLink : {$in : data[0].gcams} } ).then(
+    //   (result)=>{
+    //     // console.log('result found is',result.data)
+    //     return result.data
+    //   }
+    // )
     phone[0].replaceAll('-',' ')
     phone[1].replaceAll('-',' ')
     console.log( 'data found after request is', gcamJson)

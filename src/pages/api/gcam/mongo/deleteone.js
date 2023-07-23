@@ -15,8 +15,14 @@ export async function handler(req , res){
           deprecationErrors: true,
         }
       });
-    const data = await client.db('Gcam').collection(collection).deleteOne(filter);
-    res.send(data)
+      try {
+        await client.connect().catch( async (err) => { await client.close(true) } )
+        const data = await client.db('Gcam').collection(collection).deleteOne(filter);
+        await client.close(true)
+        res.send(data)
+      } catch (error) {
+        await client.close(true)
+      }
 
 }
-export default connectMongo(handler)
+export default handler

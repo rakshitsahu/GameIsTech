@@ -6,7 +6,7 @@ const AndroidVersionSchema = new mongoose.Schema({
         default : Date.now
     }
 })
-const AndroidVersionModel = new mongoose.model('Android Version',AndroidVersionSchema);
+const AndroidVersionModel = new mongoose.model('Android Versions',AndroidVersionSchema);
 mongoose.models = {}
 
 export {AndroidVersionModel}

@@ -149,7 +149,7 @@ const Dashboard = ( {authentication} ) => {
       {Object.keys(options).map(  (option) => {
         return (
           
-          <button key={option} id= {options[option].name} className="bg-emerald-500  p-2 drop-shadow-2xl rounded-xl" onClick={() =>{
+          <button key={option} id= {options[option].name} className="bg-emerald-500 hover:ring-1 active:bg-emerald-800 p-2 drop-shadow-2xl rounded-xl" onClick={() =>{
              setName(options[option].name) ,
              setCollection(options[option].collection),
              console.log('the collection is', options[option].collection),
@@ -169,7 +169,7 @@ const Dashboard = ( {authentication} ) => {
       { Object.keys(list).map(  (iterator) => {
 
         if(URL || collection){
-          return <span key={iterator} id={list[iterator].name} className="grid   bg-teal-500 p-2 drop-shadow-2xl rounded-xl">
+          return <span key={iterator} id={list[iterator].name} className="grid hover:ring-1 active:bg-emerald-800  bg-teal-500 p-2 drop-shadow-2xl rounded-xl">
           <button className="justify-self-end" onClick={()=>{deleteItem(list[iterator])}}><IoCloseCircle/></button>
           <span className="justify-self-center">{list[iterator].name}
           
@@ -181,7 +181,7 @@ const Dashboard = ( {authentication} ) => {
       }) }
       
       </div>
-      <button className="p-3 w-32 rounded-3xl bg-emerald-500 hover:bg-emerald-800 " onClick={deleteListItems}>Delete</button>
+      <button className="p-3 w-32 rounded-3xl bg-emerald-500 hover:ring-1 active:bg-emerald-800" onClick={deleteListItems}>Delete</button>
       </div>
       
       </div>

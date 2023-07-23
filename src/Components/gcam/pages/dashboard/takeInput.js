@@ -67,7 +67,11 @@ const TakeInput =  ({State , SetName}) => {
       data : data,
       state : State
     }
-
+    if(!data.name)
+    {
+      setResponseJson({message:'cant Post empty feild'})
+      return;
+    }
     // console.log('data is ', data)
     console.log('inserted again')
   //  await axios.post('http://localhost:3000/api/gcam/check' , stateAndData).then(
@@ -76,7 +80,7 @@ const TakeInput =  ({State , SetName}) => {
   // //  console.log('completed')
   // }
   //  )
-
+  
   const res = await InsertOperation(DbName,data , data).then( (result) =>{
     console.log(result);
     return result
@@ -101,7 +105,7 @@ const TakeInput =  ({State , SetName}) => {
     <div>
     {console.log(State)}
     <input type='text' value={name} className='w-72 h-12 rounded-lg text-lg text-black' onChange={changeName}/>
-     <Button className='bg-emerald-600  drop-shadow-2xl p-3 rounded-lg m-3' onClick={() => { changeList() , makeRequest()}}>Add</Button> {responseJson.message}
+     <Button className='bg-emerald-600 hover:ring-1 active:bg-emerald-800 drop-shadow-2xl p-3 rounded-lg m-3' onClick={() => { changeList() , makeRequest()}}>Add</Button> {responseJson.message}
     </div>
   )
 }

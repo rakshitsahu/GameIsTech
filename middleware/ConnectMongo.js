@@ -14,20 +14,35 @@ const client = new MongoClient(uri, {
   }
 });
 async function run() {
-  try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db('Gcam').command({ ping: 1 });
-    // await client.db('Gcam').collection('Google Camera').insertOne({message:"hello"})
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
+    // await mongoose.connect(uri,   {
+    //   useNewUrlParser: true,
+    //   useFindAndModify: false,
+    //   useUnifiedTopology: true
+    // }).catch((err) =>{mongoose.connection.close()});
+    
+    try {
+      // Connect the client to the server	(optional starting in v4.7)
+      await client.connect(uri);
+      // Send a ping to confirm a successful connection
+      // await client.db("admin").command({ ping: 1 });
+      // console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    } finally {
+      // Ensures that the client will close when you finish/error
+      await client.close(true);
+    }
+
 }
 const connectMongo = handler => async (req, res)=>{
-    run().catch(console.dir);
-    return handler(req,res)
+  // if(!client.isConnected())
+  // {
+    
+  // }
+    // run();
+    
+    const result = handler(req , res)
+    await client.close(true);
+    // mongoose.connection.close()
+    return result
 }
 export default connectMongo

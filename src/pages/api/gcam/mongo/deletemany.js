@@ -2,6 +2,7 @@
 // import GCAM_DB_STATE from "@/Components/gcam/mongodb/DB_Name_State";
 
 import connectMongo from "../../../../../middleware/ConnectMongo";
+import mongoose from "mongoose";
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
@@ -15,9 +16,15 @@ export async function handler(req , res){
           deprecationErrors: true,
         }
       });
-      console.log('the collectiona nd filter is', collection , filter)
-    const data = await client.db('Gcam').collection(collection).deleteMany(filter);
-    res.send(data)
-
+      try {
+        console.log('the collectiona nd filter is', collection , filter)
+        await client.connect().catch( async (err) => { await client.close(true) } )
+      const data = await client.db('Gcam').collection(collection).deleteMany(filter);
+      await client.close(true)
+      res.send(data)
+      } catch (error) {
+        await client.close(true)
+      }
+    
 }
-export default connectMongo(handler)
+export default handler

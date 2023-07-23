@@ -5,6 +5,8 @@ import PhoneBrandsGcam from '@/Components/gcam/phoneBrandsGcam'
 import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
 import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
 import GCAM_API_STATE from '@/Components/API/API_States'
+import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
+import { FindAllOperation } from '@/Components/API/POST_API_Manager'
 import Head from 'next/head'
 export async function getStaticPaths(){
     const res  = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneBrands)
@@ -18,8 +20,8 @@ export async function getStaticPaths(){
       })
       console.log( 'paths are' , paths )
       return {
-        paths : [] ,
-        fallback: true
+        paths : paths ,
+        fallback: "blocking"
       }
 }
 
@@ -30,14 +32,22 @@ export async function getStaticProps(context){
     // console.log('working till heere')
     const phone = context.params.phone
     console.log(' data of static props is', phone)
-    const data  = await axios.post(`http://localhost:3000/api/gcam/filtergcampost`,{
-      brand : phone
-    }).then(
-        (result)=>{
-          return result.data
-        }
-      )
-      console.log('the data is ',data)
+    const data = await FindAllOperation (GCAM_DB_COLLECTION.Gcam , { brand : phone }).catch( err => {return {}} )
+    if(data.length == 0)
+    {
+      return {
+        notFound: true,
+      }
+    }
+    console.log('the new data is', data) 
+    // const data  = await axios.post(`http://localhost:3000/api/gcam/filtergcampost`,{
+    //   brand : phone
+    // }).then(
+    //     (result)=>{
+    //       return result.data
+    //     }
+    //   )
+    //   console.log('the data is ',data)
       const developers = await GCAM_GET_REQUEST(GCAM_API_STATE.DeveloperNames)
       const brands = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneBrands)
       console.log('the data is ',data)

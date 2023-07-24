@@ -3,6 +3,7 @@ import GCAM_API_STATE from '@/Components/API/API_States'
 import axios from 'axios'
 import React, { useState } from 'react'
 import { setCookie , getCookie } from "cookies-next";
+import { LogIn } from '@/Components/API/POST_API_Manager';
 const cryptoJs = require('crypto-js')
 const jwt = require('jsonwebtoken')
 export default function Login() {
@@ -10,13 +11,8 @@ export default function Login() {
     const [password, setPassword] = useState('')
     const [message , setMessage] = useState('')
     async function onLoginClick(){
-      const result = await axios.post('http://localhost:3000/api/gcam/login', 
-      {
-        "userName" : userName,
-        "password" : password,
-        "onlyAuthentication" :false
-    }).then( (res)=>{ return res.data} )
-      console.log(result)
+      const result = await LogIn(userName , password)
+       console.log( 'the result found is', result.message)
       setMessage(result.message)
     }
     console.log(getCookie('Token'))

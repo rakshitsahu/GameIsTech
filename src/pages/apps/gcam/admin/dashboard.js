@@ -15,6 +15,7 @@ import axios from "axios";
 import { GCAM_GET_REQUEST } from "@/Components/API/GET_API_Manager";
 import GCAM_API_STATE from "@/Components/API/API_States";
 import GCAM_DB_COLLECTION from "@/Components/gcam/mongodb/DB_Name_State";
+import { Authorization } from "@/Components/API/POST_API_Manager";
 function getButton(label){
   return <Button
   className="bg-blue-600 p-3 rounded-lg m-3"
@@ -32,39 +33,30 @@ function getButton(label){
 const options = [
   {
     name : 'Android Versions',
-    url : 'http://localhost:3000/api/gcam/androidversion',
     collection : GCAM_DB_COLLECTION.Android_Versions
   }
   ,
   {
     name : 'Phone Brands',
-    url : 'http://localhost:3000/api/gcam/phonebrands',
     collection : GCAM_DB_COLLECTION.Phone_Brands
   },
   {
     name : 'Processor Brands',
-    url : 'http://localhost:3000/api/gcam/processorbrands',
     collection : GCAM_DB_COLLECTION.Processor_Brands
   },
   {
     name : 'Developer Names',
-    url : 'http://localhost:3000/api/gcam/developernames',
     collection : GCAM_DB_COLLECTION.Developer_Names
   },
   {
     name : 'Gcam Versions',
-    url : 'http://localhost:3000/api/gcam/gcamversion',
     collection : GCAM_DB_COLLECTION.Gcam_Version
   }
 
 ]
 export const getServerSideProps = async ({ req , res }) =>{
   // Fetch data from external API
-  const authentication = await axios.post('http://localhost:3000/api/gcam/authorization',{
-    token : getCookie('Token',{ req, res})
-}).then( (response) => {
-  return response.data
-} )
+  const authentication = await Authorization(req , res)
 
   return { props: { authentication } }
 }
@@ -157,7 +149,7 @@ const Dashboard = ( {authentication} ) => {
              setDeletedList([])
             //  document.getElementById(options[option].name).classList.remove('bg-emerald-500')
             }} >
-           {options[option].name + 'heer'} 
+           {options[option].name} 
            </button>
         );
       })}

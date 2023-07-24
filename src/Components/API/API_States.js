@@ -15,7 +15,9 @@ const GCAM_API_STATE = {
     Find : 16,
     findAndUpdate : 17,
     DeleteOne : 18,
-    UpdateOne : 19
+    UpdateOne : 19,
+    LogIn : 20,
+    Authorization : 21
 
 }
 export default GCAM_API_STATE

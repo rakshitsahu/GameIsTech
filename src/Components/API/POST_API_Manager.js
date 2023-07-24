@@ -1,6 +1,7 @@
 import axios from "axios";
 import GCAM_API_STATE from '@/Components/API/API_States'
 import GCAM_DB_COLLECTION from "../gcam/mongodb/DB_Name_State";
+import { setCookie , getCookie , hasCookie } from "cookies-next";
  export async function InsertOperation(collection , data , filter = null){
     let url = ""
     console.log('the data found at response time is', data , collection)
@@ -64,3 +65,21 @@ export async function UpdateOne(collection , filter , data){
         console.log('response is', response)
         return response
 }
+
+export async function LogIn(userName , password ){
+    const result = await axios.post('http://localhost:3000/api/gcam/mongo/login', 
+    {
+      "userName" : userName,
+      "password" : password,
+      "onlyAuthentication" :false
+  })
+  return result.data
+  }
+ export async function Authorization (req , res) {
+    // Fetch data from external API
+    const authentication = await axios.post('http://localhost:3000/api/gcam/mongo/authorization',{
+      token : getCookie('Token',{ req, res})
+  })
+     
+    return authentication.data
+  }

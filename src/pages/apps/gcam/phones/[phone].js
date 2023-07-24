@@ -32,7 +32,8 @@ export async function getStaticProps(context){
     // console.log('working till heere')
     const phone = context.params.phone
     console.log(' data of static props is', phone)
-    const data = await FindAllOperation (GCAM_DB_COLLECTION.Gcam , { brand : phone }).catch( err => {return {}} )
+    const data = await FindAllOperation (GCAM_DB_COLLECTION.Gcam_Post , { brand : phone }).catch( err => {return {}} )
+    console.log('the data is of this page', data)
     if(data.length == 0)
     {
       return {
@@ -107,7 +108,7 @@ export default function Phones({data, phone , brands, developers}) {
     <center><h1 className='text-3xl font-thin'> Download Google Camera Ports for {phone} Devices</h1></center>
     {console.log(GcamJson)}
     {phone}
-    <PhoneBrandsGcam gcams = {GcamJson} heading = {'Xiaomi'}/>
+    <PhoneBrandsGcam gcams = {GcamJson} heading = {phone}/>
     </>
   )
 }

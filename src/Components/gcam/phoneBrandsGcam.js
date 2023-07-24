@@ -28,13 +28,18 @@ export default function PhoneBrandsGcam({gcams, heading , prefix }) {
           return (
             <Link key={index} value={gcams[index].name} href={`http://localhost:3000/apps/gcam/phones/${gcams[index].brand.replaceAll(' ', '-' )}/${gcams[index].name.replaceAll(' ', '-' )}`} >
             <div key={index} value={gcams[index].name}  className='grid group/item bg-white rounded-3xl p-4'>
+            <div  className={`flex justify-center bg-black text-5xl font-extrabold drop-shadow-2xl rounded-3xl p-5 bg-clip-text text-transparent bg-gradient-to-r ${colors[color++ % colors.length]} `}>
+            { gcams[index].name } 
+            
+            {console.log(gcams)}
+            </div>
             {console.log( 'the heading is ',heading )}
              <table class="table-auto border-spacing-x-2.5 ">
 
                 <tbody >
                     <tr>
-                    <td className='font-mono text-2xl flex p-3'>Gcam Name <FcCameraIdentification className='m-1'/></td>
-                    <td className='font-mono text-xl'>{gcams[index].name}</td>
+                    <td className='font-mono text-2xl flex p-3'>Gcam Apks <FcCameraIdentification className='m-1'/></td>
+                    <td className='font-mono text-xl'>{gcams[index].gcams.length}</td>
                     
                     </tr>
                     <tr>
@@ -44,10 +49,6 @@ export default function PhoneBrandsGcam({gcams, heading , prefix }) {
                     <tr>
                     <td className='font-mono text-2xl flex p-3'>Brand <FcInfo className='justify-self-center m-1'/></td>
                     <td className='font-mono text-xl'>{gcams[index].brand} <DisplayDeviceBrandLogo/></td>
-                    </tr>
-                    <tr >
-                    <td className='font-mono text-2xl flex p-3'>Gcams <FcMultipleSmartphones className='text-rose-800 justify-self-center m-1'/></td>
-                    <td> {  } </td>
                     </tr>
                 </tbody>
                 </table>

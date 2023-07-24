@@ -9,11 +9,15 @@ import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
 import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
 import { setCookie , getCookie , hasCookie } from "cookies-next";
 import { UpdateOne , FindAllOperation , InsertOperation } from '@/Components/API/POST_API_Manager'
+import { Authorization } from '@/Components/API/POST_API_Manager'
 export const getServerSideProps = async ({ req , res }) =>{
   // Fetch data from external API
-  const authentication = await axios.post('http://localhost:3000/api/gcam/authorization',{
-    token : getCookie('Token',{ req, res})
-}).then( (response) => {return response.data} )
+
+    const authentication = await Authorization(req , res)
+
+//   const authentication = await axios.post('http://localhost:3000/api/gcam/mongo/authorization',{
+//     token : getCookie('Token',{ req, res})
+// }).then( (response) => {return response.data} )
    
   return { props: { authentication } }
 }

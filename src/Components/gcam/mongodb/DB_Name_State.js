@@ -8,5 +8,6 @@ const GCAM_DB_COLLECTION = {
     Phone_Brands : 'Phone Brands',
     Processor_Brands : 'Processor Brands',
     Gcam_Generic : 'Gcam Generic',
+    Admin : "Admin"
 }
 export default GCAM_DB_COLLECTION

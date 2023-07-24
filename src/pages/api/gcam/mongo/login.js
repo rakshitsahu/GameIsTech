@@ -1,16 +1,26 @@
-import { AdminModel } from "@/MongoDb/Gcam/Models/Admin";
-import connectDB from "../../../../middleware/ConnectDB";
-import mongoose from "mongoose";
-import { setCookie , getCookie } from "cookies-next";
 
+import { setCookie , getCookie } from "cookies-next";
+import GCAM_DB_STATE from "@/Components/gcam/mongodb/DB_Name_State";
+const { MongoClient, ServerApiVersion } = require('mongodb');
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
+
  async function handler(req , res){
+    const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
+    const client = new MongoClient(uri, {
+        serverApi: {
+          version: ServerApiVersion.v1,
+          strict: true,
+          deprecationErrors: true,
+        }
+      });
        try {
         console.log( 'body request is' , req.body);
         const saltRounds = 10
-        const model = AdminModel
-        const userData = await model.collection.findOne({userName:req.body.userName});
+
+          await client.connect().catch( async (err) => { await client.close(true) } )
+        const userData = await client.db('Gcam').collection(GCAM_DB_STATE.Admin).findOne({userName:req.body.userName});
+        await client.close(true)
         console.log('the user data is',userData);
         const userName = userData.userName
         const password = userData.password
@@ -44,6 +54,7 @@ const bcrypt = require('bcrypt')
             }
         } )
        } catch (error) {
+        await client.close(true)
         res.send({status :400 , message  : 'error occured'})
        }
         // console.log('response object is', response)
@@ -51,5 +62,5 @@ const bcrypt = require('bcrypt')
         
     
 }
-export default connectDB(handler)
+export default handler
 

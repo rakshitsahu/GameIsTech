@@ -19,8 +19,8 @@ export async function getStaticPaths(){
       })
       console.log( 'paths are' , paths )
       return {
-        paths : paths,
-        fallback: "blocking"
+        paths : [],
+        fallback: true
       }
 }
 
@@ -31,7 +31,10 @@ export async function getStaticProps(context){
     // console.log('working till heere')
     const developer = context.params.developer
     console.log(' data of static props is', developer)
-    const data = await FindAllOperation (GCAM_DB_COLLECTION.Gcam , {developerName: developer }).catch( err => {return {}} )
+    const data = await FindAllOperation (GCAM_DB_COLLECTION.Gcam , {developerName: developer }).catch( err => {
+      console.log('unexpected error occured' , err)
+      return {}
+    } )
     console.log('the new data is', data)
     if(data.length == 0)
     {
@@ -55,7 +58,8 @@ export async function getStaticProps(context){
             brands,
             developers,
             developer
-        }
+        },
+        revalidate: 20,
       }
 }
 export default function Developer({data , brands, developers,developer}) {

@@ -20,8 +20,8 @@ export async function getStaticPaths(){
       })
       console.log( 'paths are' , paths )
       return {
-        paths : paths ,
-        fallback: "blocking"
+        paths : [] ,
+        fallback: true
       }
 }
 
@@ -59,7 +59,8 @@ export async function getStaticProps(context){
             phone,
             brands,
             developers
-        }
+        },
+        revalidate: 20,
       }
 }
 export default function Phones({data, phone , brands, developers}) {

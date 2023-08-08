@@ -27,8 +27,8 @@ export async function getStaticPaths(){
 
   // console.log('the paths are ' , paths)
     return {
-        paths : paths,
-        fallback: "blocking"
+        paths : [],
+        fallback: true
     }
 }
 
@@ -81,7 +81,8 @@ export async function getStaticProps(context){
           developers,
           gcamVersions,
           genericGcams
-      }
+      },
+      revalidate: 20,
     }
 }
 export default function GcamDownloadForPhone({data , genericGcams , gcamJson, phoneBrand, phoneModel, brands,developers,gcamVersions}) {

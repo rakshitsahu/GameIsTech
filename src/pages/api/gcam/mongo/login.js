@@ -15,20 +15,20 @@ const bcrypt = require('bcrypt')
         }
       });
        try {
-        console.log( 'body request is' , req.body);
+        // console.log( 'body request is' , req.body);
         const saltRounds = 10
 
           await client.connect().catch( async (err) => { await client.close(true) } )
         const userData = await client.db('Gcam').collection(GCAM_DB_STATE.Admin).findOne({userName:req.body.userName});
         await client.close(true)
-        console.log('the user data is',userData);
+        // console.log('the user data is',userData);
         const userName = userData.userName
         const password = userData.password
         const pass = "@Rakshit#20Lavi@Rakshit#20Lavi"
         const encrypted = await bcrypt.hash(pass, 10)
-        console.log('copy this one', encrypted)
+        // console.log('copy this one', encrypted)
         const hash = await bcrypt.hash(req.body.password, 10)
-        console.log( hash , userData.password )
+        // console.log( hash , userData.password )
         
         bcrypt.compare(req.body.password , userData.password, function (err , isMatch) {
             if(err)
@@ -36,7 +36,7 @@ const bcrypt = require('bcrypt')
             if( isMatch )
             {
                 const key = 'dfgdsaghgfdsghfd'
-                console.log('password matches')
+                // console.log('password matches')
                 const token = jwt.sign({
                     userName : userData.userName,
                     password : userData.password
@@ -48,7 +48,7 @@ const bcrypt = require('bcrypt')
             }
             else
             {
-                console.log('password does not match')
+                // console.log('password does not match')
                 res.send({status :400 , message  : 'wrong username or password'})
                 return;
             }

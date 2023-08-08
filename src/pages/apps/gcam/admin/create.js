@@ -12,12 +12,7 @@ import { UpdateOne , FindAllOperation , InsertOperation } from '@/Components/API
 import { Authorization } from '@/Components/API/POST_API_Manager'
 export const getServerSideProps = async ({ req , res }) =>{
   // Fetch data from external API
-
     const authentication = await Authorization(req , res)
-
-//   const authentication = await axios.post('http://localhost:3000/api/gcam/mongo/authorization',{
-//     token : getCookie('Token',{ req, res})
-// }).then( (response) => {return response.data} )
    
   return { props: { authentication } }
 }
@@ -43,6 +38,7 @@ function CreatePost({authentication}) {
   const [gcamBrandsList , setGcamBrandsList] = useState([])
   const [xdaThread , setXdaThread] = useState('')
   const [isGeneric, setIsGeneric] = useState(false)
+  const [responseMessage , setResponseMessage] = useState('')
   useEffect( () => {
     getData()
   }, []);
@@ -76,22 +72,26 @@ function CreatePost({authentication}) {
 
 
   function onDeviceNameChange(e){
-    setDeviceName(e.target.value)
+    setDeviceName(e.target.value.trim())
   }
   async function InsertGcam(gcamData , callback = null){
     const resultJson = await FindAllOperation(GCAM_DB_COLLECTION.Gcam , {downloadLink : gcamData.downloadLink}).catch( err => {return {}} )
     if( resultJson.length == 0 )
     {
-      await InsertOperation(GCAM_DB_COLLECTION.Gcam , gcamData).then( (value) =>{
+     const response = await InsertOperation(GCAM_DB_COLLECTION.Gcam , gcamData).then( (value) =>{
         if(callback)
         callback()
         return gcamData.downloadLink
       } ) .catch( err => { return null })
+      console.log('the data supposed to is', response)
+      if(response)
+      setResponseMessage('gcam has been inserted successfully')
     }
     else
     {
       if(callback)
       callback()
+      setResponseMessage('gcam has been inserted successfully')
       return gcamData.downloadLink
     }
     
@@ -104,27 +104,37 @@ if(downloadLink){
   const response = await UpdateOne(GCAM_DB_COLLECTION.Phone_Brands , {name : Post.brand} , {
     $addToSet : { phones : Post.name }
 } )
-
 }
 const resultJson = await FindAllOperation(GCAM_DB_COLLECTION.Gcam_Post , {downloadLink : gcamData.downloadLink}).catch( err => {return {}} )
 console.log( 'the result json is', resultJson)
 if( resultJson.length != 0 ){
-  await UpdateOne(GCAM_DB_COLLECTION.Gcam_Post , {gcams : gcamData.downloadLink} , {
+  const response = await UpdateOne(GCAM_DB_COLLECTION.Gcam_Post , {gcams : gcamData.downloadLink} , {
     $addToSet : {gcams : gcamData.downloadLink}
   } )
+  console.log('the update function returns' , response)
+  if(response.matchedCount)
+  setResponseMessage('post has been created successfully')
+  else
+  setResponseMessage('Unable to update the post')
+
 }
 else
 {
   console.log('insertion function called')
-  await InsertOperation(GCAM_DB_COLLECTION.Gcam_Post , Post).catch( err => { 
+ const response = await InsertOperation(GCAM_DB_COLLECTION.Gcam_Post , Post).catch( err => { 
     console.log('error occured while creating the post')
    })
+   setResponseMessage(response.message)
 }
 
 }
   async function onPostClick(){
+    setResponseMessage('')
     if( !deviceName || !processorName || !deviceBrand || !gcamDownloadLink )
-    return {message :"fields can not be empty"}
+    {
+      setResponseMessage('fields can not be empty')
+      return
+    }
     const gcamData = {
       developerName : gcamDeveloperName,
       name :gcamName,
@@ -151,16 +161,11 @@ else
     }
     console.log(PostData)
     await CreatePost(Post , gcamData)
-    // await axios.post('http://localhost:3000/api/gcam/gcampost',PostData).then(
-    //   (result)=>{
-    //     console.log('result is ' , result);
-    //     return result
-    //   }
-    // ).catch()
+
   }
 
   async function onAddGcamClick(){
-
+    setResponseMessage('')
     const gcamData = {
       developerName : gcamDeveloperName,
       name :gcamName,
@@ -177,7 +182,8 @@ else
     if( !gcamDeveloperName ||  !gcamName || !gcamDownloadLink
        || !gcamVersion || !gcamBrandsList.length || !gcamProcessorsList.length || !gcamRequiredAndroid )
        {
-        return {message : 'field can not be empty'}
+        setResponseMessage('field can not be empty')
+        return
        }
     console.log(gcamData)
     await InsertGcam(gcamData , async () =>{
@@ -190,20 +196,6 @@ else
     } )
 
 
-    // console.log( 'the gcam data is', gcamData)
-    // // const stringJson = JSON.stringify(gcamData)
-    // // const config = {
-    // //   headers :  {
-    // //     data : stringJson
-    // //   }
-    // // }
-    // const res  = await axios.post('http://localhost:3000/api/gcam/gcamcheck', gcamData).then(
-    //   (result)=>{
-    //     // console.log('result is ' , result);
-    //     return result
-    //   }
-    // )
-    // return res;
 
   }
 
@@ -223,7 +215,7 @@ else
     </font>
     <div className='DEVICE_NAME grid grid-cols-2'>
     <font className='self-center text-2xl'>Device Name :</font>
-    <div id = 'test'>  <input type='text' value={deviceName} className='w-72 h-12 rounded-lg text-lg text-black' onChange={onDeviceNameChange}/>
+    <div id = 'test'>  <input type='text' className='w-72 h-12 rounded-lg text-lg text-black' onChange={onDeviceNameChange}/>
  
     </div>
     </div>
@@ -232,7 +224,7 @@ else
     <div className='grid grid-cols-2'>
     <font className = 'self-center text-2xl'>Brand : </font> 
 
-    <select name="cars" defaultValue='makeChoice' value={deviceBrand} onChange={(e) => setDeviceBrand(e.target.value) } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
+    <select name="cars" defaultValue='makeChoice' value={deviceBrand} onChange={(e) => setDeviceBrand(e.target.value.trim()) } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
     <option value=''></option>
     {Object.keys(brandsjson).map(  (index) => {
       //console.log ( 'the brand is ', brandsjson.index)
@@ -252,7 +244,7 @@ else
       </div>
          <div className='grid grid-cols-2'>  
          <font className='self-center text-2xl'>Processor :</font> 
-  <select name="cars" defaultValue='makeChoice' value={processorName} onChange={(e) => setProcessorName(e.target.value) } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
+  <select name="cars" defaultValue='makeChoice' value={processorName} onChange={(e) => setProcessorName(e.target.value.trim()) } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
   <option value=''></option>
   {Object.keys(processsorsJson).map(  (index) => {
       //console.log ( 'the brand is ', processsorsJson.index)
@@ -267,7 +259,7 @@ else
      <font className='place-self-center text-3xl font-thin mt-3  '>Google Camera Details</font>
     <div id = 'test' className='grid grid-cols-2'>
     <font className='self-center text-2xl'>Developer Name : </font>
-    <select name="cars" defaultValue='makeChoice' value={gcamDeveloperName} onChange={(e)=> setGcamDeveloperName(e.target.value)} className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
+    <select name="cars" defaultValue='makeChoice' value={gcamDeveloperName} onChange={(e)=> setGcamDeveloperName(e.target.value.trim())} className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
     <option value=''></option>
     {Object.keys(developersJson).map(  (index) => {
       //console.log ( 'the brand is ', developersJson.index)
@@ -284,7 +276,7 @@ else
      
     <div id = 'test' className='grid grid-cols-2'>
     <font className='self-center text-2xl'>Gcam Name : </font>
-    <input type='text' onChange={(e)=> setGcamName(e.target.value)} className='w-72 h-12 rounded-lg text-lg text-black'/>
+    <input type='text' onChange={(e)=> setGcamName(e.target.value.trim())} className='w-72 h-12 rounded-lg text-lg text-black'/>
      </div>
 
      <div id = 'test' className='grid grid-cols-2'>
@@ -296,7 +288,7 @@ else
     <font className='self-center text-2xl'>Gcam Version : </font>
     {console.log('gcam version' , gcamVersions)}
     <select name="cars" defaultValue='makeChoice' value={gcamVersion} onChange={(e) => {
-      setGcamVersion(e.target.value)
+      setGcamVersion(e.target.value.trim())
       console.log('gcam version is changed')
     }  } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
     <option value=''></option>
@@ -312,7 +304,7 @@ else
 
      <div id = 'test' className='grid grid-cols-2'>
      <font className='self-center text-2xl'>Required Android : </font>
-     <select name="cars" defaultValue='makeChoice' value={gcamRequiredAndroid} onChange={(e) => {setgcamRequiredAndroid(e.target.value)} } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
+     <select name="cars" defaultValue='makeChoice' value={gcamRequiredAndroid} onChange={(e) => {setgcamRequiredAndroid(e.target.value.trim())} } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
      <option value=''></option>
      {Object.keys(androidVersionsJson).map(  (index) => {
        //console.log ( 'the brand is ', gcamVersions.index)
@@ -326,12 +318,12 @@ else
 
      <div id = 'test' className='grid grid-cols-2'>
      <font className='self-center text-2xl'>Gcam Download Link : </font>
-     <input type='text' onChange={(e)=>setGcamDownloadLink(e.target.value)} className='w-72 h-12 rounded-lg text-lg text-black'/>
+     <input type='text' onChange={(e)=>setGcamDownloadLink(e.target.value.trim())} className='w-72 h-12 rounded-lg text-lg text-black'/>
       </div>
 
       <div id = 'test' className='grid grid-cols-2'>
       <font className='self-center text-2xl'>Release Date : </font>
-      <input type='text' onChange={(e)=>setGcamDate(e.target.value)} className='w-72 h-12 rounded-lg text-lg text-black'/>
+      <input type='text' onChange={(e)=>setGcamDate(e.target.value.trim())} className='w-72 h-12 rounded-lg text-lg text-black'/>
        </div>
 
     <div className='grid grid-cols-2'>
@@ -342,8 +334,8 @@ else
     </div>
 
     <div className='grid grid-cols-2'>
-    <font className='self-center text-2xl'>Compatible Processors</font> 
-    <div className='flex flex-wrap gap-4'> 
+    <font className='self-center text-2xl'>Compatible Processors</font>
+    <div className='flex flex-wrap gap-4'>
     { Object.keys(processsorsJson).map(  (iterator) => {
 
       return <button key={iterator} id={processsorsJson[iterator].name} onClick={()=>{
@@ -386,7 +378,7 @@ else
      
     <div id = 'test' className='grid grid-cols-2'>
     <font className='self-center text-2xl'>Xda Thread : </font>
-    <input type='text' onChange={(e)=> setXdaThread(e.target.value)} className='w-72 h-12 rounded-lg text-lg text-black'/>
+    <input type='text' onChange={(e)=> setXdaThread(e.target.value.trim())} className='w-72 h-12 rounded-lg text-lg text-black'/>
      </div>
     <div className='flex justify-center'>
     <button onClick={ () => onPostClick() } className='bg-indigo-500 active:bg-indigo-800 hover:ring-1 px-4 py-2 rounded-2xl'> 
@@ -396,6 +388,7 @@ else
     Add Gcam
     </button>
     </div>
+    <div className='mt-5'>{responseMessage}</div>
     </div>
     </>
   )

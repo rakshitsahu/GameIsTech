@@ -1,7 +1,5 @@
 import React from 'react'
 import Navbar from '@/Components/gcam/Navbar'
-import Link from 'next/link'
-import axios from 'axios'
 import DeviceBrands from '@/Components/gcam/deviceBrands'
 import DisplayDevelopers from '@/Components/gcam/displayDevelopers'
 import DisplayProcessorBrands from '@/Components/gcam/displayProcessorBrands'
@@ -13,13 +11,19 @@ import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
 import GCAM_API_STATE from '@/Components/API/API_States'
 import Head from 'next/head'
 import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
-export async function getStaticProps() {
+export async function  getServerSideProps(context) {
+  const { req, query, res, asPath, pathname } = context;
+  const hostname = req.headers.host
+  console.log('the hostname is',req.headers.host)
+  // console.log( 'the hostname env is', hostname)
   // Call an external API endpoint to get posts.
   // You can use any data fetching library
+  const test = await GCAM_GET_REQUEST(GCAM_API_STATE.Test)
   const brands = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneBrands)
  
   // By returning { props: { posts } }, the Blog component
   // will receive `posts` as a prop at build time
+  
   const developers = await GCAM_GET_REQUEST(GCAM_API_STATE.DeveloperNames)
 
 const processorbrands = await GCAM_GET_REQUEST(GCAM_API_STATE.ProcessorBrands)

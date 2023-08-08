@@ -17,7 +17,8 @@ const GCAM_API_STATE = {
     DeleteOne : 18,
     UpdateOne : 19,
     LogIn : 20,
-    Authorization : 21
+    Authorization : 21,
+    Test: 22
 
 }
 export default GCAM_API_STATE

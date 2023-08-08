@@ -18,9 +18,9 @@ export default function DisplayGcamVersions({gcamVersions, heading }) {
         Object.keys(gcamVersions).map(  (index) => {
         //console.log ( 'the brand is ', brands.index)
           return (
-            <Link key={index} value={gcamVersions[index].name} href={`http://localhost:3000/apps/gcam/version/${gcamVersions[index].name}`}>
+            <Link key={index} value={gcamVersions[index].name} href={`/apps/gcam/developer/${gcamVersions[index].name}`}>
             <div  className='grid group/item bg-white rounded-r-full rounded-l-full p-4'>
-            {console.log( 'the heading is ',heading )}
+
             <div  className={`flex justify-center bg-black text-2xl font-extrabold drop-shadow-2xl rounded-3xl p-5 bg-clip-text text-transparent bg-gradient-to-r ${colors[color++ % colors.length]} `}>
              {gcamVersions[index][heading]}  
              </div>

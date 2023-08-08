@@ -1,7 +1,6 @@
 import React from 'react'
 import { FcCameraIdentification , FcInfo , FcMultipleSmartphones } from "react-icons/fc";
 import { MdOutlineDeveloperMode , MdDateRange } from "react-icons/md";
-import {SiXdadevelopers} from "react-icons/Si"
 import {GiProcessor} from "react-icons/gi"
 import DisplayProcessors from '@/Components/gcam/displayProcessorsLogo'
 import DisplayDeviceBrandLogo from './displayDeviceBrandLogo';
@@ -26,14 +25,13 @@ export default function PhoneBrandsGcam({gcams, heading , prefix }) {
         Object.keys(gcams).map(  (index) => {
         //console.log ( 'the brand is ', brands.index)
           return (
-            <Link key={index} value={gcams[index].name} href={`http://localhost:3000/apps/gcam/phones/${gcams[index].brand.replaceAll(' ', '-' )}/${gcams[index].name.replaceAll(' ', '-' )}`} >
+            <Link key={index} value={gcams[index].name} href={`/apps/gcam/phones/${gcams[index].brand.replaceAll(' ', '-' )}/${gcams[index].name.replaceAll(' ', '-' )}`} >
             <div key={index} value={gcams[index].name}  className='grid group/item bg-white rounded-3xl p-4'>
             <div  className={`flex justify-center bg-black text-5xl font-extrabold drop-shadow-2xl rounded-3xl p-5 bg-clip-text text-transparent bg-gradient-to-r ${colors[color++ % colors.length]} `}>
             { gcams[index].name } 
             
             {console.log(gcams)}
             </div>
-            {console.log( 'the heading is ',heading )}
              <table class="table-auto border-spacing-x-2.5 ">
 
                 <tbody >

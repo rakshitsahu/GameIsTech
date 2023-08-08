@@ -1,7 +1,7 @@
 import GCAM_API_STATE from "@/Components/API/API_States";
 import { GCAM_GET_REQUEST } from "@/Components/API/GET_API_Manager";
 import GCAM_URL_STATE from "./GCAM_URL_STATE";
-const url = "http://localhost:3000/gcam/";
+const url = process.env.URL + "/gcam/";
 
 async function getUrls(prefix, STATE) {
   const result = await GCAM_GET_REQUEST(STATE);

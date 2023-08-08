@@ -9,7 +9,7 @@ function DeviceBrands({brands}) {
         Object.keys(brands).map(  (index) => {
         //console.log ( 'the brand is ', brands.index)
           return (
-            <Link key={index} value={brands[index].name} href={`http://localhost:3000/apps/gcam/phones/${brands[index].name}`}>
+            <Link key={index} value={brands[index].name} href={`/apps/gcam/phones/${brands[index].name}`}>
             <div  className=' group/item  grid grid-cols-2 gap-4 rounded-lg shadow-2xl drop-shadow-2xl '>
             
             <div className=''><Image src= { `/gcam/phonebrands/${brands[index].name}.jpg` } width={200} height={200} /></div>

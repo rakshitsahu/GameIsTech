@@ -18,7 +18,7 @@ const Authorization = handler => async (req, res)=>{
     else
     {
         console.log('posting coocie is',getCookie('Token',{ req, res, maxAge: 60 * 6 * 24 }))
-        await axios.post('http://localhost:3000/api/gcam/authorization',{
+        await axios.post( process.env.URL + '/api/gcam/authorization',{
             token : getCookie('Token',{ req, res, maxAge: 60 * 6 * 24 })
         }).then( (result) =>{
             // console.log( 'the reesult is', result)

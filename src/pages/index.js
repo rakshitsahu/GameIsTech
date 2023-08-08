@@ -1,9 +1,22 @@
 import Image from "next/image";
 import { Inter } from "next/font/google";
 import Link from "next/link";
+import GCAM_API_STATE from "@/Components/API/API_States";
+import { GCAM_GET_REQUEST } from "@/Components/API/GET_API_Manager";
 const inter = Inter({ subsets: ["latin"] });
+export async function getStaticProps(){
+  const data = {}
 
+    return {
+      props :{
+          data 
+      },
+      revalidate: 10,
+    }
+}
 export default function Home() {
+  
+  console.log('execution came till heree')
   const data = [
     {
       name: "Apex Legends",

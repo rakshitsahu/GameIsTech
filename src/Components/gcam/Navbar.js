@@ -9,14 +9,7 @@ let thedata
 
 
 export default function Navbar({brands,developers}) {
-  // const [brands ,setBrands] = useState([])
-  // useEffect(async () => {
-  //   const result = await axios.get('http://localhost:3000/api/gcam/phonebrands').then(response => {
-  //     setBrands(response.data)
-  //     return response.data
-  //   })
-  //   console.log('result is ', result)
-  //   }, [])
+
   if(!brands)
   brands = []
   if(!developers)
@@ -28,7 +21,7 @@ export default function Navbar({brands,developers}) {
         
         <div className="flex space-x-4 text-gray-900  font-semibold">
         
-         <Link href='http://localhost:3000/tracker/valorant/agents'>
+         <Link href='/tracker/valorant/agents'>
           <div className='group/item ' href="#">Devices
           <div className='bg-white rounded-2xl group/edit invisible group-edit/item:text-gray-700  group-hover/item:visible absolute'>
           <ul className=''>
@@ -46,7 +39,7 @@ export default function Navbar({brands,developers}) {
           </ul>
           </div>
           </div></Link>
-          <Link href='http://localhost:3000/tracker/valorant/agents'>
+          <Link href='/tracker/valorant/agents'>
           <div className='group/item ' href="#">Developers
           <div className=' rounded-2xl bg-white group/edit invisible group-edit/item:text-gray-700 group-hover/item:visible absolute'>
           <ul className=''>

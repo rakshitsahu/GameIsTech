@@ -18,7 +18,7 @@ export async function handler(req , res){
       });
       try {
         await client.connect().catch( async (err) => { await client.close(true) } )
-        console.log('the collection and filter is', collection , filter , Data)
+        // console.log('the collection and filter is', collection , filter , Data)
         const data = await client.db('Gcam').collection(collection).updateOne( filter , Data );
         res.send(data)
         await client.close(true)

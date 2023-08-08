@@ -6,7 +6,7 @@ import Navbar from '@/Components/valorant/Navbar'
 const getAgent = async ( uuid )=>{
   try {
     console.log("agent id is " + uuid)
-    const res = await axios.get('http://localhost:3000/api/valorant/agent/',{
+    const res = await axios.get( process.env.URL + '/api/valorant/agent/',{
       headers : {
         agentuuid : "e370fa57-4757-3604-3648-499e1f642d3f"
       }

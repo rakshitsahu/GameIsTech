@@ -3,17 +3,10 @@ import AdminNavbar from "@/Components/gcam/adminNavbar";
 import { useState ,useEffect } from "react";
 import { Button } from "react-bootstrap";
 import TakeInput from "@/Components/gcam/pages/dashboard/takeInput";
-import AndroidVersionModel from "@/MongoDb/Gcam/Models/AndroidVersion";
-import { PhoneBrandsModel } from "@/MongoDb/Gcam/Models/PhoneBrands";
-import { ProcessorBrandsModel } from "@/MongoDb/Gcam/Models/ProcessorBrands";
-import { DeveloperNamesModel } from "@/MongoDb/Gcam/Models/DeveloperNames";
+
 import { CreatePageState } from "@/Components/gcam/EnumStates";
 import { IoCloseCircle } from "react-icons/io5";
-import { setCookie , getCookie , hasCookie } from "cookies-next";
 import { DeleteMany , FindAllOperation } from "@/Components/API/POST_API_Manager";
-import axios from "axios";
-import { GCAM_GET_REQUEST } from "@/Components/API/GET_API_Manager";
-import GCAM_API_STATE from "@/Components/API/API_States";
 import GCAM_DB_COLLECTION from "@/Components/gcam/mongodb/DB_Name_State";
 import { Authorization } from "@/Components/API/POST_API_Manager";
 function getButton(label){
@@ -57,6 +50,8 @@ const options = [
 export const getServerSideProps = async ({ req , res }) =>{
   // Fetch data from external API
   const authentication = await Authorization(req , res)
+  // const authentication = {status :200 , message  : 'user has been logged in'}
+  
 
   return { props: { authentication } }
 }

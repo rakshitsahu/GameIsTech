@@ -72,32 +72,15 @@ const TakeInput =  ({State , SetName}) => {
       setResponseJson({message:'cant Post empty feild'})
       return;
     }
-    // console.log('data is ', data)
     console.log('inserted again')
-  //  await axios.post('http://localhost:3000/api/gcam/check' , stateAndData).then(
-  //  async (e) =>{ 
-   
-  // //  console.log('completed')
-  // }
-  //  )
+
   
   const res = await InsertOperation(DbName,data , data).then( (result) =>{
     console.log(result);
     return result
   })
   setResponseJson(res)
-  //  await axios.post('http://localhost:3000/api/gcam/mongo/insert' , {
-  //   collection : DbName,
-  //   data : data,
-  //   filter : data
-  //  }).then(
-  //   async (e) =>{ 
-    
-  //  console.log('new insert works')
-  //  }
-  //   )
 
-  //  await CreatePageStateManager(CreatePageState.Androidversion)
    
   }
 

@@ -8,8 +8,9 @@ import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
 import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
 import { FindAllOperation } from '@/Components/API/POST_API_Manager'
 export async function getStaticPaths(){
+  console.log('getStaticPaths started')
     const res  = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions)
-    //   console.log( 'gcam versions are', res)
+      console.log( 'gcam versions are', res)
       const paths = res.map( (element)=>{
         return {
             params:{
@@ -19,7 +20,7 @@ export async function getStaticPaths(){
       })
       console.log( 'paths are' , paths )
       return {
-        paths : paths,
+        paths : [],
         fallback: "blocking"
       }
 }
@@ -28,7 +29,7 @@ export async function getStaticProps(context){
     // const data = {
     //     name : 'hello'
     // }
-    // console.log('working till heere')
+    console.log('working till heere')
     const version = context.params.version
     console.log(' data of static props is', version)
     const data = await FindAllOperation (GCAM_DB_COLLECTION.Gcam , { version: version }).catch( err => {return {}} )

@@ -21,8 +21,8 @@ export async function getStaticPaths(){
       console.log('the paths are', paths)
       console.log( 'paths are' , paths )
       return {
-        paths : paths ,
-        fallback: "blocking"
+        paths : [] ,
+        fallback: true
       }
 }
 
@@ -52,7 +52,7 @@ export async function getStaticProps(context){
             developers,
             version
         },
-        revalidate: 10,
+        revalidate: 20,
       }
 }
 export default function Version({data , brands, developers , version}) {

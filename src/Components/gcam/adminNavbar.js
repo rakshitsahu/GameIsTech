@@ -30,10 +30,10 @@ function AdminNavbar() {
 </nav>
 
   <nav className=' sticky top-0 z-10 bg-white flex flex-wrap w-full  p-5 gap-3 bg-opacity-25 border-b font-thin'>
-  <Link href='http://localhost:3000/apps/gcam/admin/dashboard'> <span className='flex gap-2'> Dashboard </span></Link>
- <Link href='http://localhost:3000/tracker/valorant/maps'> <span className='flex gap-2'> Posts </span></Link>
- <Link href='http://localhost:3000/apps/gcam/admin/create'> <span className='flex gap-2'> Create </span></Link>
- <Link href='http://localhost:3000/tracker/valorant/leaderboard'> <span className='flex gap-2'> Edit </span></Link>
+  <Link href='/apps/gcam/admin/dashboard'> <span className='flex gap-2'> Dashboard </span></Link>
+ <Link href='/tracker/valorant/maps'> <span className='flex gap-2'> Posts </span></Link>
+ <Link href='/apps/gcam/admin/create'> <span className='flex gap-2'> Create </span></Link>
+ <Link href='/tracker/valorant/leaderboard'> <span className='flex gap-2'> Edit </span></Link>
   </nav>
   </>
 

@@ -9,7 +9,7 @@ import axios from "axios";
           server : "na"
         }
       }
-      const res = await axios.get('http://localhost:3000/api/valorant/leaderboard',config).then( (result)=>{
+      const res = await axios.get( process.env.URL + '/api/valorant/leaderboard',config).then( (result)=>{
         //console.log(result.data.players) 
         return result
       } ) ;

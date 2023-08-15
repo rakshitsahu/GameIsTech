@@ -18,47 +18,36 @@ export async function  getServerSideProps(context) {
   // console.log( 'the hostname env is', hostname)
   // Call an external API endpoint to get posts.
   // You can use any data fetching library
-  const test = await GCAM_GET_REQUEST(GCAM_API_STATE.Test)
-  const brands = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneBrands)
- 
+
   // By returning { props: { posts } }, the Blog component
   // will receive `posts` as a prop at build time
   
-  const developers = await GCAM_GET_REQUEST(GCAM_API_STATE.DeveloperNames)
-
-const processorbrands = await GCAM_GET_REQUEST(GCAM_API_STATE.ProcessorBrands)
-
-const androidVersions = await GCAM_GET_REQUEST(GCAM_API_STATE.Androidversions)
+const developersData = await GCAM_GET_REQUEST(GCAM_API_STATE.Developers)
 
 const gcamVersions = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions)
 
-const gcamPosts = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamPost)
+const gcamData = await GCAM_GET_REQUEST(GCAM_API_STATE.Gcam)
 
-const genericGcams = await GCAM_GET_REQUEST(GCAM_API_STATE.Generic)
-console.log('generic gcams are', genericGcams)
+const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
+console.log(developersData)
+console.log(gcamVersions)
+console.log(gcamData)
+console.log(phoneData)
 
-  const postMap = {}
-  gcamPosts.forEach( (post)=>{
-    console.log(  post)
-    if( !postMap[post.brand] )
-    postMap[post.brand] = [post]
-    else
-    postMap[post.brand].push(post)
-  })
-console.log('the map is ' , postMap)
+const developers = developersData.map(({ developerName }) => ({ name : developerName }))
+const brands = phoneData.map(({ phoneName }) => ({ name : phoneName }))
+// console.log('generic gcams are', genericGcams)
+console.log('the map is ' , developers)
+console.log(brands)
   return {
     props: {
       brands,
       developers,
-      processorbrands,
-      androidVersions,
-      gcamVersions,
-      postMap,
-      genericGcams
+      gcamVersions
     },
   }
 }
-export default function home({brands , genericGcams, developers,processorbrands , androidVersions , gcamVersions, phonebrands , postMap }) {
+export default function home({brands, developers,gcamVersions }) {
   const description = ` We are the best place to download Gcam APKS. 
   We have clean and best UI with powerful fiters which helps you to find Google Camera Port 
   in no time
@@ -120,10 +109,6 @@ export default function home({brands , genericGcams, developers,processorbrands 
     <center className='mt-7'>
     <font className='font-thin text-3xl hover:underline transition delay-500 decoration-blue-600 underline-offset-4'> Generic Google Camera APKs </font>
     </center>
-
-    <div class=" m-3">
-    <GcamColorfulPoster gcams={genericGcams} heading = {'name'}/>
-   </div>
     </div>
 
     <center className='mt-7'>
@@ -131,30 +116,13 @@ export default function home({brands , genericGcams, developers,processorbrands 
     </center>
 
     <div class=" m-3">
-    <DisplayGcamVersions gcamVersions={gcamVersions} heading = {'name'}/>
+    <DisplayGcamVersions gcamVersions={gcamVersions} heading = {'version'}/>
    </div>
 
-   {
-    Object.keys(postMap).map(  (index) => {
-      //console.log ( 'the brand is ', brands.index)
-        return (
-
-          <div key={index} value={postMap[index].name}  className=' bg-white rounded-3xl p-4'>
-          <h2 className='text-3xl font-thin'><center>Download google camera for {index} devices</center></h2>
-          <DisplayGcamForDevices gcamPosts={postMap[index]} / >
-          </div>
-         
-
-        );
-      })
-   }
    
     <center className='mt-7'>
-    <font className='font-thin text-3xl hover:underline transition delay-500 decoration-blue-600 underline-offset-4'> Find the compatible Google Camera Port for your device </font>
     </center>
-    
-    <div className='m-3'><DisplayProcessorBrands processors = {processorbrands}/></div>
-    <div className='m-3'><DisplayAndroidVersions androidVersions = {androidVersions}/></div>
+
     <Footer/>
     </article>
     

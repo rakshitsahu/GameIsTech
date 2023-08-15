@@ -20,11 +20,10 @@ export default function Navbar({brands,developers}) {
       <div className="flex items-center justify-between h-16">
         
         <div className="flex space-x-4 text-gray-900  font-semibold">
-        
-         <Link href='/tracker/valorant/agents'>
+      
           <div className='group/item ' href="#">Devices
           <div className='bg-white rounded-2xl group/edit invisible group-edit/item:text-gray-700  group-hover/item:visible absolute'>
-          <ul className=''>
+          <ul className='p-4 overflow-y-auto max-h-96'>
           {
             // console.log('the data found is ',brands)
             Object.keys(brands).map(  (index) => {
@@ -38,11 +37,10 @@ export default function Navbar({brands,developers}) {
         }
           </ul>
           </div>
-          </div></Link>
-          <Link href='/tracker/valorant/agents'>
+          </div>
           <div className='group/item ' href="#">Developers
           <div className=' rounded-2xl bg-white group/edit invisible group-edit/item:text-gray-700 group-hover/item:visible absolute'>
-          <ul className=''>
+          <ul className='p-4 overflow-y-auto max-h-96'>
           {
             // console.log('the data found is ',brands)
             Object.keys(developers).map(  (index) => {
@@ -56,7 +54,7 @@ export default function Navbar({brands,developers}) {
         }
           </ul>
           </div>
-          </div></Link>
+          </div>
 
 
         </div>

@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "NODE_ENV=production node app.js",
     "lint": "next lint"
   },
   "dependencies": {
@@ -20,6 +20,7 @@
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
     "jsonwebtoken": "^9.0.1",
+    "jssoup": "^0.0.15",
     "mongodb": "^5.6.0",
     "mongoose": "^7.2.3",
     "next": "^13.4.10",

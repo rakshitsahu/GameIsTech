@@ -4,24 +4,17 @@ import Link from 'next/link';
 import DisplayProcessors from './displayProcessorsLogo';
 function DeviceBrands({brands}) {
   return (
-    <div className='grid grid-cols-1 sm:grid-cols-1 xl:grid-cols-3 lg:grid-cols-3 w-full rounded-md p-5 shadow-2xl drop-shadow-2xl gap-14  font-thin shadow-2xl'>
+    <div className='grid grid-cols-6 lg: rounded-md p-5 shadow-2xl drop-shadow-2xl  gap-3 font-thin shadow-2xl'>
     {
         Object.keys(brands).map(  (index) => {
         //console.log ( 'the brand is ', brands.index)
           return (
-            <Link key={index} value={brands[index].name} href={`/apps/gcam/phones/${brands[index].name}`}>
-            <div  className=' group/item  grid grid-cols-2 gap-4 rounded-lg shadow-2xl drop-shadow-2xl '>
             
-            <div className=''><Image src= { `/gcam/phonebrands/${brands[index].name}.jpg` } width={200} height={200} /></div>
-            <div className='grid gap-1'>
-            <div className='text-3xl group-hover/item:underline underline-offset-2 transition delay-700 decoration-purple-700'>{brands[index].name}</div>
-            <div className='flex'> <DisplayProcessors/> </div>
-            <div className='DESCRIPTION invisible group-hover/item:visible underline underline-offset-2 transition delay-700 decoration-blue-600'> Download Google Camera for {brands[index].name} devices  </div>
-            </div>
-            
-            </div>
+            <div key={index} className=' h-auto w-auto rounded-lg shadow-2xl drop-shadow-2xl overflow-clip'>
+            <Link  className='bg-black' value={brands[index].name} href={`/apps/gcam/phones/${brands[index].name}`.toLowerCase()}>
+            <Image className='hover:scale-125 transition-all duration-500 cursor-pointer object-fill w-full h-full' src= { `/gcam/phonebrands/${brands[index].name.toLowerCase()}.jpg` } width={200} height={200} />
             </Link>
-            
+            </div>
           );
         })
     }

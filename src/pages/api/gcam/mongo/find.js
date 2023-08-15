@@ -31,7 +31,7 @@ export async function handler(req , res){
         }
            )
         console.log('request has been fetched successfully')
-        const data = await client.db('Gcam').collection(collection).find(filter).toArray();
+        const data = await client.db(process.env.GCAM_DB_NAME).collection(collection).find(filter).toArray();
         await client.close()
         res.send(data)
       } catch (error) {

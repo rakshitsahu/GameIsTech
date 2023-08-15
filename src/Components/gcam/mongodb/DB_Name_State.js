@@ -1,13 +1,8 @@
 
 const GCAM_DB_COLLECTION = {
-    Android_Versions : 'Android Versions',
-    Developer_Names : 'Developer Names',
-    Gcam : 'Gcam',
-    Gcam_Post : 'Gcam Posts',
-    Gcam_Version : 'Gcam Version',
-    Phone_Brands : 'Phone Brands',
-    Processor_Brands : 'Processor Brands',
-    Gcam_Generic : 'Gcam Generic',
-    Admin : "Admin"
+    Developer_Names : 'developerList',
+    Gcam : 'gcamsData',
+    Phone_Data : 'phonesData',
+    Gcam_Version : 'gcamVersionsCount'
 }
 export default GCAM_DB_COLLECTION

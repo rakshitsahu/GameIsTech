@@ -11,6 +11,7 @@ import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
 import GCAM_API_STATE from '@/Components/API/API_States'
 import Head from 'next/head'
 import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
+import DisplayGenericGcams from '@/Components/gcam/displayGenericGcams'
 export async function  getServerSideProps(context) {
   const { req, query, res, asPath, pathname } = context;
   const hostname = req.headers.host
@@ -29,13 +30,16 @@ const gcamVersions = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions)
 const gcamData = await GCAM_GET_REQUEST(GCAM_API_STATE.Gcam)
 
 const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
+
+const genericGcams = await GCAM_GET_REQUEST(GCAM_API_STATE.Generic)
 console.log(developersData)
 console.log(gcamVersions)
 console.log(gcamData)
 console.log(phoneData)
+console.log(genericGcams)
 
 const developers = developersData.map(({ developerName }) => ({ name : developerName }))
-const brands = phoneData.map(({ phoneName }) => ({ name : phoneName }))
+const brands = phoneData.map(({ phoneBrand }) => ({ name : phoneBrand }))
 // console.log('generic gcams are', genericGcams)
 console.log('the map is ' , developers)
 console.log(brands)
@@ -43,11 +47,12 @@ console.log(brands)
     props: {
       brands,
       developers,
-      gcamVersions
+      gcamVersions,
+      genericGcams
     },
   }
 }
-export default function home({brands, developers,gcamVersions }) {
+export default function home({ brands, developers, gcamVersions, genericGcams }) {
   const description = ` We are the best place to download Gcam APKS. 
   We have clean and best UI with powerful fiters which helps you to find Google Camera Port 
   in no time
@@ -90,11 +95,40 @@ export default function home({brands, developers,gcamVersions }) {
     />
   </Head>
       <Navbar brands={brands} developers = {developers}/>
-      <article className='grid'>
+      <article className='grid m-3 gap-5'>
+      <center><h1 className='font-semibold text-5xl'>Download Gcam APK's For your device | Google Camera Ports</h1></center>
+      <p className = 'font-thin text-xl'>
+      Google Camera has been incredibly popular and useful in the realm of photography. It has always been challenging to find the best-working Gcam APK for a device. 
+      Even users new users gets confused which gcam APK to download for a device from celsoazevedo,
+       which is the origin of Google Camera Ports.
+       I have organized all the Gcam APKs that celsoazevedo and XDA developers has, along with UI improvements, which will help you find the Google Camera Port for your device in no time.
+      </p>
+      
+      <p className='p-3 bg-green-300 rounded-2xl'>Don't worry. You will always receive updated content here on any Gcam-related page because my website (GCAM section) employs a smart algorithm developed by me.
+       This algorithm fetches and verifies the authenticity of the Google Camera Port from popular websites such as celsoazevedo, XDA Developers, Reddit, etc.
+       </p>
+       <p className='p-3 bg-yellow-300 rounded-2xl'>
+       As my algorithm is in the beta version, I manually run the algorithm at intervals of 2-3 days.
+        This is done to verify the accuracy of the raw data before pushing it to the database.
+       </p>
+       <p className='p-3 bg-red-300 rounded-2xl'>
+       Known Issue: Unfortunately, my algorithm struggles to identify the correct Gcam version.
+        Therefore, please ensure that you verify the Gcam version in the Gcam APK name. I hope to resolve this issue in the future.
+       </p>
       <center className='mt-7'>
       <font className='font-thin text-3xl hover:underline transition delay-500 decoration-blue-600 underline-offset-4'> Phone brands that supports Google Camera Port </font>
       </center>
-    <div className='m-3'><DeviceBrands brands={brands}/></div>
+      
+    <div className=''><DeviceBrands brands={brands}/></div>
+
+    <div className=''>
+    <center className='mt-7'>
+    <font className='font-thin text-4xl hover:underline transition delay-500 decoration-blue-600 underline-offset-4'> Generic Google Camera APKs </font>
+    </center>
+    <div>
+    <DisplayGenericGcams genericGcams = {genericGcams}/>
+    </div>
+    </div>
     
     <center className='mt-7'>
     <font className='font-thin text-3xl hover:underline transition delay-500 decoration-blue-600 underline-offset-4'> Popular Google Camera Port Developers </font>
@@ -103,12 +137,6 @@ export default function home({brands, developers,gcamVersions }) {
     <div className='m-3'>
     <DisplayGcamVersions gcamVersions={developers} heading = {'name'} />
     
-    </div>
-
-    <div className='m-3'>
-    <center className='mt-7'>
-    <font className='font-thin text-3xl hover:underline transition delay-500 decoration-blue-600 underline-offset-4'> Generic Google Camera APKs </font>
-    </center>
     </div>
 
     <center className='mt-7'>

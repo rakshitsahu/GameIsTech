@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios'
 import Navbar from '@/Components/gcam/Navbar'
-import PhoneBrandsGcam from '@/Components/gcam/phoneBrandsGcam'
+import DisplayPhoneBrandGcams from '@/Components/gcam/displayPhoneBrandGcams'
 import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
 import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
 import GCAM_API_STATE from '@/Components/API/API_States'
@@ -9,18 +9,19 @@ import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
 import { FindAllOperation } from '@/Components/API/POST_API_Manager'
 import Head from 'next/head'
 export async function getStaticPaths(){
-    const res  = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneBrands)
-    //   console.log( 'gcam versions are', res)
+  console.log('working till heere')
+    const res  = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
+    console.log( 'gcam versions are', res)
       const paths = res.map( (element)=>{
         return {
             params:{
-            phone : element.name,
+            phone : element.phoneBrand,
         },
     }
       })
       console.log( 'paths are' , paths )
       return {
-        paths : [] ,
+        paths : paths ,
         fallback: true
       }
 }
@@ -32,8 +33,8 @@ export async function getStaticProps(context){
     // console.log('working till heere')
     const phone = context.params.phone
     console.log(' data of static props is', phone)
-    const data = await FindAllOperation (GCAM_DB_COLLECTION.Gcam_Post , { brand : phone }).catch( err => {return {}} )
-    console.log('the data is of this page', data)
+    const data = await FindAllOperation (GCAM_DB_COLLECTION.Phone_Data , { phoneBrand : phone }).catch( err => {return {}} )
+    console.log('the is of this page', data)
     if(data.length == 0)
     {
       return {
@@ -41,16 +42,11 @@ export async function getStaticProps(context){
       }
     }
     console.log('the new data is', data) 
-    // const data  = await axios.post(`http://localhost:3000/api/gcam/filtergcampost`,{
-    //   brand : phone
-    // }).then(
-    //     (result)=>{
-    //       return result.data
-    //     }
-    //   )
-    //   console.log('the data is ',data)
-      const developers = await GCAM_GET_REQUEST(GCAM_API_STATE.DeveloperNames)
-      const brands = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneBrands)
+
+      const developersData = await GCAM_GET_REQUEST(GCAM_API_STATE.Developers)
+      const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
+      const developers = developersData.map(({ developerName }) => ({ name : developerName }))
+      const brands = phoneData.map(({ phoneBrand }) => ({ name : phoneBrand }))
       console.log('the data is ',data)
 
       return {
@@ -60,7 +56,6 @@ export async function getStaticProps(context){
             brands,
             developers
         },
-        revalidate: 20,
       }
 }
 export default function Phones({data, phone , brands, developers}) {
@@ -107,9 +102,10 @@ export default function Phones({data, phone , brands, developers}) {
   </Head>
     <Navbar brands={brands} developers = {developers}/>
     <center><h1 className='text-3xl font-thin'> Download Google Camera Ports for {phone} Devices</h1></center>
+    <DisplayPhoneBrandGcams phoneData = {GcamJson} />
     {console.log(GcamJson)}
     {phone}
-    <PhoneBrandsGcam gcams = {GcamJson} heading = {phone}/>
+    
     </>
   )
 }

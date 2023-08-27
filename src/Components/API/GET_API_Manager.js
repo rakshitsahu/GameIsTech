@@ -33,7 +33,7 @@ import GCAM_DB_COLLECTION from "../gcam/mongodb/DB_Name_State";
                     collection : GCAM_DB_COLLECTION.Phone_Data,
                     filter : {}
                 }).then(response => {
-                    // console.log( 'the android version json is ', response.data)
+                    console.log( 'the android version json is ', response.data)
                     return response.data
                     })
                     return gcamPosts;
@@ -52,7 +52,7 @@ import GCAM_DB_COLLECTION from "../gcam/mongodb/DB_Name_State";
             case GCAM_API_STATE.Generic:
                 const genericGcams = await axios.post(FindUrl,{
                     collection : GCAM_DB_COLLECTION.Gcam_Generic,
-                    filter : {isGeneric : true}
+                    filter : {}
                 }).then(response => {
                     // console.log( 'the android version json is ', response.data)
                     return response.data

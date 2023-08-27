@@ -36,12 +36,12 @@ export default function GcamColorfulPoster({gcams, heading , prefix , download }
                 <tbody >
                     <tr>
                     <td className='font-mono text-2xl flex p-3'>Gcam Name <FcCameraIdentification className='m-1'/></td>
-                    <td className='font-mono text-xl'>{gcams[index].name}</td>
+                    <td className='font-mono'>{gcams[index].gcamName}</td>
                     
                     </tr>
                     <tr>
                     <td className='font-mono text-2xl flex p-3'>Developer <MdOutlineDeveloperMode className='justify-self-center m-1'/></td>
-                    <td className='font-mono text-xl'>{gcams[index].developerName}</td>
+                    <td className='font-mono text-xl'>{gcams[index].developer}</td>
                     </tr>
                     <tr>
                     <td className='font-mono text-2xl flex p-3'>Version <FcInfo className='justify-self-center m-1'/></td>
@@ -49,19 +49,11 @@ export default function GcamColorfulPoster({gcams, heading , prefix , download }
                     </tr>
                     <tr>
                     <td className='font-mono text-2xl flex p-3'>Date <MdDateRange className='text-green-500 justify-self-center  m-1'/></td>
-                    <td className='font-mono text-xl'>{gcams[index].releaseDate}</td>
+                    <td className='font-mono text-xl'>{gcams[index].date}</td>
                     </tr>
                     <tr>
                     <td className='font-mono text-2xl flex p-3'>XDA Thread </td>
                     <td className='font-mono text-xl'>{gcams[index].xdaThread && 'YES'}</td>
-                    </tr>
-                    <tr className='mt-2'>
-                    <td className='font-mono text-2xl flex p-3'>Processors <GiProcessor className='text-rose-800 justify-self-center m-1'/></td>
-                    <td><DisplayProcessors/></td>
-                    </tr>
-                    <tr >
-                    <td className='font-mono text-2xl flex p-3'>Brands <FcMultipleSmartphones className='text-rose-800 justify-self-center m-1'/></td>
-                    <td><DisplayDeviceBrandLogo/></td>
                     </tr>
                 </tbody>
                 </table>

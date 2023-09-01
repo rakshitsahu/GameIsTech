@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { FcCameraIdentification, FcInfo } from "react-icons/fc";
 import { MdDateRange, MdOutlineDeveloperMode } from "react-icons/md";
 
-export default function GcamColorfulPoster({gcams, heading , prefix , download }) {
+export default function GcamDownloadPoster({gcams, heading , prefix , download }) {
   if(!gcams)
   gcams = []
     const colors = ['from-pink-500 to-violet-500', 'from-green-500 to-violet-500' , 'from-violet-500 to-pink-500' 
@@ -46,29 +46,13 @@ export default function GcamColorfulPoster({gcams, heading , prefix , download }
                    <td className="font-mono text-2xl flex p-3 truncate">Date <MdDateRange className="text-green-500 justify-self-center m-1"/></td>
                    <td className="font-mono text-xl">{gcams[index].date}</td>
                  </tr>
-                 <tr>
-                   <td className="font-mono text-2xl flex p-3">XDA Thread </td>
-                   <td className="font-mono text-xl">{gcams[index].xdaThread && 'YES'}</td>
-                 </tr>
                </tbody>
              </table>
            </div>
-           
-           
-                {
-                  download &&
-                  <div className='m-2 grid items-center justify-items-center'>
-                  <center><div className='font-mono text-2xl flex p-3'> description</div></center>
-                  <div className='flex flex-grow-0 '>{gcams[index].description}</div>
-                  </div>
-                }
-                {
-                  download &&
-                  <center> <button hr className='bg-purple-500 active:bg-purple-800 hover:ring-2 rounded-r-full rounded-l-full p-4 text-white'>
-                  
-                  <a target="_blank" class="fcc-btn" href="https://www.freecodecamp.org/">Download</a> 
-                  </button> </center>     
-                }        
+                 <center> <button  className='bg-purple-500 active:bg-purple-800 hover:ring-2 rounded-r-full rounded-l-full p-4 text-white'>
+                  <a target="_blank" class="fcc-btn" href={gcams[index].downloads.parentLink}>Download</a> 
+                  </button>
+                  </center>
             </div>
             </Link>
 

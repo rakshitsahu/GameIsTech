@@ -151,7 +151,7 @@ export default function home({ brands, developers, gcamVersions, genericGcams })
     <DisplayGcamVersions gcamVersions={gcamVersions} />
    </div>
 
-   
+
     <center className='mt-7'>
     </center>
 

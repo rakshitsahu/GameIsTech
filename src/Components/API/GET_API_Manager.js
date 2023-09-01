@@ -33,7 +33,7 @@ import GCAM_DB_COLLECTION from "../gcam/mongodb/DB_Name_State";
                     collection : GCAM_DB_COLLECTION.Phone_Data,
                     filter : {}
                 }).then(response => {
-                    console.log( 'the android version json is ', response.data)
+                    // console.log( 'the android version json is ', response.data)
                     return response.data
                     })
                     return gcamPosts;
@@ -47,6 +47,48 @@ import GCAM_DB_COLLECTION from "../gcam/mongodb/DB_Name_State";
                     return response.data
                     })
                     return gcamVersions
+            break;
+
+            case GCAM_API_STATE.GcamVersionData:
+                const gcamData = await GCAM_GET_REQUEST(GCAM_API_STATE.Gcam)
+                // console.log(gcamData)
+                const versionMap = new Map()
+                const GenericGcams = await GCAM_GET_REQUEST(GCAM_API_STATE.Generic)
+                // console.log(GenericGcams)
+                GenericGcams.forEach(
+                    (gcamList) =>{
+                        gcamList.data.forEach(
+                            (gcam) =>{
+                                if(versionMap.get(gcam.version)){
+                                    versionMap.get(gcam.version).push(gcam);
+                                }
+                                else
+                                versionMap.set(gcam.version,[gcam]);
+                            }
+                        )
+                    }
+                )
+                // console.log(versionMap)
+
+                gcamData.forEach(
+                    (gcamJson)=>{
+                        // console.log(gcamJson)
+                        gcamJson.data.forEach(
+                            (gcam)=>{
+                                // console.log(gcam)
+                                gcam.developer = gcamJson.developerName
+                                if(versionMap.get(gcam.version)){
+                                    versionMap.get(gcam.version).push(gcam);
+                                }
+                                else
+                                versionMap.set(gcam.version,[gcam]);
+                                
+                            }
+                        )
+                    }
+                )
+                // console.log(versionMap)
+                return versionMap
             break;
 
             case GCAM_API_STATE.Generic:

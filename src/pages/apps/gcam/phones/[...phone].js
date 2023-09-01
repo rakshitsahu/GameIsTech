@@ -17,14 +17,14 @@ export async function getStaticPaths(){
   // console.log(phoneData)
   const paths = []
    phoneData.map((phoneData) =>{
-    console.log(phoneData)
+    // console.log(phoneData)
     phoneData.data.map(
       (phone) =>{
         // console.log(phone)
         const phoneName = phone.phoneName.replaceAll(" ", "-")
         const phoneBrand = phoneData.phoneBrand.replaceAll(" ", "-")
-        console.log(phoneName)
-        console.log(phoneBrand)
+        // console.log(phoneName)
+        // console.log(phoneBrand)
         paths.push({
           params: {
             phone : [phoneBrand, phoneName],
@@ -35,7 +35,7 @@ export async function getStaticPaths(){
     )
   })
 
-  console.log('the paths are ' , paths)
+  // console.log('the paths are ' , paths)
     return {
         paths : paths,
         fallback: true
@@ -45,11 +45,15 @@ export async function getStaticPaths(){
 export async function getStaticProps(context){
   // console.log('working here')
   const phone = context.params.phone
-  console.log( 'the phone is' ,context)
+  // console.log( 'the phone is' ,context)
   // console.log('working here',phone[0], phone[1])
-  const phoneBrand = phone[0].replaceAll("-", " ");
-  const phoneName = phone[1].replaceAll("-", " ");
+  let phoneBrand = phone[0].replaceAll("-/-", "/");
+   phoneBrand = phone[0].replaceAll("-", " ");
+  let phoneName = phone[1].replaceAll("-/-", "/");
+  phoneName = phone[1].replaceAll("-", " ");
 
+  // console.log(phoneBrand)
+  // console.log(phoneName)
   // if(data.length == 0)
   // {
   //   return {
@@ -61,7 +65,14 @@ export async function getStaticProps(context){
     const developersData = await GCAM_GET_REQUEST(GCAM_API_STATE.Developers)
     const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
     const genericGcams = await GCAM_GET_REQUEST(GCAM_API_STATE.Generic)
-    const gcamVersions = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions)
+    const gcamVersionsData = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions)
+    const gcamVersions = []
+  console.log(gcamVersionsData)
+  Object.keys(gcamVersionsData[0]).map(
+  (element)=>{
+    gcamVersions.push(element)
+  }
+  )
     const developers = developersData.map(({ developerName }) => ({ name : developerName }))
     const brands = phoneData.map(({ phoneBrand }) => ({ name : phoneBrand }))
 
@@ -80,7 +91,7 @@ export async function getStaticProps(context){
         currentPhoneData = phone.source;
       }
     });
-    console.log(currentPhoneData)
+    // console.log(currentPhoneData)
 
 
     return {
@@ -153,21 +164,21 @@ export default function GcamDownloadForPhone({phoneBrand, phoneName , developers
     <div className='mt-3'>
     {
       Object.keys(currentPhoneData).map((source)=>{
-        console.log(source)
+        // console.log(source)
         {
          return Object.keys(currentPhoneData[source]).map(
             (index)=>{
-              console.log(index)
+              // console.log(index)
               const anchorText = currentPhoneData[source][index].anchorText
               const downloadLink = currentPhoneData[source][index].downloadLink
-              console.log(anchorText)
-              console.log(downloadLink)
+              // console.log(anchorText)
+              // console.log(downloadLink)
               return (
-                <div key = {source} className='m-1 p-3 underline decoration-red-400 underline-offset-2 p-3 rounded-full'>
-                { source === 'reddit' &&  <a href={downloadLink}><div className='flex items-center bg-blue-400 p-3 rounded-full'><BsReddit className='text-orange-400' /><button >{anchorText}</button> </div> </a>  }
-                { source === 'telegram' &&  <a href={downloadLink}><div className='flex items-center bg-emerald-400 p-3 rounded-full'><BsTelegram className='text-sky-400' /> <button >{anchorText}</button></div></a> }
-                { source === 'xda' && <a href={downloadLink}><div className='flex items-center bg-purple-400 p-3 rounded-full'><SiXdadevelopers className='text-red-400' /> <button >{anchorText}</button></div></a> }
-                { source === 'official' && <a href={downloadLink}><div className='flex items-center bg-rose-400 p-3 rounded-full'><BsCamera2 className='text-emerald-400' /> <button >{anchorText}</button></div></a> }
+                <div key = {source} className='m-1 p-3  p-3 rounded-full'>
+                { source === 'reddit' &&  <a href={downloadLink}><div className='flex items-center underline decoration-orange-400 underline-offset-2'><BsReddit className='text-orange-400' /><button >{anchorText}</button> </div> </a>  }
+                { source === 'telegram' &&  <a href={downloadLink}><div className='flex items-center underline decoration-blue-400 underline-offset-2'><BsTelegram className='text-sky-400' /> <button >{anchorText}</button></div></a> }
+                { source === 'xda' && <a href={downloadLink}><div className='flex items-center underline decoration-red-400 underline-offset-2'><SiXdadevelopers className='text-red-400' /> <button >{anchorText}</button></div></a> }
+                { source === 'official' && <a href={downloadLink}><div className='flex items-center underline decoration-emerald-400 underline-offset-2'><BsCamera2 className='text-emerald-400' /> <button >{anchorText}</button></div></a> }
                 </div>
               );
             }
@@ -204,12 +215,13 @@ export default function GcamDownloadForPhone({phoneBrand, phoneName , developers
     <div className='m-3 w-full'>
     <center><h3 className='text-2xl font-thin  m-3'> Download Google Camera Ports By Popular Developers</h3></center>
     {`We have wide variety of Google Camera ports. You can check them out at`} 
+ 
     <DisplayDevelopers developers={developers}/>
     </div>
     
     <div className='m-3 w-full'>
     <center><h3 className='text-2xl font-thin'> Download Google Camera Ports By Versions</h3></center>
-    <DisplayGcamVersions gcamVersions = {gcamVersions} heading={'name'}/>
+    <DisplayGcamVersions gcamVersions={gcamVersions} heading = {'version'}/>
     
     </div>
     </article>

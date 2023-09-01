@@ -1,21 +1,16 @@
-import React from 'react'
+import GCAM_API_STATE from '@/Components/API/API_States'
+import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
 import Navbar from '@/Components/gcam/Navbar'
 import DeviceBrands from '@/Components/gcam/deviceBrands'
 import DisplayDevelopers from '@/Components/gcam/displayDevelopers'
-import DisplayProcessorBrands from '@/Components/gcam/displayProcessorBrands'
-import DisplayAndroidVersions from '@/Components/gcam/displayAndroidVersions'
 import DisplayGcamVersions from '@/Components/gcam/displayGcamVersions'
-import DisplayGcamForDevices from '@/Components/gcam/displayGcamPost'
-import Footer from '@/Components/gcam/footer'
-import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
-import GCAM_API_STATE from '@/Components/API/API_States'
-import Head from 'next/head'
-import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
 import DisplayGenericGcams from '@/Components/gcam/displayGenericGcams'
+import Footer from '@/Components/gcam/footer'
+import Head from 'next/head'
 export async function  getServerSideProps(context) {
   const { req, query, res, asPath, pathname } = context;
   const hostname = req.headers.host
-  console.log('the hostname is',req.headers.host)
+  // console.log('the hostname is',req.headers.host)
   // console.log( 'the hostname env is', hostname)
   // Call an external API endpoint to get posts.
   // You can use any data fetching library
@@ -25,24 +20,32 @@ export async function  getServerSideProps(context) {
   
 const developersData = await GCAM_GET_REQUEST(GCAM_API_STATE.Developers)
 
-const gcamVersions = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions)
-
+const gcamVersionsData = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions)
+const gcamVersions = []
+console.log(gcamVersionsData)
+Object.keys(gcamVersionsData[0]).map(
+  (element)=>{
+    gcamVersions.push(element)
+  }
+)
+gcamVersions.splice(0 , 1)
+console.log(gcamVersions)
 const gcamData = await GCAM_GET_REQUEST(GCAM_API_STATE.Gcam)
 
 const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
 
 const genericGcams = await GCAM_GET_REQUEST(GCAM_API_STATE.Generic)
-console.log(developersData)
-console.log(gcamVersions)
-console.log(gcamData)
-console.log(phoneData)
-console.log(genericGcams)
+// console.log(developersData)
+// console.log(gcamVersions)
+// console.log(gcamData)
+// console.log(phoneData)
+// console.log(genericGcams)
 
 const developers = developersData.map(({ developerName }) => ({ name : developerName }))
 const brands = phoneData.map(({ phoneBrand }) => ({ name : phoneBrand }))
 // console.log('generic gcams are', genericGcams)
-console.log('the map is ' , developers)
-console.log(brands)
+// console.log('the map is ' , developers)
+// console.log(brands)
   return {
     props: {
       brands,
@@ -96,6 +99,7 @@ export default function home({ brands, developers, gcamVersions, genericGcams })
   </Head>
       <Navbar brands={brands} developers = {developers}/>
       <article className='grid m-3 gap-5'>
+
       <center><h1 className='font-semibold text-5xl'>Download Gcam APK's For your device | Google Camera Ports</h1></center>
       <p className = 'font-thin text-xl'>
       Google Camera has been incredibly popular and useful in the realm of photography. It has always been challenging to find the best-working Gcam APK for a device. 
@@ -126,7 +130,7 @@ export default function home({ brands, developers, gcamVersions, genericGcams })
     <font className='font-thin text-4xl hover:underline transition delay-500 decoration-blue-600 underline-offset-4'> Generic Google Camera APKs </font>
     </center>
     <div>
-    <DisplayGenericGcams genericGcams = {genericGcams}/>
+    <DisplayGenericGcams className ='' genericGcams = {genericGcams}/>
     </div>
     </div>
     
@@ -135,7 +139,7 @@ export default function home({ brands, developers, gcamVersions, genericGcams })
     </center>
 
     <div className='m-3'>
-    <DisplayGcamVersions gcamVersions={developers} heading = {'name'} />
+    <DisplayDevelopers developers={developers}/>
     
     </div>
 
@@ -144,7 +148,7 @@ export default function home({ brands, developers, gcamVersions, genericGcams })
     </center>
 
     <div class=" m-3">
-    <DisplayGcamVersions gcamVersions={gcamVersions} heading = {'version'}/>
+    <DisplayGcamVersions gcamVersions={gcamVersions} />
    </div>
 
    

@@ -14,9 +14,11 @@ export default function DisplayPhoneBrandGcams({phoneData}){
     <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 md:grid-cols-3 xl:grid-cols-4 gap-3 justify-center w-full rounded-md p-3 shadow-2xl drop-shadow-2xl '>
     {
         Object.keys(phoneData[0].data).map(  (index) => {
+          let phoneBrand = phoneData[0].phoneBrand.replaceAll('/','%2F').replaceAll(' ','-')
+          let phoneName = phoneData[0].data[index].phoneName.replaceAll('/','%2F').replaceAll(' ','-')
         //console.log ( 'the brand is ', brands.index)
           return (
-            <Link key={index} value={phoneData[0].phoneName} href={`/apps/gcam/phones/${phoneData[0].phoneBrand}/${phoneData[0].data[index].phoneName.replaceAll(' ' , '-')}`}>
+            <Link key={index} value={phoneData[0].phoneName} href={`/apps/gcam/phones/${phoneBrand}/${phoneName}`}>
             <div  className='grid grid-rows-2  group/item bg-white rounded-r-full rounded-l-full p-4'>
 
             <div  className={`flex flex-wrap justify-center text-lg bg-black font-extrabold drop-shadow-2xl rounded-3xl p-3 bg-clip-text text-transparent bg-gradient-to-r ${colors[color++ % colors.length]} `}>

@@ -8,20 +8,20 @@ import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
 import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
 import { FindAllOperation } from '@/Components/API/POST_API_Manager'
 export async function getStaticPaths(){
-  console.log('getStaticPaths started')
+  // console.log('getStaticPaths started')
     const res  = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions)
-      console.log( 'gcam versions are', res)
+      // console.log( 'gcam versions are', res)
       const paths = res.map( (element)=>{
         return {
             params:{
-            version : element.name,
+            version : element.version,
         },
     }
       })
-      console.log( 'paths are' , paths )
+      // console.log( 'paths are' , paths )
       return {
         paths : [],
-        fallback: "blocking"
+        fallback: true
       }
 }
 
@@ -29,38 +29,30 @@ export async function getStaticProps(context){
     // const data = {
     //     name : 'hello'
     // }
-    console.log('working till heere')
+    // console.log('working till heere')
     const version = context.params.version
-    console.log(' data of static props is', version)
-    const data = await FindAllOperation (GCAM_DB_COLLECTION.Gcam , { version: version }).catch( err => {return {}} )
-    if(data.length == 0)
-    {
-      return {
-        notFound: true,
-      }
-    }
-    console.log('the new data is', data) 
-    // const data  = await axios.post(`http://localhost:3000/api/gcam/filtergcam`,{
-    //     version: 13
-    // }).then(
-    //     (result)=>{
-    //       return result.data
-    //     }
-    //   )
-      const developers = await GCAM_GET_REQUEST(GCAM_API_STATE.DeveloperNames)
-      const brands = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneBrands)
-
+    // console.log(' data of static props is', version)
+    const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
+    const developersData = await GCAM_GET_REQUEST(GCAM_API_STATE.Developers)
+    const gcamVersions = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions)
+    const gcamVersionsMap = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersionData)
+    // console.log(gcamVersionsMap)
+    const gcamVersionData = gcamVersionsMap.get(version)
+    // console.log(gcamVersionData)
+    const developers = developersData.map(({ developerName }) => ({ name : developerName }))
+    const brands = phoneData.map(({ phoneBrand }) => ({ name : phoneBrand }))
+    
       return {
         props :{
-            data ,
+          gcamVersionData,
+          gcamVersions,
             brands,
             developers,
             version
         }
       }
 }
-export default function Version({data , brands, developers, version}) {
-  const GcamJson = data;
+export default function Version({gcamVersionData ,gcamVersions , brands, developers, version}) {
   const description = `Download Gcam ${version} APKs by various developer. Google Camera ${version} APK Download`
   const title = `Gcam ${version} APKs Download | Google Camera ${version} APK`
   function addPageInfo() {
@@ -101,8 +93,8 @@ export default function Version({data , brands, developers, version}) {
     />
   </Head>
     <Navbar brands={brands} developers = {developers}/>
-    {console.log(GcamJson)}
-    <GcamColorfulPoster gcams = {GcamJson} heading = {'name'}/>
+    {console.log(gcamVersionData)}
+    <GcamColorfulPoster gcams = {gcamVersionData} className= 'h-screen w-screen' heading = {'name'}/>
     </>
   )
 }

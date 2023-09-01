@@ -1,23 +1,23 @@
-import React from 'react'
-import axios from 'axios'
-import Navbar from '@/Components/gcam/Navbar'
-import Head from 'next/head'
-import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
-import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
 import GCAM_API_STATE from '@/Components/API/API_States'
-import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
+import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
 import { FindAllOperation } from '@/Components/API/POST_API_Manager'
+import Navbar from '@/Components/gcam/Navbar'
+import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
+import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
+import Head from 'next/head'
 export async function getStaticPaths(){
-    const res  = await GCAM_GET_REQUEST(GCAM_API_STATE.DeveloperNames)
+  const developersData = await GCAM_GET_REQUEST(GCAM_API_STATE.Developers)
+  const developers = developersData.map(({ developerName }) => ({ name : developerName }))
     //   console.log( 'gcam versions are', res)
-      const paths = res.map( (element)=>{
+      const paths = developers.map( (element)=>{
+        // console.log(element)
         return {
             params:{
             developer : element.name,
         },
     }
       })
-      console.log( 'paths are' , paths )
+      // console.log( 'paths are' , paths )
       return {
         paths : [],
         fallback: true
@@ -30,18 +30,8 @@ export async function getStaticProps(context){
     // }
     // console.log('working till heere')
     const developer = context.params.developer
-    console.log(' data of static props is', developer)
-    const data = await FindAllOperation (GCAM_DB_COLLECTION.Gcam , {developerName: developer }).catch( err => {
-      console.log('unexpected error occured' , err)
-      return {}
-    } )
-    console.log('the new data is', data)
-    if(data.length == 0)
-    {
-      return {
-        notFound: true,
-      }
-    }
+    const gcamData = await GCAM_GET_REQUEST(GCAM_API_STATE.Gcam)
+
     // const data  = await axios.post(`http://localhost:3000/api/gcam/filtergcam`,{
     //     developerName: 'BSG'
     // }).then(
@@ -49,12 +39,30 @@ export async function getStaticProps(context){
     //       return result.data
     //     }
     //   )
-      const developers = await GCAM_GET_REQUEST(GCAM_API_STATE.DeveloperNames)
-      const brands = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneBrands)
+    const developersData = await GCAM_GET_REQUEST(GCAM_API_STATE.Developers)
+    const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
+    // console.log('developer name is' , developer)
+    let data = null
+    Object.keys(gcamData).map(
+      (element) =>{
+        // console.log(gcamData[element].developerName , developer )
+        if( gcamData[element].developerName === developer ){
+          data = gcamData[element].data
+        }
+      }
+    )
+    if(!data)
+    {
+      return {
+        notFound: true,
+      }
+    }
+    const developers = developersData.map(({ developerName }) => ({ name : developerName }))
+    const brands = phoneData.map(({ phoneBrand }) => ({ name : phoneBrand }))
 
       return {
         props :{
-            data ,
+          data ,
             brands,
             developers,
             developer
@@ -66,9 +74,10 @@ export default function Developer({data , brands, developers,developer}) {
   if(!data)
   data = []
   const GcamJson = data;
+  console.log(GcamJson)
   const description = `Download all Gcam ports made by ${developer}. We have ${GcamJson.length} Google Camera Ports that are
   made by ${developer}.`
-  const title = `Google Camera Ports Developed by ${developer} | Gcam APKs`
+  const title = `Gcam APK's By ${developer} | Google Camera Ports`
   function addPageInfo() {
     return {
       __html: `
@@ -91,6 +100,8 @@ export default function Developer({data , brands, developers,developer}) {
   `
   };
 }
+const H1 = 'font-semibold text-5xl'
+const content = 'font-thin text-xl'
   return (
     <>
     <Head>
@@ -107,8 +118,17 @@ export default function Developer({data , brands, developers,developer}) {
     />
   </Head>
     <Navbar brands={brands} developers = {developers}/>
-    {console.log(GcamJson)}
-    <GcamColorfulPoster gcams = {GcamJson} heading = {'developerName'}/>
+    <article>
+    <center>
+    <h1 className={`${H1} m-8`}>{title}</h1>
+    </center>
+    <p className={`${content}`}>
+    This page Contains all the Gcam apk's made by {developer} till date. I have listed all the Google Cameras sorted by date.
+    If you are having compatibility issues with any of {developer} gcam ports, you can checkout the Generic / Stable Gcam APK's.
+
+    </p>
+    <GcamColorfulPoster gcams = {GcamJson} heading = {'developer'}/>
+    </article>
     </>
   )
 }

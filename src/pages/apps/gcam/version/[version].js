@@ -77,6 +77,8 @@ export default function Version({gcamVersionData ,gcamVersions , brands, develop
   `
   };
 }
+const H1 = 'font-semibold text-5xl'
+const content = 'font-thin text-xl'
   return (
     <>
     <Head>
@@ -93,8 +95,17 @@ export default function Version({gcamVersionData ,gcamVersions , brands, develop
     />
   </Head>
     <Navbar brands={brands} developers = {developers}/>
-    {console.log(gcamVersionData)}
+    <article>
+    <center>
+    <h1 className={`${H1} m-8`}>{title}</h1>
+    </center>
+    <p className={`${content}`}>
+    This page Contains all the Gcam {version} apk's till date. I have listed all the Google Cameras sorted by date.
+    If you are having compatibility issues with any of gcam ports, you can checkout the Generic / Stable Gcam APK's.
+
+    </p>
     <GcamColorfulPoster gcams = {gcamVersionData} className= 'h-screen w-screen' heading = {'name'}/>
+    </article>
     </>
   )
 }

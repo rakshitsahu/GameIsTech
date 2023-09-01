@@ -1,28 +1,36 @@
-import React from 'react'
-import { useRouter } from 'next/router'
-import { useEffect } from 'react'
-import axios from 'axios'
-import Navbar from '@/Components/gcam/Navbar'
-import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
 import GCAM_API_STATE from '@/Components/API/API_States'
 import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
-import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
 import { FindAllOperation } from '@/Components/API/POST_API_Manager'
+import Navbar from '@/Components/gcam/Navbar'
+import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
+import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
 import Head from 'next/head'
 export async function getStaticPaths(){
   const gcamJson = await GCAM_GET_REQUEST(GCAM_API_STATE.Gcam)
-  const paths =  gcamJson.map((gcam) =>{
-    return {
-      params: {
-        gcam : [gcam.developerName, gcam.name],
-      },
-    }
+  const paths = []
+   gcamJson.map((gcamJson) =>{
+    gcamJson.data.map(
+
+      (gcam) =>{
+        
+        const gcamName = gcam.name.replaceAll(" ", "-")
+        const developer = gcam.developer
+        // console.log(gcamName , developer)
+        paths.push({
+          params: {
+            gcam : [developer, gcamName],
+          },
+        })
+       
+      }
+    )
   })
-  console.log('the paths are',paths)
-    return {
-        paths : [],
-        fallback: true
-    }
+  // console.log(paths)
+  return {
+    paths : paths,
+    fallback: true
+}
+
 }
 
 export async function getStaticProps(context){

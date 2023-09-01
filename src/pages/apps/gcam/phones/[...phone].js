@@ -14,17 +14,12 @@ import Head from 'next/head'
 import Link from 'next/link'
 export async function getStaticPaths(){
   const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
-  // console.log(phoneData)
   const paths = []
    phoneData.map((phoneData) =>{
-    // console.log(phoneData)
     phoneData.data.map(
       (phone) =>{
-        // console.log(phone)
         const phoneName = phone.phoneName.replaceAll(" ", "-")
         const phoneBrand = phoneData.phoneBrand.replaceAll(" ", "-")
-        // console.log(phoneName)
-        // console.log(phoneBrand)
         paths.push({
           params: {
             phone : [phoneBrand, phoneName],

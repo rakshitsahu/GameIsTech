@@ -49,7 +49,8 @@ export default function GcamDownloadPoster({gcams, heading , prefix , download }
                </tbody>
              </table>
            </div>
-                 <center> <button  className='bg-purple-500 active:bg-purple-800 hover:ring-2 rounded-r-full rounded-l-full p-4 text-white'>
+                 <center> 
+                 <button  className='bg-purple-500 active:bg-purple-800 hover:ring-2 rounded-r-full rounded-l-full p-4 text-white'>
                   <a target="_blank" class="fcc-btn" href={gcams[index].downloads.parentLink}>Download</a> 
                   </button>
                   </center>

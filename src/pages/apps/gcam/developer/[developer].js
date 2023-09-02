@@ -112,6 +112,8 @@ const content = 'font-thin text-xl'
       content= {description}
       key="desc"
     />
+    <meta name="robots" content="index, follow"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script
       type="application/ld+json"
       dangerouslySetInnerHTML={addPageInfo()}

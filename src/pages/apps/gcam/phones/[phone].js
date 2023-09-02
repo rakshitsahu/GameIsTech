@@ -106,6 +106,8 @@ export default function Phones({data, phone , brands, developers}) {
       dangerouslySetInnerHTML={addPageInfo()}
       key="product-jsonld"
     />
+    <meta name="robots" content="index, follow"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </Head>
     <Navbar brands={brands} developers = {developers}/>
     <center><h1 className='text-3xl font-thin'> Download Google Camera Ports for {phone} Devices</h1></center>

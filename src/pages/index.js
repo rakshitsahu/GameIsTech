@@ -130,24 +130,21 @@ export default function Home() {
           </div>
           <div className="flex flex-wrap gap-4 justify-center">
             <font className="mx-4 w-full">Game Under maintainence</font>
-            {data.map((game) =>{
-              
-              return (
-                <>
+
                 <div className="grid text-white justify-items-center text-lg ">
                 <div className="flex h-80 w-50 rounded-lg shadow-2xl  border-red-500 border-4 place-self-start">
-                  <Image
-                    src={game.PosterPath}
-                    className=" hover:scale-110 duration-500 rounded-lg "
-                    height={180}
-                    width={180}
-                  />
+                <Link href='/apps/gcam'>
+                <Image
+                  src="/gcam/poster.jpg"
+                  className=" hover:scale-110 duration-500 rounded-lg "
+                  height={180}
+                  width={180}
+                />
+                </Link>
                 </div>
-                {game.name}
+                
               </div>
-                </>
-                )
-            })}
+  
 
           </div>
           

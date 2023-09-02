@@ -28,10 +28,9 @@ export default function Navbar({brands,developers}) {
             // console.log('the data found is ',brands)
             Object.keys(brands).map(  (index) => {
             return (
-              
+              <Link key={index} href={`/apps/gcam/phones/${brands[index].name}`}>
               <li key={index} id= {brands[index].name} className='p-3 border-b-4 hover:bg-blue-500 contrast-125 rounded-xl font-thin hover:text-white'>{brands[index].name}</li>
-
-
+              </Link>
             );
           })
         }
@@ -45,8 +44,10 @@ export default function Navbar({brands,developers}) {
             // console.log('the data found is ',brands)
             Object.keys(developers).map(  (index) => {
             return (
+              <Link key={index} href={`/apps/gcam/developer/${developers[index].name}`} >
+              <li  id= {developers[index].name} className='p-3 border-b-4 hover:bg-blue-500 contrast-125 rounded-xl font-thin hover:text-white'>{developers[index].name}</li>
+              </Link>
               
-              <li key={index} id= {developers[index].name} className='p-3 border-b-4 hover:bg-blue-500 contrast-125 rounded-xl font-thin hover:text-white'>{developers[index].name}</li>
 
 
             );

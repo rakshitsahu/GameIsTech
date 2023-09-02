@@ -5,7 +5,7 @@ import { useRouter } from 'next/router'
 import Navbar from '@/Components/valorant/Navbar'
 const getAgent = async ( uuid )=>{
   try {
-    console.log("agent id is " + uuid)
+    // console.log("agent id is " + uuid)
     const res = await axios.get( process.env.URL + '/api/valorant/agent/',{
       headers : {
         agentuuid : "e370fa57-4757-3604-3648-499e1f642d3f"
@@ -15,7 +15,7 @@ const getAgent = async ( uuid )=>{
     return res.data;
 
   } catch (error) {
-    console.log(error)
+    // console.log(error)
   }
 }
 const Agent =  () => {
@@ -34,7 +34,7 @@ const Agent =  () => {
             const CurrentName =  String(element.displayName)
             const AgentName = String(router.query.slug)
             //console.log(typeof AgentName)
-            console.log(CurrentName + " "+ AgentName)
+            // console.log(CurrentName + " "+ AgentName)
             //console.log(typeof CurrentName) 
             if( CurrentName.toLocaleLowerCase() == AgentName.toLocaleLowerCase() )
             {

@@ -38,16 +38,25 @@ export async function getStaticPaths(){
   const paths = pathArray[0]
   // console.log(paths)
   return {
-    paths : paths,
-    fallback: true
+    paths : [],
+    fallback: 'blocking'
 }
 
 }
 
 export async function getStaticProps(context){
   const gcamParams = context.params.gcam
-  const pathArray = await getAllPaths(gcamParams)
-  console.log(pathArray[0])
+  // console.log(gcamParams)
+  const [pathArray, developersData, phoneData] = await Promise.all([
+    getAllPaths(gcamParams),
+    GCAM_GET_REQUEST(GCAM_API_STATE.Developers),
+    GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
+  ])
+    .then((results) => {
+      return results
+    })
+
+  // console.log(pathArray[0])
   const data = pathArray[1]
   
   if(data == null)
@@ -56,9 +65,8 @@ export async function getStaticProps(context){
       notFound: true,
     }
   }
-  console.log(data)
-  const developersData = await GCAM_GET_REQUEST(GCAM_API_STATE.Developers)
-  const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
+  // console.log(data)
+
   const developers = developersData.map(({ developerName }) => ({ name : developerName }))
   const brands = phoneData.map(({ phoneBrand }) => ({ name : phoneBrand }))
 
@@ -69,7 +77,7 @@ export async function getStaticProps(context){
           developers,
           gcamParams
       },
-      revalidate: 20,
+      // revalidate: 20,
     }
 }
 export default function GcamDownload({data , brands, developers , gcamParams}) {

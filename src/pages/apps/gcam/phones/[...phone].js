@@ -32,15 +32,15 @@ export async function getStaticPaths(){
 
   // console.log('the paths are ' , paths)
     return {
-        paths : paths,
-        fallback: true
+        paths : [],
+        fallback: 'blocking'
     }
 }
 
 export async function getStaticProps(context){
   // console.log('working here')
   const phone = context.params.phone
-  // console.log( 'the phone is' ,context)
+  // console.log( 'the phone is' ,phone)
   // console.log('working here',phone[0], phone[1])
   let phoneBrand = phone[0].replaceAll("-/-", "/");
    phoneBrand = phone[0].replaceAll("-", " ");
@@ -56,13 +56,18 @@ export async function getStaticProps(context){
   //   }
   // }
 
+  const [developersData, phoneData, genericGcams, gcamVersionsData] = await Promise.all([
+    GCAM_GET_REQUEST(GCAM_API_STATE.Developers),
+    GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData),
+    GCAM_GET_REQUEST(GCAM_API_STATE.Generic),
+    GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions)
+  ])
+    .then((results) => {
+      return results
+    })
 
-    const developersData = await GCAM_GET_REQUEST(GCAM_API_STATE.Developers)
-    const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
-    const genericGcams = await GCAM_GET_REQUEST(GCAM_API_STATE.Generic)
-    const gcamVersionsData = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions)
     const gcamVersions = []
-  console.log(gcamVersionsData)
+  // console.log(gcamVersionsData)
   Object.keys(gcamVersionsData[0]).map(
   (element)=>{
     gcamVersions.push(element)
@@ -79,7 +84,8 @@ export async function getStaticProps(context){
       }
     });
 
-    let currentPhoneData
+    let currentPhoneData = []
+    // console.log(phone)
     phoneBrandData.forEach( phone => {
       if( phone.phoneName === phoneName)
       {
@@ -99,7 +105,7 @@ export async function getStaticProps(context){
           gcamVersions,
           currentPhoneData
       },
-      // revalidate: 20,
+      revalidate: 20,
     }
 }
 export default function GcamDownloadForPhone({phoneBrand, phoneName , developers , brands , genericGcams, gcamVersions , currentPhoneData}) {
@@ -135,6 +141,7 @@ export default function GcamDownloadForPhone({phoneBrand, phoneName , developers
    `
    };
  }
+ // console.log(currentPhoneData)
   return (
     <>
     <Head>
@@ -189,7 +196,7 @@ export default function GcamDownloadForPhone({phoneBrand, phoneName , developers
     <center>
     <h2 className = 'text-3xl font-thin' >Generic Google Camera Ports Might Be Compatible For {phoneName}</h2>
     </center>
-    <p className=' font-thin text-xl flex flex-wrap m-3 bg-white shadow-inner shadow-2xl contrast-100 brightness-90 p-3 rounded-3xl'> 
+    <p className=' font-thin text-xl flex flex-wrap m-3 bg-white  shadow-2xl contrast-100 brightness-90 p-3 rounded-3xl'> 
     {GenericGcamDescription}
     </p>
     

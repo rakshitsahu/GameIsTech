@@ -7,34 +7,33 @@ import DisplayGcamVersions from '@/Components/gcam/displayGcamVersions'
 import DisplayGenericGcams from '@/Components/gcam/displayGenericGcams'
 import Footer from '@/Components/gcam/footer'
 import Head from 'next/head'
-export async function  getServerSideProps(context) {
-  const { req, query, res, asPath, pathname } = context;
-  const hostname = req.headers.host
-  // console.log('the hostname is',req.headers.host)
-  // console.log( 'the hostname env is', hostname)
-  // Call an external API endpoint to get posts.
-  // You can use any data fetching library
 
-  // By returning { props: { posts } }, the Blog component
-  // will receive `posts` as a prop at build time
-  
-const developersData = await GCAM_GET_REQUEST(GCAM_API_STATE.Developers)
 
-const gcamVersionsData = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions)
+export async function  getStaticProps() {
+  // const { req, query, res, asPath, pathname } = context;
+  // const hostname = req.headers.host
+
+  const [developersData, gcamVersionsData, phoneData, genericGcams] = await Promise.all([
+    GCAM_GET_REQUEST(GCAM_API_STATE.Developers),
+    GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions),
+    
+    GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData),
+    GCAM_GET_REQUEST(GCAM_API_STATE.Generic),
+  ])
+    .then((results) => {
+      return results
+    })
+    // console.log(ob)
 const gcamVersions = []
-console.log(gcamVersionsData)
+// console.log(gcamVersionsData)
 Object.keys(gcamVersionsData[0]).map(
   (element)=>{
     gcamVersions.push(element)
   }
 )
 gcamVersions.splice(0 , 1)
-console.log(gcamVersions)
-const gcamData = await GCAM_GET_REQUEST(GCAM_API_STATE.Gcam)
+// console.log(gcamVersions)
 
-const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
-
-const genericGcams = await GCAM_GET_REQUEST(GCAM_API_STATE.Generic)
 // console.log(developersData)
 // console.log(gcamVersions)
 // console.log(gcamData)
@@ -91,6 +90,9 @@ export default function home({ brands, developers, gcamVersions, genericGcams })
       content= {description}
       key="desc"
     />
+    <meta name="robots" content="index, follow"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
     <script
       type="application/ld+json"
       dangerouslySetInnerHTML={addPageInfo()}
@@ -100,7 +102,7 @@ export default function home({ brands, developers, gcamVersions, genericGcams })
       <Navbar brands={brands} developers = {developers}/>
       <article className='grid m-3 gap-5'>
 
-      <center><h1 className='font-semibold text-5xl'>Download Gcam APK's For your device | Google Camera Ports</h1></center>
+      <center><h1 className='font-semibold text-5xl'>Download Gcam APK&apos;s For your device | Google Camera Ports</h1></center>
       <p className = 'font-thin text-xl'>
       Google Camera has been incredibly popular and useful in the realm of photography. It has always been challenging to find the best-working Gcam APK for a device. 
       Even users new users gets confused which gcam APK to download for a device from celsoazevedo,
@@ -108,7 +110,7 @@ export default function home({ brands, developers, gcamVersions, genericGcams })
        I have organized all the Gcam APKs that celsoazevedo and XDA developers has, along with UI improvements, which will help you find the Google Camera Port for your device in no time.
       </p>
       
-      <p className='p-3 bg-green-300 rounded-2xl'>Don't worry. You will always receive updated content here on any Gcam-related page because my website (GCAM section) employs a smart algorithm developed by me.
+      <p className='p-3 bg-green-300 rounded-2xl'>Don&apos;t worry. You will always receive updated content here on any Gcam-related page because my website (GCAM section) employs a smart algorithm developed by me.
        This algorithm fetches and verifies the authenticity of the Google Camera Port from popular websites such as celsoazevedo, XDA Developers, Reddit, etc.
        </p>
        <p className='p-3 bg-yellow-300 rounded-2xl'>

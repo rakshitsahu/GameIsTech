@@ -23,17 +23,17 @@ function mapAgents(json) {
 
 export async function getStaticProps(){
   const json = await getAgents()
-  console.log( 'the response of gameistech is ', json)
+  // console.log( 'the response of gameistech is ', json)
   return { props: { json } }
 }
 export default function Agents({json}) {
   // console.log( 'the response of gameistech is ', json)
-  console.log('the agentsjsoj  is', json)
+  // console.log('the agentsjsoj  is', json)
 
       mapAgents(json);
 
       const data = Object.keys(AgentMap["Sentinel"]);
-      console.log(AgentMap);
+      // console.log(AgentMap);
       return (
         <>
           <Navbar />

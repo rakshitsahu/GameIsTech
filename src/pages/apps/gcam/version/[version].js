@@ -1,12 +1,8 @@
-import React from 'react'
-import axios from 'axios'
-import Navbar from '@/Components/gcam/Navbar'
-import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
 import GCAM_API_STATE from '@/Components/API/API_States'
-import Head from 'next/head'
+import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
+import Navbar from '@/Components/gcam/Navbar'
 import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
-import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
-import { FindAllOperation } from '@/Components/API/POST_API_Manager'
+import Head from 'next/head'
 export async function getStaticPaths(){
   // console.log('getStaticPaths started')
     const res  = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions)
@@ -21,7 +17,7 @@ export async function getStaticPaths(){
       // console.log( 'paths are' , paths )
       return {
         paths : [],
-        fallback: true
+        fallback: 'blocking'
       }
 }
 
@@ -32,10 +28,17 @@ export async function getStaticProps(context){
     // console.log('working till heere')
     const version = context.params.version
     // console.log(' data of static props is', version)
-    const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
-    const developersData = await GCAM_GET_REQUEST(GCAM_API_STATE.Developers)
-    const gcamVersions = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions)
-    const gcamVersionsMap = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersionData)
+    const [phoneData, developersData, gcamVersions,gcamVersionsMap] = await Promise.all([
+      GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData),
+      GCAM_GET_REQUEST(GCAM_API_STATE.Developers),
+      GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions),
+      GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersionData)
+    ])
+      .then((results) => {
+        return results
+      })
+
+
     // console.log(gcamVersionsMap)
     const gcamVersionData = gcamVersionsMap.get(version)
     // console.log(gcamVersionData)
@@ -49,7 +52,8 @@ export async function getStaticProps(context){
             brands,
             developers,
             version
-        }
+        },
+        // revalidate: 20,
       }
 }
 export default function Version({gcamVersionData ,gcamVersions , brands, developers, version}) {
@@ -100,8 +104,8 @@ const content = 'font-thin text-xl'
     <h1 className={`${H1} m-8`}>{title}</h1>
     </center>
     <p className={`${content}`}>
-    This page Contains all the Gcam {version} apk's till date. I have listed all the Google Cameras sorted by date.
-    If you are having compatibility issues with any of gcam ports, you can checkout the Generic / Stable Gcam APK's.
+    This page Contains all the Gcam {version} apk&apos;s till date. I have listed all the Google Cameras sorted by date.
+    If you are having compatibility issues with any of gcam ports, you can checkout the Generic / Stable Gcam APK&apos;s.
 
     </p>
     <GcamColorfulPoster gcams = {gcamVersionData} className= 'h-screen w-screen' heading = {'name'}/>

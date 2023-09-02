@@ -7,7 +7,7 @@ import Navbar from '@/Components/valorant/Navbar'
 export const Leaderboard = () => {
   const [_leaderboard , _setLeaderboard] = useState({})
   const {query} = useRouter()
-  console.log(query)
+  // console.log(query)
   // ************************* Local Function to call in Use effect ************************* 
   const storeLeaderboard = ()  =>{
     const result = getLeaderboard()

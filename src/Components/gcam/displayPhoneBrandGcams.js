@@ -2,7 +2,7 @@ import {BsReddit , BsTelegram , BsCamera2} from 'react-icons/bs'
 import { SiXdadevelopers } from "react-icons/si"
 import React from 'react'
 import Link from 'next/link'
-
+import { Tooltip } from '@nextui-org/react'
 export default function DisplayPhoneBrandGcams({phoneData}){
     console.log('phonedata is', phoneData)
     console.log(Object.keys(phoneData[0]))
@@ -19,14 +19,13 @@ export default function DisplayPhoneBrandGcams({phoneData}){
         //console.log ( 'the brand is ', brands.index)
           return (
             <Link key={index} value={phoneData[0].phoneName} href={`/apps/gcam/phones/${phoneBrand}/${phoneName}`}>
+            <Tooltip className='bg-purple-600 rounded-full text-white' content= {`Gcam for ${phoneData[0].data[index].phoneName}`}>
             <div  className='grid grid-rows-2  group/item bg-white rounded-r-full rounded-l-full p-4'>
 
             <div  className={`flex flex-wrap justify-center text-lg bg-black font-extrabold drop-shadow-2xl rounded-3xl p-3 bg-clip-text text-transparent bg-gradient-to-r ${colors[color++ % colors.length]} `}>
              {phoneData[0].data[index].phoneName}  
              </div>
-             <div className=' hidden group-hover/item:block underline underline-offset-2 decoration-emerald-400 '>
-             <center>Gcam for {phoneData[0].data[index].phoneName}</center>
-             </div>
+
              <div className='grid grid-cols-4 justify-items-center p-3'>
              {
               Object.keys(phoneData[0].data[index].source).map(  (index) => {
@@ -43,6 +42,7 @@ export default function DisplayPhoneBrandGcams({phoneData}){
               }
              </div>
             </div>
+            </Tooltip>
             </Link>
           );
         })

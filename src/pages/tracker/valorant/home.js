@@ -16,7 +16,7 @@ export default function Valorant() {
     const agentsJson = getAgents()
     agentsJson.then( (json) => {
       setAgents(json)
-      console.log(json)
+      // console.log(json)
     } )
     const weaponsJson = getWeapons()
     weaponsJson.then( (json) =>{

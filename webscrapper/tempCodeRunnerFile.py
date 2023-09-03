@@ -62,13 +62,13 @@ def extractDeveloperData(developer ,url):
         gcamName = gcamTag.text
         gcamVersion = extractGcamVersion(gcamName)
         gcamLink = gcamTag.get('href')
-        filterDownloadLink = []
+        filterDownloadLink = [gcamLink]
         if len(gcamLink) >= 4 and gcamLink[len(gcamLink) - 4 : ] != '.apk':
             childrenGcams = mapDevelopersGcam(gcamLink)
             # print(gcamLink[len(gcamLink) - 4 : ])
             filterDownloadLink = childrenGcams
-        versionCountMap[gcamVersion].append({"name" : gcamName , "downloads" : filterDownloadLink , "download" : gcamLink , "developer" : developer , "date" : gcamDate , "version" : gcamVersion })
-        gcamData.append({"name" : gcamName , "downloads" : filterDownloadLink, "download" : gcamLink , "developer" : developer , "date" : gcamDate , "version" : gcamVersion })
+        versionCountMap[gcamVersion].append({"name" : gcamName , "downloads" : filterDownloadLink , "developerName" : developer , "date" : gcamDate , "version" : gcamVersion })
+        gcamData.append({"name" : gcamName , "downloads" : filterDownloadLink , "developerName" : developer , "date" : gcamDate , "version" : gcamVersion })
     return gcamData
 def extractAllDevelopersData():
     global developerList
@@ -249,7 +249,6 @@ def stableGcams():
         for apkLine in apkList:
             apk = apkLine
             gcamName = apk.find('a').text
-            downloadLink = apk.find('a').get('href')
             gcamVersion = extractGcamVersion(gcamName)
             apk = apk.text
             [developer , date] = extractDateAndDevelloper(apk)
@@ -262,7 +261,6 @@ def stableGcams():
             data.append({
                     "name" :gcamName,
                     "developer" :developer,
-                    "download" : downloadLink,
                     "date" :date,
                     "info" : info,
                     "version" : gcamVersion
@@ -270,7 +268,6 @@ def stableGcams():
             versionCountMap[gcamVersion].append({
                     "name" :gcamName,
                     "developer" :developer,
-                    "download" : downloadLink,
                     "date" :date,
                     "info" : info,
                     "version" : gcamVersion
@@ -290,9 +287,9 @@ def stableGcams():
     return gcamData
 
 # This is added so that many files can reuse the function get_database()
-# uploadData()
+uploadData()
 
-gatherAllData()
+# gatherAllData()
 # print(gcamForPhones())
 # extractAllDevelopersData()
 # print( versionCountMap , len(versionCountMap))

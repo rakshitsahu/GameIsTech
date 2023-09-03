@@ -290,9 +290,9 @@ def stableGcams():
     return gcamData
 
 # This is added so that many files can reuse the function get_database()
-# uploadData()
+uploadData()
 
-gatherAllData()
+# gatherAllData()
 # print(gcamForPhones())
 # extractAllDevelopersData()
 # print( versionCountMap , len(versionCountMap))

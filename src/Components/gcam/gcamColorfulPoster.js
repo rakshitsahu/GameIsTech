@@ -46,10 +46,6 @@ export default function GcamColorfulPoster({gcams, heading , prefix , download }
                    <td className="font-mono text-2xl flex p-3 truncate">Date <MdDateRange className="text-green-500 justify-self-center m-1"/></td>
                    <td className="font-mono text-xl">{gcams[index].date}</td>
                  </tr>
-                 <tr>
-                   <td className="font-mono text-2xl flex p-3">XDA Thread </td>
-                   <td className="font-mono text-xl">{gcams[index].xdaThread && 'YES'}</td>
-                 </tr>
                </tbody>
              </table>
            </div>

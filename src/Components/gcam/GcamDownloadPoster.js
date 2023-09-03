@@ -20,9 +20,8 @@ export default function GcamDownloadPoster({gcams, heading , prefix , download }
         Object.keys(gcams).map(  (index) => {
         //console.log ( 'the brand is ', brands.index)
           return (
-            <Link key={index} value={gcams[index].name} href={`/apps/gcam/download/${gcams[index].developer}/${gcams[index].name}`} >
             
-            <div  className='grid group/item bg-white rounded-3xl p-4'>
+            <div key={index} className='grid group/item bg-white rounded-3xl p-4'>
             <div  className={`flex justify-center  bg-black md:xl lg:text-3xl xl:text-3xl font-extrabold drop-shadow-2xl rounded-3xl p-5 bg-clip-text text-transparent bg-gradient-to-r ${colors[color++ % colors.length]} `}>
              {prefixString + gcams[index][heading] } 
              
@@ -51,11 +50,12 @@ export default function GcamDownloadPoster({gcams, heading , prefix , download }
            </div>
                  <center> 
                  <button  className='bg-purple-500 active:bg-purple-800 hover:ring-2 rounded-r-full rounded-l-full p-4 text-white'>
-                  <a target="_blank" class="fcc-btn" href={gcams[index].downloads.parentLink}>Download</a> 
+                 
+                  <Link target="_blank" class="fcc-btn" href={gcams[index].download}>Download</Link> 
                   </button>
                   </center>
             </div>
-            </Link>
+            
 
           );
         })

@@ -6,8 +6,10 @@ import GcamDownloadPoster from '@/Components/gcam/GcamDownloadPoster'
 import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
 import Head from 'next/head'
 
-async function getAllPaths(toFind = null){
+async function getAllPathsForGcamDownload(toFind = null){
   const gcamJson = await GCAM_GET_REQUEST(GCAM_API_STATE.Gcam)
+  const stableGcamJson = await GCAM_GET_REQUEST(GCAM_API_STATE.Generic)
+  // console.log(stableGcamJson)
   const paths = []
   const possiblePaths = []
   let result = null
@@ -31,10 +33,32 @@ async function getAllPaths(toFind = null){
       }
     )
   })
+
+  stableGcamJson.map((stableGcamJson) =>{
+    stableGcamJson.data.map(
+
+      (gcam) =>{
+        
+        const gcamName = gcam.name.replaceAll(" ", "-")
+        const developer = gcam.developer
+        // console.log(gcamName , developer)
+        // console.log(gcamName , developer)
+        if(toFind && gcamName === toFind[1] && developer === toFind[0] ){
+          result = gcam
+        }
+        paths.push({
+          params: {
+            gcam : [developer, gcamName],
+          },
+        })
+        possiblePaths.push([developer, gcamName])
+      }
+    )
+  })
   return [paths, result]
 }
 export async function getStaticPaths(){
-  const pathArray = await getAllPaths()
+  const pathArray = await getAllPathsForGcamDownload()
   const paths = pathArray[0]
   // console.log(paths)
   return {
@@ -48,13 +72,14 @@ export async function getStaticProps(context){
   const gcamParams = context.params.gcam
   // console.log(gcamParams)
   const [pathArray, developersData, phoneData] = await Promise.all([
-    getAllPaths(gcamParams),
+    getAllPathsForGcamDownload(gcamParams),
     GCAM_GET_REQUEST(GCAM_API_STATE.Developers),
     GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
   ])
     .then((results) => {
       return results
     })
+    // console.log(pathArray , developersData , phoneData)
 
   // console.log(pathArray[0])
   const data = pathArray[1]
@@ -86,7 +111,7 @@ export default function GcamDownload({data , brands, developers , gcamParams}) {
   const developer = gcamParams ? gcamParams[0].replaceAll('-', ' '):''
   const apkName = gcamParams[1]
   const description = `Download ${apkName} APK developed by ${developer}`
-  const title = `${developer} - ${apkName} | Google Camera Ports`
+  const title = `${developer} - ${apkName} | Gcam`
   function addPageInfo() {
     return {
       __html: `
@@ -126,9 +151,10 @@ export default function GcamDownload({data , brands, developers , gcamParams}) {
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </Head>
-    <Navbar brands={brands} developers = {developers}/>
-    Hello there page has been loaded successfully
-    <GcamDownloadPoster gcams = {[GcamJson]} heading = {'developer'}/>
+<article>
+<Navbar brands={brands} developers = {developers}/>
+<GcamDownloadPoster gcams = {[GcamJson]} heading = {'developer'}/>
+</article>
     </>
   )
 }

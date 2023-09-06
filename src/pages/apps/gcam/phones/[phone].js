@@ -6,6 +6,8 @@ import DisplayPhoneBrandGcams from '@/Components/gcam/displayPhoneBrandGcams'
 import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
 import Head from 'next/head'
 import {  encryptString } from '../../../../../GCAM/URL_MANAGER'
+import Footer from '@/Components/gcam/footer'
+import Link from 'next/link'
 
 export async function getAllPathsForPhonePage(){
   const paths = []
@@ -81,6 +83,8 @@ export default function Phones({data, phone , brands, developers}) {
     // console.log( 'post data is' , GcamJson)
     const description = `Download Gcam for ${phone} Devices. We have so many Google Camera ports for almost every ${phone} Device`
     const title = `Gcam for ${phone} Devices | Google Camera Ports`
+    const H1 = 'font-semibold text-5xl'
+    const content = 'font-thin text-xl m-3'
     function addPageInfo() {
       return {
         __html: `
@@ -89,7 +93,7 @@ export default function Phones({data, phone , brands, developers}) {
           "@type": "Product",
           "name": "Google Camera Ports",
       
-          "description": ${description} ,
+          "description": "${description}" ,
           "brand": {
             "@type": "Brand",
             "name": "Gcam APK"
@@ -122,10 +126,20 @@ export default function Phones({data, phone , brands, developers}) {
   </Head>
     <Navbar brands={brands} developers = {developers}/>
     <article>
-    <center><h1 className='text-3xl font-thin'> Download Google Camera Ports for {phone} Devices</h1></center>
+    <center>
+    <h1 className={`${H1} m-8`}>{title}</h1>
+    </center>
+    <p className={`${content}`}>
+    Looking for the Google Camera for your {phone} device. I hope you will get it on this page. If in case you don&apos;t find your device on this page.
+    Dont worry you can checkout the collection of <Link href='/apps/gcam' className='underline underline-offset-2 decoration-emerald-500'>
+    generic / stable google cameras
+ </Link>, These gcams are compatible with most of the devices.
+
+
+    </p>
     <DisplayPhoneBrandGcams phoneData = {GcamJson} />
     </article>
-
+    <Footer/>
     
     </>
   )

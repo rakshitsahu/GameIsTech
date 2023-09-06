@@ -1,6 +1,7 @@
 import GCAM_API_STATE from '@/API/API_States'
 import { GCAM_GET_REQUEST } from '@/API/GET_API_Manager'
 import Navbar from '@/Components/gcam/Navbar'
+import Footer from '@/Components/gcam/footer'
 import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
 import Head from 'next/head'
 
@@ -81,7 +82,7 @@ export default function Version({gcamVersionData ,gcamVersions , brands, develop
         "@type": "Product",
         "name": "Google Camera Ports",
     
-        "description": ${description} ,
+        "description": "${description}" ,
         "brand": {
           "@type": "Brand",
           "name": "Gcam APK"
@@ -126,6 +127,7 @@ const content = 'font-thin text-xl'
     </p>
     <GcamColorfulPoster gcams = {gcamVersionData} className= 'h-screen w-screen' heading = {'name'}/>
     </article>
+    <Footer/>
     </>
   )
 }

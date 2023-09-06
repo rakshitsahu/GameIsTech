@@ -13,7 +13,6 @@ export async function  getStaticProps() {
   const [developersData, gcamVersionsData, phoneData, genericGcams] = await Promise.all([
     GCAM_GET_REQUEST(GCAM_API_STATE.Developers),
     GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions),
-    
     GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData),
     GCAM_GET_REQUEST(GCAM_API_STATE.Generic),
   ])
@@ -56,21 +55,19 @@ export default function home({ brands, developers, gcamVersions, genericGcams })
         "@context": "https://schema.org/",
         "@type": "Product",
         "name": "Google Camera Ports",
-    
-        "description": ${description} ,
+        "description": "${description}",
         "brand": {
           "@type": "Brand",
           "name": "Gcam APK"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Rakshit Sahu"
         }
-        ,
-          "author": {
-            "@type": "Person",
-            "name": "Rakshit Sahu"
-          }
       }
-  `
-  };
-}
+    `
+    };
+  }
   return (
     <>
     <Head>
@@ -100,15 +97,12 @@ export default function home({ brands, developers, gcamVersions, genericGcams })
        I have organized all the Gcam APKs that celsoazevedo and XDA developers has, along with UI improvements, which will help you find the Google Camera Port for your device in no time.
       </p>
       
-      <p className='p-3 bg-green-300 rounded-2xl'>Don&apos;t worry. You will always receive updated content here on any Gcam-related page because my website (GCAM section) employs a smart algorithm developed by me.
+      <p className='p-3 bg-green-300 rounded-2xl'>Don&apos;t worry. You will always receive updated content here on any Gcam-related page because my website (GCAM section) employs a smart algorithm.
        This algorithm fetches and verifies the authenticity of the Google Camera Port from popular websites such as celsoazevedo, XDA Developers, Reddit, etc.
        </p>
-       <p className='p-3 bg-yellow-300 rounded-2xl'>
-       As my algorithm is in the beta version, I manually run the algorithm at intervals of 2-3 days.
-        This is done to verify the accuracy of the raw data before pushing it to the database.
-       </p>
+
        <p className='p-3 bg-red-300 rounded-2xl'>
-       Known Issue: Unfortunately, my algorithm struggles to identify the correct Gcam version.
+       Known Issue: Unfortunately, algorithm struggles to identify the correct Gcam version.
         Therefore, please ensure that you verify the Gcam version in the Gcam APK name. I hope to resolve this issue in the future.
        </p>
       <center className='mt-7'>
@@ -146,10 +140,8 @@ export default function home({ brands, developers, gcamVersions, genericGcams })
 
     <center className='mt-7'>
     </center>
-
-    <Footer/>
     </article>
-    
+    <Footer/>
     
     </>
     

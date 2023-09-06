@@ -2,7 +2,7 @@ import { Tooltip } from "@nextui-org/react";
 import Link from 'next/link';
 
 export default function DisplayGcamVersions({gcamVersions, heading }) {
-console.log(gcamVersions)
+// console.log(gcamVersions)
   if(!gcamVersions)
   gcamVersions = true
     const colors = ['from-pink-500 to-violet-500', 'from-green-500 to-violet-500' , 'from-violet-500 to-pink-500' 

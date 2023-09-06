@@ -18,7 +18,7 @@ export async function getStaticProps(){
 }
 export default function Home() {
   
-  console.log('execution came till heree')
+  // console.log('execution came till heree')
   const data = [
     {
       name: "Apex Legends",

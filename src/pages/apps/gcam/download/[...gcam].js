@@ -6,6 +6,7 @@ import GcamDownloadPoster from '@/Components/gcam/GcamDownloadPoster'
 import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
 import Head from 'next/head'
 import { encryptString } from '../../../../../GCAM/URL_MANAGER'
+import Footer from '@/Components/gcam/footer'
 
 export async function getAllPathsForGcamDownload(toFind = null){
   const gcamJson = await GCAM_GET_REQUEST(GCAM_API_STATE.Gcam)
@@ -123,7 +124,7 @@ export default function GcamDownload({data , brands, developers , gcamParams}) {
         "@type": "Product",
         "name": "Google Camera Ports",
     
-        "description": ${description} ,
+        "description": "${description}" ,
         "brand": {
           "@type": "Brand",
           "name": "Gcam APK"
@@ -158,6 +159,7 @@ export default function GcamDownload({data , brands, developers , gcamParams}) {
 <Navbar brands={brands} developers = {developers}/>
 <GcamDownloadPoster gcams = {[GcamJson]} heading = {'developer'}/>
 </article>
+<Footer/>
     </>
   )
 }

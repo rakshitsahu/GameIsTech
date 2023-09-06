@@ -8,6 +8,7 @@ import Head from 'next/head'
 import { BsCamera2, BsReddit, BsTelegram } from 'react-icons/bs'
 import { SiXdadevelopers } from "react-icons/si"
 import { encryptString} from '../../../../../GCAM/URL_MANAGER'
+import Footer from '@/Components/gcam/footer'
 export async function getAllPathsForPhoneDownloadPage(){
   const paths = []
   const possiblePaths = []
@@ -119,7 +120,7 @@ export default function GcamDownloadForPhone({phoneBrand, phoneName , developers
          "@type": "Product",
          "name": "Google Camera Ports",
      
-         "description": ${description} ,
+         "description": "${description}" ,
          "brand": {
            "@type": "Brand",
            "name": "Gcam APK"
@@ -153,7 +154,7 @@ export default function GcamDownloadForPhone({phoneBrand, phoneName , developers
   </Head>
     <Navbar brands={brands} developers={developers}/>
     <article className='grid justify-items-center m-3'>
-    <h1 className='text-3xl font-thin mt-3'> Download Google Camera Ports For {phoneBrand} {phoneName} </h1>
+    <h1 className='text-3xl font-thin mt-3'> Download Google Camera Ports For {phoneName} </h1>
     <p className=' prose prose-xl font-thin text-xl flex flex-wrap m-3 bg-white  shadow-2xl contrast-100 brightness-90 p-3 rounded-3xl'> 
     {GcamDescription}
     </p>
@@ -221,6 +222,7 @@ export default function GcamDownloadForPhone({phoneBrand, phoneName , developers
     
     </div>
     </article>
+    <Footer/>
     </>
   )
 }

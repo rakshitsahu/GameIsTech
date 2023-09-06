@@ -4,6 +4,7 @@ import Navbar from '@/Components/gcam/Navbar'
 import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
 import Head from 'next/head'
 import { encryptString } from '../../../../../GCAM/URL_MANAGER'
+import Footer from '@/Components/gcam/footer'
 export async function getAllPathsForDeveloperPage(){
   const paths = []
   const possiblePaths = []
@@ -98,7 +99,7 @@ export default function Developer({data , brands, developers,developer}) {
         "@type": "Product",
         "name": "Google Camera Ports",
     
-        "description": ${description} ,
+        "description": "${description}" ,
         "brand": {
           "@type": "Brand",
           "name": "Gcam APK"
@@ -143,6 +144,7 @@ const content = 'font-thin text-xl'
     </p>
     <GcamColorfulPoster gcams = {GcamJson} heading = {'developer'}/>
     </article>
+    <Footer/>
     </>
   )
 }

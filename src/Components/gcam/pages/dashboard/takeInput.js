@@ -3,7 +3,7 @@ import useInput from '../../Hooks/useInput';
 import { Button } from 'react-bootstrap'
 import { CreatePageState } from '../../EnumStates';
 import GCAM_DB_COLLECTION from '../../mongodb/DB_Name_State';
-import { InsertOperation } from '@/Components/API/POST_API_Manager';
+import { InsertOperation } from '@/API/POST_API_Manager';
 import { useState } from 'react';
 import axios from 'axios';
 

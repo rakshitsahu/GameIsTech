@@ -6,9 +6,9 @@ import TakeInput from "@/Components/gcam/pages/dashboard/takeInput";
 
 import { CreatePageState } from "@/Components/gcam/EnumStates";
 import { IoCloseCircle } from "react-icons/io5";
-import { DeleteMany , FindAllOperation } from "@/Components/API/POST_API_Manager";
+import { DeleteMany , FindAllOperation } from "@/API/POST_API_Manager";
 import GCAM_DB_COLLECTION from "@/Components/gcam/mongodb/DB_Name_State";
-import { Authorization } from "@/Components/API/POST_API_Manager";
+import { Authorization } from "@/API/POST_API_Manager";
 function getButton(label){
   return <Button
   className="bg-blue-600 p-3 rounded-lg m-3"

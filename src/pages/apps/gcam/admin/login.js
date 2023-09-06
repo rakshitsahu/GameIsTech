@@ -1,9 +1,9 @@
-import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
-import GCAM_API_STATE from '@/Components/API/API_States'
+import { GCAM_GET_REQUEST } from '@/API/GET_API_Manager'
+import GCAM_API_STATE from '@/API/API_States'
 import axios from 'axios'
 import React, { useState } from 'react'
 import { setCookie , getCookie } from "cookies-next";
-import { LogIn } from '@/Components/API/POST_API_Manager';
+import { LogIn } from '@/API/POST_API_Manager';
 const cryptoJs = require('crypto-js')
 const jwt = require('jsonwebtoken')
 export default function Login() {

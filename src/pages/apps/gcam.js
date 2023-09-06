@@ -1,5 +1,5 @@
-import GCAM_API_STATE from '@/Components/API/API_States'
-import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
+import GCAM_API_STATE from '@/API/API_States'
+import { GCAM_GET_REQUEST } from '@/API/GET_API_Manager'
 import Navbar from '@/Components/gcam/Navbar'
 import DeviceBrands from '@/Components/gcam/deviceBrands'
 import DisplayDevelopers from '@/Components/gcam/displayDevelopers'
@@ -8,10 +8,7 @@ import DisplayGenericGcams from '@/Components/gcam/displayGenericGcams'
 import Footer from '@/Components/gcam/footer'
 import Head from 'next/head'
 
-
 export async function  getStaticProps() {
-  // const { req, query, res, asPath, pathname } = context;
-  // const hostname = req.headers.host
 
   const [developersData, gcamVersionsData, phoneData, genericGcams] = await Promise.all([
     GCAM_GET_REQUEST(GCAM_API_STATE.Developers),
@@ -32,13 +29,6 @@ Object.keys(gcamVersionsData[0]).map(
   }
 )
 gcamVersions.splice(0 , 1)
-// console.log(gcamVersions)
-
-// console.log(developersData)
-// console.log(gcamVersions)
-// console.log(gcamData)
-// console.log(phoneData)
-// console.log(genericGcams)
 
 const developers = developersData.map(({ developerName }) => ({ name : developerName }))
 const brands = phoneData.map(({ phoneBrand }) => ({ name : phoneBrand }))

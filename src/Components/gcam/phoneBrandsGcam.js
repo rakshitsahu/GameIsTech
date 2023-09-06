@@ -5,6 +5,7 @@ import {GiProcessor} from "react-icons/gi"
 import DisplayProcessors from '@/Components/gcam/displayProcessorsLogo'
 import DisplayDeviceBrandLogo from './displayDeviceBrandLogo';
 import Link from 'next/link';
+import { encryptString } from '../../../GCAM/URL_MANAGER';
 export default function PhoneBrandsGcam({gcams, heading , prefix }) {
   if(!gcams)
   gcams = []
@@ -25,7 +26,7 @@ export default function PhoneBrandsGcam({gcams, heading , prefix }) {
         Object.keys(gcams).map(  (index) => {
         //console.log ( 'the brand is ', brands.index)
           return (
-            <Link key={index} value={gcams[index].name} href={`/apps/gcam/phones/${gcams[index].brand.replaceAll(' ', '-' )}/${gcams[index].name.replaceAll(' ', '-' )}`} >
+            <Link key={index} value={gcams[index].name} href={`/apps/gcam/phones/${ encryptString(gcams[index].brand) }/${encryptString(gcams[index].name)}`} >
             <div key={index} value={gcams[index].name}  className='grid group/item bg-white rounded-3xl p-4'>
             <div  className={`flex justify-center bg-black text-5xl font-extrabold drop-shadow-2xl rounded-3xl p-5 bg-clip-text text-transparent bg-gradient-to-r ${colors[color++ % colors.length]} `}>
             { gcams[index].name } 

@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { FcCameraIdentification, FcInfo } from "react-icons/fc";
 import { MdDateRange, MdOutlineDeveloperMode } from "react-icons/md";
+import { encryptString } from '../../../GCAM/URL_MANAGER';
 
 export default function GcamColorfulPoster({gcams, heading , prefix , download }) {
   if(!gcams)
@@ -18,9 +19,12 @@ export default function GcamColorfulPoster({gcams, heading , prefix , download }
     <div className=' grid lg:grid-cols-2 overflow-clip xl:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 justify-center w-full rounded-md p-5 shadow-2xl drop-shadow-2xl gap-14 '>
     {
         Object.keys(gcams).map(  (index) => {
-        //console.log ( 'the brand is ', brands.index)
+        console.log ( 'the brand is ', gcams[index].developer)
+        const encryptedDeveloper = encryptString(gcams[index].developer)
+        const encryptedGcamName = encryptString(gcams[index].name)
+        console.log(encryptedDeveloper)
           return (
-            <Link key={index} value={gcams[index].name} href={`/apps/gcam/download/${gcams[index].developer}/${gcams[index].name}`} >
+            <Link key={index} value={gcams[index].name} href={`/apps/gcam/download/${encryptedDeveloper}/${encryptedGcamName}`} >
             
             <div  className='grid group/item bg-white rounded-3xl p-4'>
             <div  className={`flex justify-center  bg-black md:xl lg:text-3xl xl:text-3xl font-extrabold drop-shadow-2xl rounded-3xl p-5 bg-clip-text text-transparent bg-gradient-to-r ${colors[color++ % colors.length]} `}>

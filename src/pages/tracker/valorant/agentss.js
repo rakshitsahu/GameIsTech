@@ -4,8 +4,8 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import Navbar from "@/Components/valorant/Navbar";
 import { useRouter } from "next/router";
-import GCAM_API_STATE from "@/Components/API/API_States";
-import { GCAM_GET_REQUEST } from "@/Components/API/GET_API_Manager";
+import GCAM_API_STATE from "@/API/API_States";
+import { GCAM_GET_REQUEST } from "@/API/GET_API_Manager";
 var AgentMap = new Map();
 function addValueToKey(key, value) {
   // Shorcut || returns left side if it is "truthy," or the right otherwise.

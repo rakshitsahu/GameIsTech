@@ -1,36 +1,40 @@
-import React from 'react'
-import axios from 'axios'
+import GCAM_API_STATE from '@/API/API_States'
+import { GCAM_GET_REQUEST } from '@/API/GET_API_Manager'
 import Navbar from '@/Components/gcam/Navbar'
-import {BsReddit , BsTelegram , BsCamera2} from 'react-icons/bs'
-import { SiXdadevelopers } from "react-icons/si"
 import DisplayDevelopers from '@/Components/gcam/displayDevelopers'
 import DisplayGcamVersions from '@/Components/gcam/displayGcamVersions'
-import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
-import GCAM_API_STATE from '@/Components/API/API_States'
-import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
-import { FindAllOperation } from '@/Components/API/POST_API_Manager'
 import DisplayGenericGcams from '@/Components/gcam/displayGenericGcams'
 import Head from 'next/head'
-import Link from 'next/link'
-export async function getStaticPaths(){
-  const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
+import { BsCamera2, BsReddit, BsTelegram } from 'react-icons/bs'
+import { SiXdadevelopers } from "react-icons/si"
+import { encryptString} from '../../../../../GCAM/URL_MANAGER'
+export async function getAllPathsForPhoneDownloadPage(){
   const paths = []
-   phoneData.map((phoneData) =>{
+  const possiblePaths = []
+  const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
+  phoneData.map((phoneData) =>{
     phoneData.data.map(
       (phone) =>{
-        const phoneName = phone.phoneName.replaceAll(" ", "-")
-        const phoneBrand = phoneData.phoneBrand.replaceAll(" ", "-")
+        const phoneName = phone.phoneName
+        const phoneBrand = phoneData.phoneBrand
+        // console.log(phoneName)
         paths.push({
           params: {
             phone : [phoneBrand, phoneName],
           },
         })
-       
+        possiblePaths.push([encryptString(phoneBrand), encryptString(phoneName)])
       }
     )
   })
+  return [paths , possiblePaths]
+}
+export async function getStaticPaths(){
+  const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
+  const pathData = await getAllPathsForPhoneDownloadPage()
+  const paths = pathData[0]
 
-  // console.log('the paths are ' , paths)
+  // console.log('the paths are ' , pathData[1])
     return {
         paths : [],
         fallback: 'blocking'
@@ -38,23 +42,11 @@ export async function getStaticPaths(){
 }
 
 export async function getStaticProps(context){
-  // console.log('working here')
   const phone = context.params.phone
-  // console.log( 'the phone is' ,phone)
-  // console.log('working here',phone[0], phone[1])
-  let phoneBrand = phone[0].replaceAll("-/-", "/");
-   phoneBrand = phone[0].replaceAll("-", " ");
-  let phoneName = phone[1].replaceAll("-/-", "/");
-  phoneName = phone[1].replaceAll("-", " ");
 
-  // console.log(phoneBrand)
-  // console.log(phoneName)
-  // if(data.length == 0)
-  // {
-  //   return {
-  //     notFound: true,
-  //   }
-  // }
+  let phoneBrand = phone[0]
+  let phoneName = phone[1]
+
 
   const [developersData, phoneData, genericGcams, gcamVersionsData] = await Promise.all([
     GCAM_GET_REQUEST(GCAM_API_STATE.Developers),
@@ -162,7 +154,7 @@ export default function GcamDownloadForPhone({phoneBrand, phoneName , developers
     <Navbar brands={brands} developers={developers}/>
     <article className='grid justify-items-center m-3'>
     <h1 className='text-3xl font-thin mt-3'> Download Google Camera Ports For {phoneBrand} {phoneName} </h1>
-    <p className=' prose prose-xl font-thin text-xl flex flex-wrap m-3 bg-white shadow-inner shadow-2xl contrast-100 brightness-90 p-3 rounded-3xl'> 
+    <p className=' prose prose-xl font-thin text-xl flex flex-wrap m-3 bg-white  shadow-2xl contrast-100 brightness-90 p-3 rounded-3xl'> 
     {GcamDescription}
     </p>
     <div className='mt-3'>

@@ -1,21 +1,32 @@
-import GCAM_API_STATE from '@/Components/API/API_States'
-import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
+import GCAM_API_STATE from '@/API/API_States'
+import { GCAM_GET_REQUEST } from '@/API/GET_API_Manager'
 import Navbar from '@/Components/gcam/Navbar'
 import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
 import Head from 'next/head'
+import { encryptString } from '../../../../../GCAM/URL_MANAGER'
+export async function getAllPathsForDeveloperPage(){
+  const paths = []
+  const possiblePaths = []
+  const developersData = await GCAM_GET_REQUEST(GCAM_API_STATE.Developers)
+  const developers = developersData.map(({ developerName }) => ({ name : developerName }))
+  developers.map( (element)=>{
+    // console.log(element)
+    paths.push({
+      params:{
+      developer : element.name,
+  }
+})
+    possiblePaths.push(encryptString(element.name))
+  })
+  return [paths , possiblePaths]
+}
 export async function getStaticPaths(){
   const developersData = await GCAM_GET_REQUEST(GCAM_API_STATE.Developers)
   const developers = developersData.map(({ developerName }) => ({ name : developerName }))
     //   console.log( 'gcam versions are', res)
-      const paths = developers.map( (element)=>{
-        // console.log(element)
-        return {
-            params:{
-            developer : element.name,
-        },
-    }
-      })
-      // console.log( 'paths are' , paths )
+  const pathsData = await getAllPathsForDeveloperPage()
+      const paths = pathsData[0]
+      // console.log( 'paths are' , pathsData[1] )
       return {
         paths : [],
         fallback: 'blocking'

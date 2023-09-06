@@ -1,34 +1,69 @@
-import GCAM_API_STATE from "@/Components/API/API_States";
-import { GCAM_GET_REQUEST } from "@/Components/API/GET_API_Manager";
+import GCAM_API_STATE from "@/API/API_States";
+import { GCAM_GET_REQUEST } from "@/API/GET_API_Manager";
 import GCAM_URL_STATE from "./GCAM_URL_STATE";
-const url = process.env.URL + "/gcam/";
+import { getAllPathsForVersionPage } from "@/pages/apps/gcam/version/[version]";
+import { getAllPathsForDeveloperPage } from "@/pages/apps/gcam/developer/[developer]";
+import { getAllPathsForPhonePage } from "@/pages/apps/gcam/phones/[phone]";
+import { getAllPathsForPhoneDownloadPage } from "@/pages/apps/gcam/phones/[...phone]";
+import { getAllPathsForGcamDownload } from "@/pages/apps/gcam/download/[...gcam]";
+import { encryptString } from "../../../../GCAM/URL_MANAGER";
+const url = "https://gameistech.com";
 
-async function getUrls(prefix, STATE) {
-  const result = await GCAM_GET_REQUEST(STATE);
+
+async function getGcamVersions() {
+  const result = await getAllPathsForVersionPage()
+  // console.log(result[1])
   var urls = [];
-  
-  result.forEach((element) => {
-    urls.push(url + prefix + `${element.name}`);
+  result[1].forEach((element) => {
+    urls.push( url + "/apps/gcam/version/"+ `${element}`);
+  });
+  return urls;
+}
+async function getGcamDeveloper() {
+  const result = await getAllPathsForDeveloperPage()
+  // console.log(result[1])
+  var urls = [];
+  result[1].forEach((element) => {
+    urls.push( url + "/apps/gcam/developer/"+ `${element}`);
+  });
+  return urls;
+}
+async function getGcamPhoneBrands() {
+  const result = await getAllPathsForPhonePage()
+  // console.log(result[1])
+  var urls = [];
+  result[1].forEach((element) => {
+    urls.push( url + "/apps/gcam/phones/"+ `${element}`);
   });
   return urls;
 }
 
-async function getPhonePageUrls(prefix, STATE) {
-  const result = await GCAM_GET_REQUEST(STATE);
+async function getGcamPhone() {
+  const result = await getAllPathsForPhoneDownloadPage()
+  // console.log(result[1])
   var urls = [];
-  result.forEach((element) => {
-    const brandName = element.brand.replaceAll(" ", "-");
-    const deviceName = element.name.replaceAll(" ", "-");
-    urls.push(url + prefix + `${brandName}/${deviceName}`);
+  result[1].forEach((element) => {
+    urls.push( url + "/apps/gcam/phones/"+ `${element[0]}/${element[1]}`);
   });
   return urls;
 }
+
+async function getGcamDownloadPage() {
+  const result = await getAllPathsForGcamDownload()
+  // console.log(result[0])
+  var urls = [];
+  result[1].forEach((element) => {
+    urls.push( url + "/apps/gcam/download/"+ `${element[0]}/${element[1]}`);
+  });
+  return urls;
+}
+
 async function getDownlaodUrl(prefix, STATE) {
   const result = await GCAM_GET_REQUEST(STATE);
   var urls = [];
   result.forEach((element) => {
-    const developerName = element.developerName.replaceAll(" ", "-");
-    const gcamName = element.name.replaceAll(" ", "-");
+    const developerName = encryptString(element.developerName);
+    const gcamName = encryptString(element.name);
     urls.push(url + prefix + `${developerName}/${gcamName}`);
   });
   return urls;
@@ -36,39 +71,40 @@ async function getDownlaodUrl(prefix, STATE) {
  export async function GCAM_URLS(STATE) {
   switch (STATE) {
     case GCAM_URL_STATE.GcamVersionPage:
-      return getUrls("version/" , GCAM_API_STATE.GcamVersions);
+      return getGcamVersions()
       break;
     case GCAM_URL_STATE.DeveloperPage:
-      return getUrls("developer/" , GCAM_API_STATE.DeveloperNames);
+      return getGcamDeveloper();
       break;
     case GCAM_URL_STATE.PhoneBrandPage:
-      return getUrls("phones/" , GCAM_API_STATE.PhoneBrands);
+      return getGcamPhoneBrands();
       break;
     case GCAM_URL_STATE.PhonePage:
-      return getPhonePageUrls("phones/" , GCAM_API_STATE.GcamPost);
+      return getGcamPhone();
       break;
     case GCAM_URL_STATE.DownloadPage:
-      return getDownlaodUrl("download/" , GCAM_API_STATE.Gcam);
-      break;
-    case GCAM_URL_STATE.AndroidVersionPage:
-        const urls = getUrls("android/" , GCAM_API_STATE.Androidversions);
-        console.log(urls)
-      return urls
+      return getGcamDownloadPage() ;
       break;
     case GCAM_URL_STATE.Home:
       return [url];
       break;
     case GCAM_URL_STATE.All:
-        const GcamVersionPage = await getUrls("version/" , GCAM_API_STATE.GcamVersions);
-        const DeveloperPage =await getUrls("developer/" , GCAM_API_STATE.DeveloperNames);
-        const PhoneBrandPage =await getUrls("phones/" , GCAM_API_STATE.PhoneBrands);
-        const PhonePage =await getPhonePageUrls("phones/" , GCAM_API_STATE.GcamPost);
-        const DownloadPage =await getDownlaodUrl("download/" , GCAM_API_STATE.Gcam);
-        const AndroidVersionPage =await getUrls("android/" , GCAM_API_STATE.Androidversions);
+      const [GcamVersionPage, DeveloperPage, PhoneBrandsPage, GcamPage , GcamDownloadPage] = await Promise.all([
+        getGcamVersions(),
+        getGcamDeveloper(),
+        getGcamPhoneBrands(),
+        getGcamPhone(),
+        getGcamDownloadPage()
+      ])
+        .then((results) => {
+          return results
+        })
+
         const home = [url]
-        const allUrls = [...GcamVersionPage, ...DeveloperPage, ...PhoneBrandPage, ...PhonePage , ...DownloadPage,
-        ...AndroidVersionPage , ...home
+        const allUrls = [...GcamVersionPage, ...DeveloperPage, ...PhoneBrandsPage, ...GcamPage , ...GcamDownloadPage,
+         ...home
          ]
+         console.log(allUrls.length)
       return allUrls;
       break;
     default:

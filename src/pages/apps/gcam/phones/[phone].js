@@ -1,22 +1,33 @@
-import GCAM_API_STATE from '@/Components/API/API_States'
-import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
-import { FindAllOperation } from '@/Components/API/POST_API_Manager'
+import GCAM_API_STATE from '@/API/API_States'
+import { GCAM_GET_REQUEST } from '@/API/GET_API_Manager'
+import { FindAllOperation } from '@/API/POST_API_Manager'
 import Navbar from '@/Components/gcam/Navbar'
 import DisplayPhoneBrandGcams from '@/Components/gcam/displayPhoneBrandGcams'
 import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
 import Head from 'next/head'
+import {  encryptString } from '../../../../../GCAM/URL_MANAGER'
+
+export async function getAllPathsForPhonePage(){
+  const paths = []
+  const possiblePaths = []
+  const res  = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
+  // console.log( 'gcam versions are', res)
+  res.map( (element)=>{
+    paths.push({
+      params:{
+      phone : element.phoneBrand,
+  },
+  }
+  )
+  possiblePaths.push(encryptString(element.phoneBrand))
+    })
+  return [paths , possiblePaths]
+}
 export async function getStaticPaths(){
   // console.log('working till heere')
-    const res  = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
-    // console.log( 'gcam versions are', res)
-      const paths = res.map( (element)=>{
-        return {
-            params:{
-            phone : element.phoneBrand,
-        },
-    }
-      })
-      // console.log( 'paths are' , paths )
+    const pathData = await getAllPathsForPhonePage()
+    const paths = pathData[0]
+      // console.log( 'paths are' , pathData[1] )
       return {
         paths : [] ,
         fallback: 'blocking'
@@ -110,10 +121,11 @@ export default function Phones({data, phone , brands, developers}) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </Head>
     <Navbar brands={brands} developers = {developers}/>
+    <article>
     <center><h1 className='text-3xl font-thin'> Download Google Camera Ports for {phone} Devices</h1></center>
     <DisplayPhoneBrandGcams phoneData = {GcamJson} />
-    {console.log(GcamJson)}
-    {phone}
+    </article>
+
     
     </>
   )

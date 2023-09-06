@@ -10,7 +10,7 @@ export default function DisplayGenericGcams({genericGcams}) {
     Object.keys(genericGcams).map(  (index) => {
         return (
             <div key={index} >
-            <center><h4 className='text-3xl font-bold mt-3'> Download Stable Gcam APK's for {genericGcams[index].requiredAndroidVersion} </h4>
+            <center><h4 className='text-3xl font-bold mt-3'> Download Stable Gcam APK&apos;s for {genericGcams[index].requiredAndroidVersion} </h4>
             <div className='my-6 font-2xl'> {genericGcams[index].gcamSummary} </div>
             </center>
             <div className='mt-3'>

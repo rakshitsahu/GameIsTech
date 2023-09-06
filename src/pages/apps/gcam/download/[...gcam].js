@@ -1,12 +1,13 @@
-import GCAM_API_STATE from '@/Components/API/API_States'
-import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
-import { FindAllOperation } from '@/Components/API/POST_API_Manager'
+import GCAM_API_STATE from '@/API/API_States'
+import { GCAM_GET_REQUEST } from '@/API/GET_API_Manager'
+import { FindAllOperation } from '@/API/POST_API_Manager'
 import Navbar from '@/Components/gcam/Navbar'
 import GcamDownloadPoster from '@/Components/gcam/GcamDownloadPoster'
 import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
 import Head from 'next/head'
+import { encryptString } from '../../../../../GCAM/URL_MANAGER'
 
-async function getAllPathsForGcamDownload(toFind = null){
+export async function getAllPathsForGcamDownload(toFind = null){
   const gcamJson = await GCAM_GET_REQUEST(GCAM_API_STATE.Gcam)
   const stableGcamJson = await GCAM_GET_REQUEST(GCAM_API_STATE.Generic)
   // console.log(stableGcamJson)
@@ -18,7 +19,7 @@ async function getAllPathsForGcamDownload(toFind = null){
 
       (gcam) =>{
         
-        const gcamName = gcam.name.replaceAll(" ", "-")
+        const gcamName = gcam.name
         const developer = gcam.developer
         // console.log(gcamName , developer)
         if(toFind && gcamName === toFind[1] && developer === toFind[0] ){
@@ -29,7 +30,7 @@ async function getAllPathsForGcamDownload(toFind = null){
             gcam : [developer, gcamName],
           },
         })
-        possiblePaths.push([developer, gcamName])
+        possiblePaths.push([encryptString(developer), encryptString(gcamName)])
       }
     )
   })
@@ -39,7 +40,7 @@ async function getAllPathsForGcamDownload(toFind = null){
 
       (gcam) =>{
         
-        const gcamName = gcam.name.replaceAll(" ", "-")
+        const gcamName = gcam.name
         const developer = gcam.developer
         // console.log(gcamName , developer)
         // console.log(gcamName , developer)
@@ -55,12 +56,14 @@ async function getAllPathsForGcamDownload(toFind = null){
       }
     )
   })
+  if(!toFind)
+  return [paths, possiblePaths]
   return [paths, result]
 }
 export async function getStaticPaths(){
   const pathArray = await getAllPathsForGcamDownload()
   const paths = pathArray[0]
-  // console.log(paths)
+  console.log(pathArray[1])
   return {
     paths : [],
     fallback: 'blocking'
@@ -108,7 +111,7 @@ export async function getStaticProps(context){
 export default function GcamDownload({data , brands, developers , gcamParams}) {
 
   const GcamJson = data;
-  const developer = gcamParams ? gcamParams[0].replaceAll('-', ' '):''
+  const developer = gcamParams[0]
   const apkName = gcamParams[1]
   const description = `Download ${apkName} APK developed by ${developer}`
   const title = `${developer} - ${apkName} | Gcam`

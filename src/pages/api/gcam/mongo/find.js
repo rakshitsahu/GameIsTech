@@ -1,11 +1,10 @@
 
 // import GCAM_DB_STATE from "@/Components/gcam/mongodb/DB_Name_State";
 
-import connectMongo from "../../../../../middleware/ConnectMongo";
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
-export async function handler(req , res){
+async function MongoFind(req , res){
   console.log( 'the req body is', req.body);
   console.log('the type of req body is', typeof req.body);
   const body = req.body
@@ -41,4 +40,4 @@ export async function handler(req , res){
       }
 
 }
-export default handler
+export default MongoFind

@@ -4,12 +4,12 @@ import { Button } from 'react-bootstrap'
 import AdminNavbar from '@/Components/gcam/adminNavbar'
 import { version } from 'mongoose'
 import axios from 'axios'
-import GCAM_API_STATE from '@/Components/API/API_States'
-import { GCAM_GET_REQUEST } from '@/Components/API/GET_API_Manager'
+import GCAM_API_STATE from '@/API/API_States'
+import { GCAM_GET_REQUEST } from '@/API/GET_API_Manager'
 import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
 import { setCookie , getCookie , hasCookie } from "cookies-next";
-import { UpdateOne , FindAllOperation , InsertOperation } from '@/Components/API/POST_API_Manager'
-import { Authorization } from '@/Components/API/POST_API_Manager'
+import { UpdateOne , FindAllOperation , InsertOperation } from '@/API/POST_API_Manager'
+import { Authorization } from '@/API/POST_API_Manager'
 export const getServerSideProps = async ({ req , res }) =>{
   // Fetch data from external API
     const authentication = await Authorization(req , res)

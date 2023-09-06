@@ -2,8 +2,9 @@ import Image from "next/image";
 import { Inter } from "next/font/google";
 import Link from "next/link";
 import Head from "next/head";
-import GCAM_API_STATE from "@/Components/API/API_States";
-import { GCAM_GET_REQUEST } from "@/Components/API/GET_API_Manager";
+import GCAM_API_STATE from "@/API/API_States";
+import { GCAM_GET_REQUEST } from "@/API/GET_API_Manager";
+import Script from 'next/script'
 const inter = Inter({ subsets: ["latin"] });
 export async function getStaticProps(){
   const data = {}
@@ -112,7 +113,7 @@ export default function Home() {
 }
   return (
     <>
-<article>
+
 <Head>
 <title>{title}</title>
 <meta
@@ -127,7 +128,22 @@ export default function Home() {
   dangerouslySetInnerHTML={addPageInfo()}
   key="product-jsonld"
 />
-</Head>
+
+</Head>    
+<div className="container">
+
+<Script src="https://www.googletagmanager.com/gtag/js?id=G-NQJL28G8E0" />
+<Script id="google-analytics">
+  {`
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-NQJL28G8E0');
+  `}
+</Script>
+</div>
+<article>
 <div className="shadow-lg overflow-hidden">
 <nav className="flex flex-wrap gap-5 px-6 text-white bg-neutral-900 justify-between">
   <div className="flex  ">

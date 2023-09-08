@@ -159,7 +159,7 @@
             }
         },
         {
-            "phoneName": "Asus ZenFone 8 / Fip",
+            "phoneName": "Asus ZenFone 8 | Fip",
             "source": {
                 "official": [
                     {
@@ -367,7 +367,7 @@
             }
         },
         {
-            "phoneName": "Google Pixel 6 / 6 Pro",
+            "phoneName": "Google Pixel 6 | 6 Pro",
             "source": {
                 "official": [
                     {
@@ -392,7 +392,7 @@
             }
         },
         {
-            "phoneName": "Google Pixel 7 / 7 Pro",
+            "phoneName": "Google Pixel 7 | 7 Pro",
             "source": {
                 "official": [
                     {
@@ -1052,7 +1052,7 @@
             }
         },
         {
-            "phoneName": "Motorola Edge 30 Pro / Edge Plus 2022 / Edge X30",
+            "phoneName": "Motorola Edge 30 Pro | Edge Plus 2022 | Edge X30",
             "source": {
                 "xda": [
                     {
@@ -1544,7 +1544,7 @@
             }
         },
         {
-            "phoneName": "Motorola Moto G100 / EDGE S",
+            "phoneName": "Motorola Moto G100 | EDGE S",
             "source": {
                 "official": [
                     {
@@ -1935,7 +1935,7 @@
             }
         },
         {
-            "phoneName": "OnePlus 3/3T",
+            "phoneName": "OnePlus 3|3T",
             "source": {
                 "official": [
                     {
@@ -1968,7 +1968,7 @@
             }
         },
         {
-            "phoneName": "OnePlus 5/5T",
+            "phoneName": "OnePlus 5|5T",
             "source": {
                 "official": [
                     {
@@ -2001,7 +2001,7 @@
             }
         },
         {
-            "phoneName": "OnePlus 6/6T",
+            "phoneName": "OnePlus 6|6T",
             "source": {
                 "official": [
                     {
@@ -2523,7 +2523,7 @@
             }
         },
         {
-            "phoneName": "Poco F2 Pro / Redmi K30 Pro",
+            "phoneName": "Poco F2 Pro | Redmi K30 Pro",
             "source": {
                 "official": [
                     {
@@ -2554,7 +2554,7 @@
             }
         },
         {
-            "phoneName": "Poco F3 / Redmi K40",
+            "phoneName": "Poco F3 | Redmi K40",
             "source": {
                 "official": [
                     {
@@ -2614,7 +2614,7 @@
             }
         },
         {
-            "phoneName": "Poco F4 / Redmi K40S",
+            "phoneName": "Poco F4 | Redmi K40S",
             "source": {
                 "official": [
                     {
@@ -2647,7 +2647,7 @@
             }
         },
         {
-            "phoneName": "Poco F5 / Redmi Note 12 Turbo",
+            "phoneName": "Poco F5 | Redmi Note 12 Turbo",
             "source": {
                 "telegram": [
                     {
@@ -2668,7 +2668,7 @@
             }
         },
         {
-            "phoneName": "Poco F5 Pro / Redmi K60",
+            "phoneName": "Poco F5 Pro | Redmi K60",
             "source": {
                 "telegram": [
                     {
@@ -2743,7 +2743,7 @@
             }
         },
         {
-            "phoneName": "Poco X2 / Redmi K30",
+            "phoneName": "Poco X2 | Redmi K30",
             "source": {
                 "xda": [
                     {
@@ -3117,7 +3117,7 @@
             }
         },
         {
-            "phoneName": "Realme 7i / Narzo 20",
+            "phoneName": "Realme 7i | Narzo 20",
             "source": {
                 "official": [
                     {
@@ -3152,7 +3152,7 @@
             }
         },
         {
-            "phoneName": "Realme 9 5G SE / Q3s",
+            "phoneName": "Realme 9 5G SE | Q3s",
             "source": {
                 "xda": [
                     {
@@ -3192,7 +3192,7 @@
             }
         },
         {
-            "phoneName": "Realme C2 / Narzo 10A",
+            "phoneName": "Realme C2 | Narzo 10A",
             "source": {
                 "telegram": [
                     {
@@ -3230,7 +3230,7 @@
             }
         },
         {
-            "phoneName": "Realme GT Neo 2 / 3T",
+            "phoneName": "Realme GT Neo 2 | 3T",
             "source": {
                 "telegram": [
                     {
@@ -3633,7 +3633,7 @@
             }
         },
         {
-            "phoneName": "Samsung Galaxy A22 4G / 5G",
+            "phoneName": "Samsung Galaxy A22 4G | 5G",
             "source": {
                 "official": [
                     {
@@ -3717,7 +3717,7 @@
             }
         },
         {
-            "phoneName": "Samsung Galaxy A32 4G / 5G",
+            "phoneName": "Samsung Galaxy A32 4G | 5G",
             "source": {
                 "official": [
                     {
@@ -3800,7 +3800,7 @@
             }
         },
         {
-            "phoneName": "Samsung Galaxy A52 4G / 5G",
+            "phoneName": "Samsung Galaxy A52 4G | 5G",
             "source": {
                 "official": [
                     {
@@ -3885,7 +3885,7 @@
             }
         },
         {
-            "phoneName": "Samsung Galaxy A72 / 5G",
+            "phoneName": "Samsung Galaxy A72 | 5G",
             "source": {
                 "official": [
                     {
@@ -4347,7 +4347,7 @@
             }
         },
         {
-            "phoneName": "Samsung Galaxy S20 FE / 5G",
+            "phoneName": "Samsung Galaxy S20 FE | 5G",
             "source": {
                 "official": [
                     {
@@ -4386,7 +4386,7 @@
             }
         },
         {
-            "phoneName": "Samsung Galaxy S21 / S21+",
+            "phoneName": "Samsung Galaxy S21 | S21+",
             "source": {
                 "official": [
                     {
@@ -4531,7 +4531,7 @@
             }
         },
         {
-            "phoneName": "Samsung Galaxy S22/Plus/Ultra",
+            "phoneName": "Samsung Galaxy S22|Plus|Ultra",
             "source": {
                 "telegram": [
                     {
@@ -4552,7 +4552,7 @@
             }
         },
         {
-            "phoneName": "Samsung Galaxy S23/Plus/Ultra",
+            "phoneName": "Samsung Galaxy S23|Plus|Ultra",
             "source": {
                 "telegram": [
                     {
@@ -4760,7 +4760,7 @@
     ],
     "Xiaomi": [
         {
-            "phoneName": "Xiaomi 11T / 11T Pro",
+            "phoneName": "Xiaomi 11T | 11T Pro",
             "source": {
                 "xda": [
                     {
@@ -4777,7 +4777,7 @@
             }
         },
         {
-            "phoneName": "Xiaomi 12 / 12 Pro",
+            "phoneName": "Xiaomi 12 | 12 Pro",
             "source": {
                 "xda": [
                     {
@@ -4944,7 +4944,7 @@
             }
         },
         {
-            "phoneName": "Xiaomi Mi 9/Pro",
+            "phoneName": "Xiaomi Mi 9|Pro",
             "source": {
                 "xda": [
                     {
@@ -4969,7 +4969,7 @@
             }
         },
         {
-            "phoneName": "Xiaomi Mi 9 Lite / Xiaomi Mi CC9",
+            "phoneName": "Xiaomi Mi 9 Lite | Xiaomi Mi CC9",
             "source": {
                 "xda": [
                     {
@@ -5033,7 +5033,7 @@
             }
         },
         {
-            "phoneName": "Xiaomi Mi 10 / 10 Pro / 10 Lite",
+            "phoneName": "Xiaomi Mi 10 | 10 Pro | 10 Lite",
             "source": {
                 "official": [
                     {
@@ -5078,7 +5078,7 @@
             }
         },
         {
-            "phoneName": "Xiaomi Mi 10T / 10T Pro",
+            "phoneName": "Xiaomi Mi 10T | 10T Pro",
             "source": {
                 "xda": [
                     {
@@ -5151,7 +5151,7 @@
             }
         },
         {
-            "phoneName": "Xiaomi 12T Pro / Redmi K50 Ultra",
+            "phoneName": "Xiaomi 12T Pro | Redmi K50 Ultra",
             "source": {
                 "xda": [
                     {
@@ -5409,7 +5409,7 @@
             }
         },
         {
-            "phoneName": "Xiaomi POCO / Pocophone",
+            "phoneName": "Xiaomi POCO | Pocophone",
             "source": {
                 "official": [
                     {
@@ -5608,7 +5608,7 @@
             }
         },
         {
-            "phoneName": "Xiaomi Redmi 9 / 9T",
+            "phoneName": "Xiaomi Redmi 9 | 9T",
             "source": {
                 "telegram": [
                     {
@@ -5625,7 +5625,7 @@
             }
         },
         {
-            "phoneName": "Xiaomi Redmi 10X / 10X Pro",
+            "phoneName": "Xiaomi Redmi 10X | 10X Pro",
             "source": {
                 "xda": [
                     {
@@ -5793,7 +5793,7 @@
             }
         },
         {
-            "phoneName": "Xiaomi Redmi Note 5 / 5 Plus",
+            "phoneName": "Xiaomi Redmi Note 5 | 5 Plus",
             "source": {
                 "xda": [
                     {
@@ -5915,7 +5915,7 @@
             }
         },
         {
-            "phoneName": "Xiaomi Redmi Note 8 / 8T (2019)",
+            "phoneName": "Xiaomi Redmi Note 8 | 8T (2019)",
             "source": {
                 "official": [
                     {
@@ -6011,7 +6011,7 @@
             }
         },
         {
-            "phoneName": "Xiaomi Redmi Note 9 Pro / Max / 9S",
+            "phoneName": "Xiaomi Redmi Note 9 Pro | Max | 9S",
             "source": {
                 "official": [
                     {
@@ -6048,7 +6048,7 @@
             "source": {}
         },
         {
-            "phoneName": "Xiaomi Redmi Note 10 / Pro / Pro Max",
+            "phoneName": "Xiaomi Redmi Note 10 | Pro | Pro Max",
             "source": {
                 "telegram": [
                     {

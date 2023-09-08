@@ -1,12 +1,10 @@
 import GCAM_API_STATE from '@/API/API_States'
 import { GCAM_GET_REQUEST } from '@/API/GET_API_Manager'
-import { FindAllOperation } from '@/API/POST_API_Manager'
-import Navbar from '@/Components/gcam/Navbar'
 import GcamDownloadPoster from '@/Components/gcam/GcamDownloadPoster'
-import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
-import Head from 'next/head'
-import { encryptString } from '../../../../../GCAM/URL_MANAGER'
+import Navbar from '@/Components/gcam/Navbar'
 import Footer from '@/Components/gcam/footer'
+import Head from 'next/head'
+
 
 export async function getAllPathsForGcamDownload(toFind = null){
   const gcamJson = await GCAM_GET_REQUEST(GCAM_API_STATE.Gcam)
@@ -31,7 +29,7 @@ export async function getAllPathsForGcamDownload(toFind = null){
             gcam : [developer, gcamName],
           },
         })
-        possiblePaths.push([encryptString(developer), encryptString(gcamName)])
+        possiblePaths.push([developer, gcamName])
       }
     )
   })
@@ -61,20 +59,24 @@ export async function getAllPathsForGcamDownload(toFind = null){
   return [paths, possiblePaths]
   return [paths, result]
 }
-export async function getStaticPaths(){
-  const pathArray = await getAllPathsForGcamDownload()
-  const paths = pathArray[0]
-  console.log(pathArray[1])
-  return {
-    paths : [],
-    fallback: 'blocking'
-}
+// export async function getStaticPaths(){
+//   console.log('static path started')
+//   const pathArray = await getAllPathsForGcamDownload()
+//   console.log('get all path completed')
+//   const paths = pathArray[0]
+//   // console.log(pathArray[1])
+//   return {
+//     paths : [],
+//     fallback: 'blocking'
+// }
 
-}
+// }
 
-export async function getStaticProps(context){
-  const gcamParams = context.params.gcam
-  // console.log(gcamParams)
+export async function getServerSideProps(context){
+  let gcamParams = context.params.gcam
+  console.log('params found are' )
+  gcamParams = [gcamParams[0] , gcamParams[1]]
+  console.log('after decrypthon params are' , gcamParams)
   const [pathArray, developersData, phoneData] = await Promise.all([
     getAllPathsForGcamDownload(gcamParams),
     GCAM_GET_REQUEST(GCAM_API_STATE.Developers),
@@ -87,7 +89,7 @@ export async function getStaticProps(context){
 
   // console.log(pathArray[0])
   const data = pathArray[1]
-  
+  console.log('data is null ' , data)
   if(data == null)
   {
     return {

@@ -2,7 +2,6 @@ import { Tooltip } from '@nextui-org/react'
 import Link from 'next/link'
 import { BsCamera2, BsReddit, BsTelegram } from 'react-icons/bs'
 import { SiXdadevelopers } from "react-icons/si"
-import { encryptString } from '../../../GCAM/URL_MANAGER'
 export default function DisplayPhoneBrandGcams({phoneData}){
     // console.log('phonedata is', phoneData)
     // console.log(Object.keys(phoneData[0]))
@@ -14,8 +13,8 @@ export default function DisplayPhoneBrandGcams({phoneData}){
     <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 md:grid-cols-3 xl:grid-cols-4 gap-3 justify-center w-full rounded-md p-3 shadow-2xl drop-shadow-2xl '>
     {
         Object.keys(phoneData[0].data).map(  (index) => {
-          let phoneBrand = encryptString(phoneData[0].phoneBrand)
-          let phoneName = encryptString(phoneData[0].data[index].phoneName) 
+          let phoneBrand = encodeURIComponent(phoneData[0].phoneBrand)
+          let phoneName = encodeURIComponent(phoneData[0].data[index].phoneName) 
         //console.log ( 'the brand is ', brands.index)
           return (
             <Link key={index} value={phoneData[0].phoneName} href={`/apps/gcam/phones/${phoneBrand}/${phoneName}`}>

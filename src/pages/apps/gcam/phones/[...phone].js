@@ -4,11 +4,10 @@ import Navbar from '@/Components/gcam/Navbar'
 import DisplayDevelopers from '@/Components/gcam/displayDevelopers'
 import DisplayGcamVersions from '@/Components/gcam/displayGcamVersions'
 import DisplayGenericGcams from '@/Components/gcam/displayGenericGcams'
+import Footer from '@/Components/gcam/footer'
 import Head from 'next/head'
 import { BsCamera2, BsReddit, BsTelegram } from 'react-icons/bs'
 import { SiXdadevelopers } from "react-icons/si"
-import { encryptString} from '../../../../../GCAM/URL_MANAGER'
-import Footer from '@/Components/gcam/footer'
 export async function getAllPathsForPhoneDownloadPage(){
   const paths = []
   const possiblePaths = []
@@ -24,7 +23,7 @@ export async function getAllPathsForPhoneDownloadPage(){
             phone : [phoneBrand, phoneName],
           },
         })
-        possiblePaths.push([encryptString(phoneBrand), encryptString(phoneName)])
+        possiblePaths.push([encodeURIComponent(phoneBrand), encodeURIComponent(phoneName)])
       }
     )
   })
@@ -171,7 +170,7 @@ export default function GcamDownloadForPhone({phoneBrand, phoneName , developers
               // console.log(anchorText)
               // console.log(downloadLink)
               return (
-                <div key = {source} className='m-1 p-3  p-3 rounded-full'>
+                <div key = {source} className='m-1 p-3   rounded-full'>
                 { source === 'reddit' &&  <a href={downloadLink}><div className='flex items-center underline decoration-orange-400 underline-offset-2'><BsReddit className='text-orange-400' /><button >{anchorText}</button> </div> </a>  }
                 { source === 'telegram' &&  <a href={downloadLink}><div className='flex items-center underline decoration-blue-400 underline-offset-2'><BsTelegram className='text-sky-400' /> <button >{anchorText}</button></div></a> }
                 { source === 'xda' && <a href={downloadLink}><div className='flex items-center underline decoration-red-400 underline-offset-2'><SiXdadevelopers className='text-red-400' /> <button >{anchorText}</button></div></a> }

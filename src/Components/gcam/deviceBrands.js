@@ -2,7 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 function DeviceBrands({brands}) {
   return (
-    <div className='grid grid-cols-6 lg: rounded-md p-5 shadow-2xl drop-shadow-2xl  gap-3 font-thin shadow-2xl'>
+    <div className='grid grid-cols-6 lg: rounded-md p-5 shadow-2xl drop-shadow-2xl  gap-3 font-thin'>
     {
         Object.keys(brands).map(  (index) => {
         //console.log ( 'the brand is ', brands.index)

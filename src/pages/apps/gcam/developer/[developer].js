@@ -1,10 +1,9 @@
 import GCAM_API_STATE from '@/API/API_States'
 import { GCAM_GET_REQUEST } from '@/API/GET_API_Manager'
 import Navbar from '@/Components/gcam/Navbar'
+import Footer from '@/Components/gcam/footer'
 import GcamColorfulPoster from '@/Components/gcam/gcamColorfulPoster'
 import Head from 'next/head'
-import { encryptString } from '../../../../../GCAM/URL_MANAGER'
-import Footer from '@/Components/gcam/footer'
 export async function getAllPathsForDeveloperPage(){
   const paths = []
   const possiblePaths = []
@@ -17,7 +16,7 @@ export async function getAllPathsForDeveloperPage(){
       developer : element.name,
   }
 })
-    possiblePaths.push(encryptString(element.name))
+    possiblePaths.push(encodeURIComponent(element.name))
   })
   return [paths , possiblePaths]
 }

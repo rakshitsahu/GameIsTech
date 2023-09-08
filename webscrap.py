@@ -123,7 +123,7 @@ def gcamForPhones():
             })
         # print('source is', source.keys())
         print(source)
-        phonesData.append( {"phoneName" : phoneName , "source" : source } )
+        phonesData.append( {"phoneName" : replaceSymbols(phoneName) , "source" : source } )
     phoneMap = defaultdict(list)
     for phoneData in phonesData[1:]:
         name = phoneData["phoneName"]
@@ -164,6 +164,9 @@ def extractGcamVersion(string):
                     return version
  
     return '-'
+def replaceSymbols(string):
+    string = string.replace('/','|')
+    return string
 def gatherAllData():
     extractAllDevelopersData()
     global developerList
@@ -200,7 +203,7 @@ def uploadData():
         global versionCountMap
         phonesData = gcamForPhones()
         
-        db = client["Webscrap-GCAM"]
+        db = client["Webscrap-GCAM-test"]
 
         mycol = db["phonesData"]
         resultList = [{ "phoneBrand" : key , "data" : value} for key, value in phonesData.items()]
@@ -261,7 +264,7 @@ def stableGcams():
                 info = info[:-1]
             data.append({
                     "name" :gcamName,
-                    "developer" :developer,
+                    "developer" :replaceSymbols(developer),
                     "download" : downloadLink,
                     "date" :date,
                     "info" : info,
@@ -269,7 +272,7 @@ def stableGcams():
              })
             versionCountMap[gcamVersion].append({
                     "name" :gcamName,
-                    "developer" :developer,
+                    "developer" :replaceSymbols(developer),
                     "download" : downloadLink,
                     "date" :date,
                     "info" : info,
@@ -290,9 +293,9 @@ def stableGcams():
     return gcamData
 
 # This is added so that many files can reuse the function get_database()
-# uploadData()
+uploadData()
 
-gatherAllData()
+# gatherAllData()
 # print(gcamForPhones())
 # extractAllDevelopersData()
 # print( versionCountMap , len(versionCountMap))

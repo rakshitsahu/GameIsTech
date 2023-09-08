@@ -1,12 +1,10 @@
-import GCAM_API_STATE from "@/API/API_States";
 import { GCAM_GET_REQUEST } from "@/API/GET_API_Manager";
-import GCAM_URL_STATE from "./GCAM_URL_STATE";
-import { getAllPathsForVersionPage } from "@/pages/apps/gcam/version/[version]";
 import { getAllPathsForDeveloperPage } from "@/pages/apps/gcam/developer/[developer]";
-import { getAllPathsForPhonePage } from "@/pages/apps/gcam/phones/[phone]";
-import { getAllPathsForPhoneDownloadPage } from "@/pages/apps/gcam/phones/[...phone]";
 import { getAllPathsForGcamDownload } from "@/pages/apps/gcam/download/[...gcam]";
-import { encryptString } from "../../../../GCAM/URL_MANAGER";
+import { getAllPathsForPhoneDownloadPage } from "@/pages/apps/gcam/phones/[...phone]";
+import { getAllPathsForPhonePage } from "@/pages/apps/gcam/phones/[phone]";
+import { getAllPathsForVersionPage } from "@/pages/apps/gcam/version/[version]";
+import GCAM_URL_STATE from "./GCAM_URL_STATE";
 const url = "https://gameistech.com";
 
 
@@ -62,8 +60,8 @@ async function getDownlaodUrl(prefix, STATE) {
   const result = await GCAM_GET_REQUEST(STATE);
   var urls = [];
   result.forEach((element) => {
-    const developerName = encryptString(element.developerName);
-    const gcamName = encryptString(element.name);
+    const developerName = encodeURIComponent(element.developerName);
+    const gcamName = encodeURIComponent(element.name);
     urls.push(url + prefix + `${developerName}/${gcamName}`);
   });
   return urls;

@@ -7018,7 +7018,7 @@
         },
         {
             "name": "MGC_8.1.101_A9_GV2b",
-            "developer": "cstark27/Urnyx05",
+            "developer": "cstark27|Urnyx05",
             "download": "https://www.celsoazevedo.com/files/android/google-camera/dev-bsg/f/dl88/",
             "date": "2021-01-25",
             "info": "BSG's 8.1",

@@ -1,7 +1,6 @@
 import Link from 'next/link';
 import { FcCameraIdentification, FcInfo } from "react-icons/fc";
 import { MdDateRange, MdOutlineDeveloperMode } from "react-icons/md";
-import { encryptString } from '../../../GCAM/URL_MANAGER';
 
 export default function GcamColorfulPoster({gcams, heading , prefix , download }) {
   if(!gcams)
@@ -20,8 +19,8 @@ export default function GcamColorfulPoster({gcams, heading , prefix , download }
     {
         Object.keys(gcams).map(  (index) => {
         console.log ( 'the brand is ', gcams[index].developer)
-        const encryptedDeveloper = encryptString(gcams[index].developer)
-        const encryptedGcamName = encryptString(gcams[index].name)
+        const encryptedDeveloper = encodeURIComponent(gcams[index].developer)
+        const encryptedGcamName = encodeURIComponent(gcams[index].name)
         console.log(encryptedDeveloper)
           return (
             <Link key={index} value={gcams[index].name} href={`/apps/gcam/download/${encryptedDeveloper}/${encryptedGcamName}`} >

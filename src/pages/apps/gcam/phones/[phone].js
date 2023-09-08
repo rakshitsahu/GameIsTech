@@ -3,10 +3,9 @@ import { GCAM_GET_REQUEST } from '@/API/GET_API_Manager'
 import { FindAllOperation } from '@/API/POST_API_Manager'
 import Navbar from '@/Components/gcam/Navbar'
 import DisplayPhoneBrandGcams from '@/Components/gcam/displayPhoneBrandGcams'
+import Footer from '@/Components/gcam/footer'
 import GCAM_DB_COLLECTION from '@/Components/gcam/mongodb/DB_Name_State'
 import Head from 'next/head'
-import {  encryptString } from '../../../../../GCAM/URL_MANAGER'
-import Footer from '@/Components/gcam/footer'
 import Link from 'next/link'
 
 export async function getAllPathsForPhonePage(){
@@ -21,7 +20,7 @@ export async function getAllPathsForPhonePage(){
   },
   }
   )
-  possiblePaths.push(encryptString(element.phoneBrand))
+  possiblePaths.push(encodeURIComponent(element.phoneBrand))
     })
   return [paths , possiblePaths]
 }

@@ -74,28 +74,7 @@ export async function getStaticProps(context){
 export default function Version({gcamVersionData ,gcamVersions , brands, developers, version}) {
   const description = `Download Gcam ${version} APKs by various developer. Google Camera ${version} APK Download`
   const title = `Gcam ${version} APKs Download | Google Camera ${version} APK`
-  function addPageInfo() {
-    return {
-      __html: `
-      {
-        "@context": "https://schema.org/",
-        "@type": "Product",
-        "name": "Google Camera Ports",
-    
-        "description": "${description}" ,
-        "brand": {
-          "@type": "Brand",
-          "name": "Gcam APK"
-        }
-        ,
-          "author": {
-            "@type": "Person",
-            "name": "Rakshit Sahu"
-          }
-      }
-  `
-  };
-}
+
 const H1 = 'font-semibold text-5xl'
 const content = 'font-thin text-xl'
   return (
@@ -106,11 +85,6 @@ const content = 'font-thin text-xl'
       name="description"
       content= {description}
       key="desc"
-    />
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={addPageInfo()}
-      key="product-jsonld"
     />
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>

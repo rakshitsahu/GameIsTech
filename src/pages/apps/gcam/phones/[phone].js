@@ -84,28 +84,6 @@ export default function Phones({data, phone , brands, developers}) {
     const title = `Gcam for ${phone} Devices | Google Camera Ports`
     const H1 = 'font-semibold text-5xl'
     const content = 'font-thin text-xl m-3'
-    function addPageInfo() {
-      return {
-        __html: `
-        {
-          "@context": "https://schema.org/",
-          "@type": "Product",
-          "name": "Google Camera Ports",
-      
-          "description": "${description}" ,
-          "brand": {
-            "@type": "Brand",
-            "name": "Gcam APK"
-          }
-          ,
-            "author": {
-              "@type": "Person",
-              "name": "Rakshit Sahu"
-            }
-        }
-    `
-    };
-  }
   return (
     <>
     <Head>
@@ -115,11 +93,7 @@ export default function Phones({data, phone , brands, developers}) {
       content= {description}
       key="desc"
     />
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={addPageInfo()}
-      key="product-jsonld"
-    />
+
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </Head>

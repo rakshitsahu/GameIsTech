@@ -1,1 +1,442 @@
-[{'requiredAndroidVersion': 'Android 11', 'gcamSummary': 'Google Camera 8.6+ (Android 11+)', 'data': [{'name': 'MGC_8.7.250_A11_V11', 'developer': 'BSG', 'download': 'https://www.celsoazevedo.com/files/android/google-camera/dev-bsg/f/dl129/', 'date': '2022-11-28', 'info': "BSG's 8.7", 'version': '8.7'}]}, {'requiredAndroidVersion': 'Android 10', 'gcamSummary': 'Google Camera 8.1 - 8.4 (Android 10+)', 'data': [{'name': 'MGC_8.1.101_A9_GV2b', 'developer': 'cstark27|Urnyx05', 'download': 'https://www.celsoazevedo.com/files/android/google-camera/dev-bsg/f/dl88/', 'date': '2021-01-25', 'info': "BSG's 8.1", 'version': '8.1'}, {'name': 'GoogleCamera_8.0_Wyroczen_Alpha', 'developer': 'MWP', 'download': 'https://www.celsoazevedo.com/files/android/google-camera/f/changelog1471/', 'date': '2022-03-27', 'info': "Wyroczen's 8.0", 'version': '8.0'}]}, {'requiredAndroidVersion': 'Android 9', 'gcamSummary': 'Google Camera 7.3+ (Android 9+)', 'data': [{'name': 'GCam_7.3.018_Urnyx05-v2.6.apk', 'developer': 'Wichaya', 'download': 'https://www.celsoazevedo.com/files/android/google-camera/dev-urnyx05/f/dl0/', 'date': '2020-12-15', 'info': "Urnyx's 7.3 v2.6", 'version': '7.3'}, {'name': 'GCam_RN8P_Wyroczen_7.3.020_2.0.apk', 'developer': 'san1ty', 'download': 'https://f.celsoazevedo.com/file/cfiles/gcm1/GCam_RN8P_Wyroczen_7.3.020_2.0.apk', 'date': '2020-03-18', 'info': "wyroczen's 7.3 v2", 'version': '7.3'}]}, {'requiredAndroidVersion': 'Android 9', 'gcamSummary': 'Google Camera 7.2 (Android 9+)', 'data': [{'name': 'GCam_7.2.010_Urnyx05-v2.3.apk', 'developer': 'the_dise', 'download': 'https://f.celsoazevedo.com/file/cfiles/gcm1/GCam_7.2.010_Urnyx05-v2.3.apk', 'date': '2020-02-15', 'info': "Urnyx's 2.3", 'version': '7.2'}]}, {'requiredAndroidVersion': 'Android 9', 'gcamSummary': 'Google Camera 6.2/6.3 (Android 9+)', 'data': [{'name': 'Gcam_6.2.030_Advanced_V2.2.190716.1800-Final.apk', 'developer': 'the_dise', 'download': 'https://f.celsoazevedo.com/file/cfiles/gcm1/Gcam_6.2.030_Advanced_V2.2.190716.1800-Final.apk', 'date': '2019-07-01', 'info': "Arnova's 6.2.030 v2.2", 'version': '6.2'}]}, {'requiredAndroidVersion': 'Android 8', 'gcamSummary': 'Google Camera 6.1 (Android 8+)', 'data': [{'name': 'Gcam_6.1.021_Advanced_V1.7.190716.1800.apk', 'developer': 'zoran', 'download': 'https://f.celsoazevedo.com/file/cfiles/gcm1/Gcam_6.1.021_Advanced_V1.7.190716.1800.apk', 'date': '2020-05-10', 'info': "Arnova's Advanced 1.7", 'version': '6.1'}]}, {'requiredAndroidVersion': 'Android 8', 'gcamSummary': 'Google Camera 5 (Android 8+)', 'data': [{'name': 'GCam-5.1.018-Pixel2Mod-Arnova8G2-V8.3b1.apk', 'developer': 'Arnova8G2', 'download': 'https://f.celsoazevedo.com/file/gcamera/GCam-5.1.018-Pixel2Mod-Arnova8G2-V8.3b1.apk', 'date': '2017-12-11', 'info': "Arnova's v8.3b1", 'version': '5.1'}]}, {'requiredAndroidVersion': 'Android 7', 'gcamSummary': 'Google Camera 4 (Android 7+)', 'data': [{'name': 'MGCB_7.0H_C2API_v.4.0_AllinOne_Full_Manual.apk', 'developer': 'ivanich', 'download': 'https://f.celsoazevedo.com/file/gcamera/MGCB_7.0H_C2API_v.4.0_AllinOne_Full_Manual.apk', 'date': '2017-08-27', 'info': 'BSG v4.0', 'version': '7.0'}]}]
+[
+    {
+        "requiredAndroidVersion": "Android 11",
+        "gcamSummary": "Google Camera 8.6+ (Android 11+)",
+        "data": [
+            {
+                "name": "MGC_8.7.250_A11_V11",
+                "developer": "BSG",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/dev-bsg/f/dl129/",
+                "date": "2023-02-25",
+                "info": "BSG's 8.7",
+                "version": "8.7"
+            },
+            {
+                "name": "MGC_8.6.263_A11_V14",
+                "developer": "BSG",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/dev-bsg/f/dl116/",
+                "date": "2022-11-28",
+                "info": "BSG's 8.6",
+                "version": "8.6"
+            }
+        ]
+    },
+    {
+        "requiredAndroidVersion": "Android 10",
+        "gcamSummary": "Google Camera 8.1 - 8.4 (Android 10+)",
+        "data": [
+            {
+                "name": "MGC_8.1.101_A9_GV2b",
+                "developer": "BSG",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/dev-bsg/f/dl88/",
+                "date": "2022-05-31",
+                "info": "BSG's 8.1",
+                "version": "8.1"
+            },
+            {
+                "name": "GCam8.2.204_Greatness.230503",
+                "developer": "Greatness",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/dev-greatness/f/dl15/",
+                "date": "2023-05-03",
+                "info": "Greatness' 8.2",
+                "version": "8.2"
+            },
+            {
+                "name": "NGCam_8.2.300-v1.8",
+                "developer": "Nikita",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/dev-Nikita/f/dl13/",
+                "date": "2022-06-05",
+                "info": "Nikita's 8.2",
+                "version": "8.2"
+            },
+            {
+                "name": "AGC_8.4.300_V9.6",
+                "developer": "BigKaka",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/dev-BigKaka/f/dl18/",
+                "date": "2023-03-23",
+                "info": "BigKaka 8.4",
+                "version": "8.4"
+            },
+            {
+                "name": "GCam_8.1.101_Wichaya_V1.6",
+                "developer": "Wichaya",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/dev-wichaya/f/dl6/",
+                "date": "2022-08-12",
+                "info": "Wichaya's 8.1",
+                "version": "8.1"
+            },
+            {
+                "name": "Gcam-8.1.101.build-V6.2.211013",
+                "developer": "Arnova8G2",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/dev-arnova8G2/f/dl2/",
+                "date": "2021-10-14",
+                "info": "Arnova's 8.1",
+                "version": "8.1"
+            },
+            {
+                "name": "LMC8.4_R15",
+                "developer": "Hasli",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/dev-hasli/f/dl11/",
+                "date": "2022-11-30",
+                "info": "Hasli's 8.4: LMC8.4_R15 (Hasli, 2022-11-30, configs",
+                "version": "8.4"
+            },
+            {
+                "name": "PXv8.1_GCam-v1.2",
+                "developer": "cstark27|Urnyx05",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/f/changelog1526/",
+                "date": "2021-01-25",
+                "info": "Urnyx's 8.1",
+                "version": "8.1"
+            },
+            {
+                "name": "GoogleCamera_8.0_Wyroczen_Alpha",
+                "developer": "wyroczen",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/f/changelog1471/",
+                "date": "2020-11-04",
+                "info": "Wyroczen's 8.0",
+                "version": "8.0"
+            },
+            {
+                "name": "Gcam_8.3.252_V2.0c_MWP",
+                "developer": "MWP",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/dev-MWP/f/dl22/",
+                "date": "2022-03-27",
+                "info": "MPV's 8.3",
+                "version": "8.3"
+            }
+        ]
+    },
+    {
+        "requiredAndroidVersion": "Android 9",
+        "gcamSummary": "Google Camera 7.3+ (Android 9+)",
+        "data": [
+            {
+                "name": "GCam_7.3.018_Urnyx05-v2.6.apk",
+                "developer": "Urnyx05",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/dev-urnyx05/f/dl0/",
+                "date": "2021-11-22",
+                "info": "Urnyx's 7.3 v2.6",
+                "version": "7.3"
+            },
+            {
+                "name": "GCam_5.2beta3.201006.2045build-7.4.104.apk",
+                "developer": "Arnova8G2",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/f/changelog1434/",
+                "date": "2020-10-08",
+                "info": "Arnova's 7.4 Beta",
+                "version": "5.2"
+            },
+            {
+                "name": "MGC_7.4.104_V0a.apk",
+                "developer": "BSG",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/f/changelog1214/",
+                "date": "2020-02-16",
+                "info": "BSG's 7.4 v0a",
+                "version": "7.4"
+            },
+            {
+                "name": "NGCam_7.4.104-v2.0",
+                "developer": "Nikita",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/f/changelog1497/",
+                "date": "2020-12-06",
+                "info": "Nikita's 7.4 v2.0",
+                "version": "7.4"
+            },
+            {
+                "name": "GCam_7.3.018_Urnyx05-v2.1_Wichaya_V3.1.1.apk",
+                "developer": "Wichaya",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/f/changelog1501/",
+                "date": "2020-12-15",
+                "info": "Wichaya 7.3 v 3.1.1",
+                "version": "7.3"
+            },
+            {
+                "name": "GCam_RN8P_Wyroczen_7.3.020_2.0.apk",
+                "developer": "wyroczen",
+                "download": "https://f.celsoazevedo.com/file/cfiles/gcm1/GCam_RN8P_Wyroczen_7.3.020_2.0.apk",
+                "date": "2020-03-27",
+                "info": "wyroczen's 7.3 v2",
+                "version": "7.3"
+            },
+            {
+                "name": "ZGCAM_7.4_V1.03387.apk",
+                "developer": "zoran",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/f/changelog1340a/",
+                "date": "2020-11-09",
+                "info": "Zoran's 7.4",
+                "version": "7.4"
+            },
+            {
+                "name": "DMGC_7.3.020_ver.4.5.apk",
+                "developer": "the_dise",
+                "download": "https://f.celsoazevedo.com/file/cfiles/gcm1/DMGC_7.3.020_ver.4.5.apk",
+                "date": "2020-06-24",
+                "info": "the_dise's v4.5",
+                "version": "7.3"
+            },
+            {
+                "name": "PocoSv10.6.2b.apk",
+                "developer": "san1ty",
+                "download": "https://f.celsoazevedo.com/file/cfiles/gcm1/PocoSv10.6.2b.apk",
+                "date": "2020-03-27",
+                "info": "San1ty's Sv10.6.2b",
+                "version": "6.2"
+            },
+            {
+                "name": "PocoSv10.4.apk",
+                "developer": "san1ty",
+                "download": "https://f.celsoazevedo.com/file/cfiles/gcm1/PocoSv10.4.apk",
+                "date": "2020-03-18",
+                "info": "San1ty's Sv10.4",
+                "version": "-"
+            }
+        ]
+    },
+    {
+        "requiredAndroidVersion": "Android 9",
+        "gcamSummary": "Google Camera 7.2 (Android 9+)",
+        "data": [
+            {
+                "name": "GCam_7.2.010_Urnyx05-v2.3.apk",
+                "developer": "Urnyx05",
+                "download": "https://f.celsoazevedo.com/file/cfiles/gcm1/GCam_7.2.010_Urnyx05-v2.3.apk",
+                "date": "2020-02-19",
+                "info": "Urnyx's 2.3",
+                "version": "7.2"
+            },
+            {
+                "name": "GCam_5beta6.200105.0445build-7.2.018.apk",
+                "developer": "Arnova8G2",
+                "download": "https://f.celsoazevedo.com/file/cfiles/gcm1/GCam_5beta6.200105.0445build-7.2.018.apk",
+                "date": "2020-01-06",
+                "info": "Arnova's Beta 6",
+                "version": "6.2"
+            },
+            {
+                "name": "MGC_7.2.018_RPII.MiVIII_V0b.apk",
+                "developer": "BSG",
+                "download": "https://f.celsoazevedo.com/file/cfiles/gcm1/MGC_7.2.018_RPII.MiVIII_V0b.apk",
+                "date": "2019-12-21",
+                "info": "BSG's V0b",
+                "version": "7.2"
+            },
+            {
+                "name": "F1MinimalMod2.1.apk",
+                "developer": "san1ty",
+                "download": "https://f.celsoazevedo.com/file/cfiles/gcm1/F1MinimalMod2.1.apk",
+                "date": "2020-02-17",
+                "info": "Sanity's 2.1",
+                "version": "2.1"
+            },
+            {
+                "name": "PXv4.5_GoogleCamera_7.2.014.apk",
+                "developer": "cstark27",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/f/changelog1330/",
+                "date": "2020-09-04",
+                "info": "cstark's PXv4.5",
+                "version": "4.5"
+            },
+            {
+                "name": "DMGC_7.2.018_ver.3.15.apk",
+                "developer": "the_dise",
+                "download": "https://f.celsoazevedo.com/file/cfiles/gcm1/DMGC_7.2.018_ver.3.15.apk",
+                "date": "2020-02-15",
+                "info": "the_dise's v3.15",
+                "version": "7.2"
+            }
+        ]
+    },
+    {
+        "requiredAndroidVersion": "Android 9",
+        "gcamSummary": "Google Camera 6.2/6.3 (Android 9+)",
+        "data": [
+            {
+                "name": "Gcam_6.2.030_Advanced_V2.2.190716.1800-Final.apk",
+                "developer": "Arnova8G2",
+                "download": "https://f.celsoazevedo.com/file/cfiles/gcm1/Gcam_6.2.030_Advanced_V2.2.190716.1800-Final.apk",
+                "date": "2019-07-16",
+                "info": "Arnova's 6.2.030 v2.2",
+                "version": "6.2"
+            },
+            {
+                "name": "MGC_6.2.030_RazerPhone2_V5.apk",
+                "developer": "BSG",
+                "download": "https://f.celsoazevedo.com/file/cfiles/gcm1/MGC_6.2.030_RazerPhone2_V5.apk",
+                "date": "2019-06-26",
+                "info": "BSG's RP2 V5",
+                "version": "6.2"
+            },
+            {
+                "name": "MGC_6.2.030_MI9SE_V4_plus2.apk",
+                "developer": "BSG",
+                "download": "https://f.celsoazevedo.com/file/cfiles/gcm1/MGC_6.2.030_MI9SE_V4_plus2.apk",
+                "date": "2019-06-22",
+                "info": "BSG's MI9SE V4_P2",
+                "version": "6.2"
+            },
+            {
+                "name": "GCam-6.2.030_Arnova8G2_Urnyx05-v2.5.apk",
+                "developer": "Urnyx05",
+                "download": "https://f.celsoazevedo.com/file/cfiles/gcm1/GCam-6.2.030_Arnova8G2_Urnyx05-v2.5.apk",
+                "date": "2019-09-20",
+                "info": "Urnyx's 2.5",
+                "version": "6.2"
+            },
+            {
+                "name": "F1v9.5_6.2.030.apk",
+                "developer": "san1ty",
+                "download": "https://f.celsoazevedo.com/file/cfiles/gcm1/F1v9.5_6.2.030.apk",
+                "date": "2019-08-16",
+                "info": "San1ty's F1v9.5",
+                "version": "9.5"
+            },
+            {
+                "name": "sav2l-sign_plus.apk",
+                "developer": "Arnova8G2|Savitar",
+                "download": "https://f.celsoazevedo.com/file/cfiles/gcm1/sav2l-sign_plus.apk",
+                "date": "2019-09-07",
+                "info": "Savitar's 2l",
+                "version": "-"
+            },
+            {
+                "name": "DMGC_6.2.030_ver.1.6-PE.apk",
+                "developer": "the_dise",
+                "download": "https://f.celsoazevedo.com/file/cfiles/gcm1/DMGC_6.2.030_ver.1.6-PE.apk",
+                "date": "2019-07-01",
+                "info": "the_dise's v1.6",
+                "version": "6.2"
+            }
+        ]
+    },
+    {
+        "requiredAndroidVersion": "Android 8",
+        "gcamSummary": "Google Camera 6.1 (Android 8+)",
+        "data": [
+            {
+                "name": "Gcam_6.1.021_Advanced_V1.7.190716.1800.apk",
+                "developer": "Arnova8G2",
+                "download": "https://f.celsoazevedo.com/file/cfiles/gcm1/Gcam_6.1.021_Advanced_V1.7.190716.1800.apk",
+                "date": "2019-07-16",
+                "info": "Arnova's Advanced 1.7",
+                "version": "6.1"
+            },
+            {
+                "name": "MGC_6.1.021_MI8_V2e.apk",
+                "developer": "BSG",
+                "download": "https://f.celsoazevedo.com/file/gcamera/MGC_6.1.021_MI8_V2e.apk",
+                "date": "2019-02-08",
+                "info": "BSG V2e",
+                "version": "6.1"
+            },
+            {
+                "name": "MGC_6.1.021_RazerPhone2_V2a.apk",
+                "developer": "BSG",
+                "download": "https://f.celsoazevedo.com/file/gcamera/MGC_6.1.021_RazerPhone2_V2a.apk",
+                "date": "2019-03-05",
+                "info": "BSG V2a",
+                "version": "6.1"
+            },
+            {
+                "name": "Gcam_6.1.021_Advanced_V1.6.190614.0200.apk",
+                "developer": "Arnova8G2",
+                "download": "https://f.celsoazevedo.com/file/cfiles/gcm1/Gcam_6.1.021_Advanced_V1.6.190614.0200.apk",
+                "date": "2019-06-14",
+                "info": "Arnova's Advanced 1.6",
+                "version": "6.1"
+            },
+            {
+                "name": "ZGCAM_3.8.01149_BSG_Arnova_6.1.apk",
+                "developer": "zoran",
+                "download": "https://www.celsoazevedo.com/files/android/google-camera/f/changelog1338/",
+                "date": "2020-05-10",
+                "info": "Zoran's 6.1",
+                "version": "3.8"
+            }
+        ]
+    },
+    {
+        "requiredAndroidVersion": "Android 8",
+        "gcamSummary": "Google Camera 5 (Android 8+)",
+        "data": [
+            {
+                "name": "GCam-5.1.018-Pixel2Mod-Arnova8G2-V8.3b1.apk",
+                "developer": "Arnova8G2",
+                "download": "https://f.celsoazevedo.com/file/gcamera/GCam-5.1.018-Pixel2Mod-Arnova8G2-V8.3b1.apk",
+                "date": "2018-08-25",
+                "info": "Arnova's v8.3b1",
+                "version": "5.1"
+            },
+            {
+                "name": "GoogleCamera-Pixel2Mod-Arnova8G2-V8.2.apk",
+                "developer": "Arnova8G2",
+                "download": "https://f.celsoazevedo.com/file/gcamera/GoogleCamera-Pixel2Mod-Arnova8G2-V8.2.apk",
+                "date": "2018-08-13",
+                "info": "Arnova's v8.2",
+                "version": "8.2"
+            },
+            {
+                "name": "GoogleCamera-Pixel2Mod-Arnova8G2-V8.1.apk",
+                "developer": "Arnova8G2",
+                "download": "https://f.celsoazevedo.com/file/gcamera/GoogleCamera-Pixel2Mod-Arnova8G2-V8.1.apk",
+                "date": "2018-07-22",
+                "info": "Arnova's v8.1",
+                "version": "8.1"
+            },
+            {
+                "name": "GoogleCamera-Pixel2Mod-Arnova8G2-V8.apk",
+                "developer": "Arnova8G2",
+                "download": "https://f.celsoazevedo.com/file/gcamera/GoogleCamera-Pixel2Mod-Arnova8G2-V8.apk",
+                "date": "2018-06-19",
+                "info": "Arnova's v8",
+                "version": "-"
+            },
+            {
+                "name": "GoogleCamera-Pixel2Mod-Arnova8G2-V7.9.9.apk",
+                "developer": "Arnova8G2",
+                "download": "https://f.celsoazevedo.com/file/gcamera/GoogleCamera-Pixel2Mod-Arnova8G2-V7.9.9.apk",
+                "date": "2018-06-05",
+                "info": "Arnova's v7.9.9",
+                "version": "7.9"
+            },
+            {
+                "name": "GoogleCamera-Pixel2Mod-Arnova8G2-V7beta-test-9.apk",
+                "developer": "Arnova8G2",
+                "download": "https://f.celsoazevedo.com/file/gcamera/GoogleCamera-Pixel2Mod-Arnova8G2-V7beta-test-9.apk",
+                "date": "2018-03-25",
+                "info": "Arnova's v7beta9",
+                "version": "-"
+            },
+            {
+                "name": "GCam5.1.018-Arnova8G2-V1.2.apk",
+                "developer": "Arnova8G2",
+                "download": "https://f.celsoazevedo.com/file/gcamera/GCam5.1.018-Arnova8G2-V1.2.apk",
+                "date": "2017-12-11",
+                "info": "Arnova's v1.2",
+                "version": "5.1"
+            }
+        ]
+    },
+    {
+        "requiredAndroidVersion": "Android 7",
+        "gcamSummary": "Google Camera 4 (Android 7+)",
+        "data": [
+            {
+                "name": "MGCB_7.0H_C2API_v.4.0_AllinOne_Full_Manual.apk",
+                "developer": "BSG",
+                "download": "https://f.celsoazevedo.com/file/gcamera/MGCB_7.0H_C2API_v.4.0_AllinOne_Full_Manual.apk",
+                "date": "2017-09-27",
+                "info": "BSG v4.0",
+                "version": "7.0"
+            },
+            {
+                "name": "MGCB_7.0H_C2API_Full_PXL2_v.1.4_60FPS_noburst_v3.apk",
+                "developer": "ivanich",
+                "download": "https://f.celsoazevedo.com/file/gcamera/MGCB_7.0H_C2API_Full_PXL2_v.1.4_60FPS_noburst_v3.apk",
+                "date": "2017-08-27",
+                "info": "ivanich v1.4_v3",
+                "version": "7.0"
+            }
+        ]
+    }
+]

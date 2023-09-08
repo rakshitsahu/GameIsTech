@@ -90,28 +90,7 @@ export default function Developer({data , brands, developers,developer}) {
   const description = `Download all Gcam ports made by ${developer}. We have ${GcamJson.length} Google Camera Ports that are
   made by ${developer}.`
   const title = `Gcam APK's By ${developer} | Google Camera Ports`
-  function addPageInfo() {
-    return {
-      __html: `
-      {
-        "@context": "https://schema.org/",
-        "@type": "Product",
-        "name": "Google Camera Ports",
-    
-        "description": "${description}" ,
-        "brand": {
-          "@type": "Brand",
-          "name": "Gcam APK"
-        }
-        ,
-          "author": {
-            "@type": "Person",
-            "name": "Rakshit Sahu"
-          }
-      }
-  `
-  };
-}
+
 const H1 = 'font-semibold text-5xl'
 const content = 'font-thin text-xl'
   return (
@@ -125,11 +104,7 @@ const content = 'font-thin text-xl'
     />
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={addPageInfo()}
-      key="product-jsonld"
-    />
+
   </Head>
     <Navbar brands={brands} developers = {developers}/>
     <article>

@@ -48,30 +48,10 @@ export default function home({ brands, developers, gcamVersions, genericGcams })
   We have clean and best UI with powerful fiters which helps you to find Google Camera Port 
   in no time
   `
-  function addPageInfo() {
-    return {
-      __html: `
-      {
-        "@context": "https://schema.org/",
-        "@type": "Product",
-        "name": "Google Camera Ports",
-        "description": "${description}",
-        "brand": {
-          "@type": "Brand",
-          "name": "Gcam APK"
-        },
-        "author": {
-          "@type": "Person",
-          "name": "Rakshit Sahu"
-        }
-      }
-    `
-    };
-  }
   return (
     <>
     <Head>
-    <title>An App For Gcam APKs | Google Camera Ports</title>
+    <title> Gcam APK&apos;s | Stable Google Camera Ports</title>
     <meta
       name="description"
       content= {description}
@@ -80,11 +60,7 @@ export default function home({ brands, developers, gcamVersions, genericGcams })
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={addPageInfo()}
-      key="product-jsonld"
-    />
+
   </Head>
       <Navbar brands={brands} developers = {developers}/>
       <article className='grid m-3 gap-5'>

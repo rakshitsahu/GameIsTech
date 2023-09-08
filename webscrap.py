@@ -178,6 +178,7 @@ def gatherAllData():
     gcamsDataJson = json.dumps(gcamsData, indent=4)
     versionCountMapJson = json.dumps(versionCountMap, indent=4)
     phonesDataJson = json.dumps(phonesData, indent=4)
+    stableGcamJson = json.dumps(stableGcam, indent=4)
     with open("developerList.txt", "a") as f:
         print(developerListJson, file=f)
     with open("gcamsData.txt", "a") as f:
@@ -187,7 +188,7 @@ def gatherAllData():
     with open("phonesData.txt", "a") as f:
         print(phonesDataJson, file=f)
     with open("stableGcams.txt", "a") as f:
-        print(stableGcam, file=f)
+        print(stableGcamJson, file=f)
 
 def uploadData():
     uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority"
@@ -203,7 +204,7 @@ def uploadData():
         global versionCountMap
         phonesData = gcamForPhones()
         
-        db = client["Webscrap-GCAM-test"]
+        db = client["Webscrap-GCAM"]
 
         mycol = db["phonesData"]
         resultList = [{ "phoneBrand" : key , "data" : value} for key, value in phonesData.items()]
@@ -240,7 +241,7 @@ def stableGcams():
 
     gcamData = []
     for gcamDownloadSection in gcamsDownloadSection:
-        print('tes')
+        # print('tes')
         summary = gcamDownloadSection.find('summary')
         requiredAndroid = summary.find('small').text.strip()
         gcamSummary = summary.text
@@ -248,9 +249,17 @@ def stableGcams():
 
         requiredAndroid = requiredAndroid[1:-2]
         apkList = gcamDownloadSection.find_all('ul',attrs={'class':'listapks'})
+        apkListLITag = []
+        print(len(apkList))
+        for apkULTags in apkList:
+            for apk in apkULTags.find_all('li'):
+                apkListLITag.append(apk)
+        # print(len(apkListLITag))
         data = []
-        for apkLine in apkList:
+        # print(apkListLITag)
+        for apkLine in apkListLITag:
             apk = apkLine
+            # print(apk)
             gcamName = apk.find('a').text
             downloadLink = apk.find('a').get('href')
             gcamVersion = extractGcamVersion(gcamName)
@@ -260,7 +269,7 @@ def stableGcams():
             developer = developer.strip()
             info = apkLine.find('strong').text.strip()
             while info[-1] in string.punctuation: 
-                print("yes")
+                # print("yes")
                 info = info[:-1]
             data.append({
                     "name" :gcamName,
@@ -278,10 +287,10 @@ def stableGcams():
                     "info" : info,
                     "version" : gcamVersion
              })
-            print(gcamName)
-            print(developer)
-            print(date)
-            print(info)
+            # print(gcamName)
+            # print(developer)
+            # print(date)
+            # print(info)
         gcamData.append(
             {
                 "requiredAndroidVersion" :requiredAndroid,
@@ -289,7 +298,7 @@ def stableGcams():
                 "data" : data
             }
         )
-    print(gcamData)
+    # print(gcamData)
     return gcamData
 
 # This is added so that many files can reuse the function get_database()
@@ -299,7 +308,6 @@ uploadData()
 # print(gcamForPhones())
 # extractAllDevelopersData()
 # print( versionCountMap , len(versionCountMap))
-
 # pretty = json.dumps(extractAllDevelopersData(), indent=4)
 # with open("output.txt", "a") as f:
 #   print(pretty, file=f)

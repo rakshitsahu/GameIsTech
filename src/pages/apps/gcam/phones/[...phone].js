@@ -111,28 +111,7 @@ export default function GcamDownloadForPhone({phoneBrand, phoneName , developers
    Before downloading, verify the compatibility from the Google Camera description with ${phoneName} features.`
    const description = `Download Gcam for ${phoneName}. We also have generic Google Camera ports which could work in ${phoneName}.`
    const title = `Gcam for ${phoneName} | Google Camera Ports`
-   function addPageInfo() {
-     return {
-       __html: `
-       {
-         "@context": "https://schema.org/",
-         "@type": "Product",
-         "name": "Google Camera Ports",
-     
-         "description": "${description}" ,
-         "brand": {
-           "@type": "Brand",
-           "name": "Gcam APK"
-         }
-         ,
-           "author": {
-             "@type": "Person",
-             "name": "Rakshit Sahu"
-           }
-       }
-   `
-   };
- }
+
  // console.log(currentPhoneData)
   return (
     <>
@@ -143,11 +122,7 @@ export default function GcamDownloadForPhone({phoneBrand, phoneName , developers
       content= {description}
       key="desc"
     />
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={addPageInfo()}
-      key="product-jsonld"
-    />
+
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </Head>

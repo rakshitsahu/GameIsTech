@@ -59,20 +59,20 @@ export async function getAllPathsForGcamDownload(toFind = null){
   return [paths, possiblePaths]
   return [paths, result]
 }
-// export async function getStaticPaths(){
-//   console.log('static path started')
-//   const pathArray = await getAllPathsForGcamDownload()
-//   console.log('get all path completed')
-//   const paths = pathArray[0]
-//   // console.log(pathArray[1])
-//   return {
-//     paths : [],
-//     fallback: 'blocking'
-// }
+export async function getStaticPaths(){
+  // console.log('static path started')
+  const pathArray = await getAllPathsForGcamDownload()
+  // console.log('get all path completed')
+  const paths = pathArray[0]
+  // console.log(pathArray[1])
+  return {
+    paths : [],
+    fallback: 'blocking'
+}
 
-// }
+}
 
-export async function getServerSideProps(context){
+export async function getStaticProps(context){
   let gcamParams = context.params.gcam
   console.log('params found are' )
   gcamParams = [gcamParams[0] , gcamParams[1]]
@@ -118,28 +118,7 @@ export default function GcamDownload({data , brands, developers , gcamParams}) {
   const apkName = gcamParams[1]
   const description = `Download ${apkName} APK developed by ${developer}`
   const title = `${developer} - ${apkName} | Gcam`
-  function addPageInfo() {
-    return {
-      __html: `
-      {
-        "@context": "https://schema.org/",
-        "@type": "Product",
-        "name": "Google Camera Ports",
-    
-        "description": "${description}" ,
-        "brand": {
-          "@type": "Brand",
-          "name": "Gcam APK"
-        }
-        ,
-          "author": {
-            "@type": "Person",
-            "name": "Rakshit Sahu"
-          }
-      }
-  `
-  };
-}
+
   return (
     <>
     <Head>
@@ -149,11 +128,7 @@ export default function GcamDownload({data , brands, developers , gcamParams}) {
       content= {description}
       key="desc"
     />
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={addPageInfo()}
-      key="product-jsonld"
-    />
+
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </Head>

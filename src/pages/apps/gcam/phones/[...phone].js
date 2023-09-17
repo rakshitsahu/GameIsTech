@@ -43,9 +43,24 @@ export async function getStaticPaths(){
 
 export async function getStaticProps(context){
   const phone = context.params.phone
-
+  const pathData = await getAllPathsForPhoneDownloadPage()
+  const paths = pathData[1]
+  
   let phoneBrand = phone[0]
   let phoneName = phone[1]
+  let result = false
+  paths.forEach( (element) =>{
+    if(element[0] == encodeURIComponent(phoneBrand) && element[1] == encodeURIComponent(phoneName))
+    result = true
+  })
+  if( !result )
+  {
+    return {
+      notFound: true,
+    }
+  }
+  // console.log("yes")
+  // console.log( , encodeURIComponent(phoneName) )
 
 
   const [developersData, phoneData, genericGcams, gcamVersionsData] = await Promise.all([
@@ -112,7 +127,7 @@ export default function GcamDownloadForPhone({phoneBrand, phoneName , developers
    const description = `Download Gcam for ${phoneName}. We also have generic Google Camera ports which could work in ${phoneName}.`
    const title = `Gcam for ${phoneName} | Google Camera Ports`
 
- // console.log(currentPhoneData)
+ console.log(phoneBrand)
   return (
     <>
     <Head>
@@ -125,6 +140,7 @@ export default function GcamDownloadForPhone({phoneBrand, phoneName , developers
 
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="canonical" href= {`https://www.gameistech.com/apps/gcam/phones/${encodeURIComponent(phoneBrand)}/${encodeURIComponent(phoneName)}`} />
   </Head>
     <Navbar brands={brands} developers={developers}/>
     <article className='grid justify-items-center m-3'>

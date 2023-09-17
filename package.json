@@ -20,6 +20,7 @@
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
     "framer-motion": "^10.16.2",
+    "googleapis": "^126.0.1",
     "icons": "^1.0.0",
     "jsonwebtoken": "^9.0.1",
     "jssoup": "^0.0.15",
@@ -36,6 +37,7 @@
     "react-redux": "^8.0.5",
     "redux": "^4.2.1",
     "redux-thunk": "^2.4.2",
+    "request": "^2.88.2",
     "tw-elements": "^1.0.0-beta2"
   },
   "devDependencies": {

@@ -1,9 +1,19 @@
 const { createServer } = require('http')
 const { parse } = require('url')
 const next = require('next')
+const axios = require('axios');
 const dev = process.env.NODE_ENV !== 'production'
 const host = process.env.NODE_ENV !== 'production' ? 'localhost:3000' : 'gameistech.com'
 const port = process.env.PORT || 3000
+
+const callApi = async () => {
+  try {
+    const response = await axios.get('https://gameistech.com/api/indexing'); // Replace with your API endpoint
+    console.log('API call successful:', response.data);
+  } catch (error) {
+    console.error('API call failed:', error.message);
+  }
+}
 // when using middleware `host` and `port` must be provided below
 const app = next({ dev, host, port })
 const handle = app.getRequestHandler()
@@ -37,5 +47,6 @@ app.prepare().then(() => {
     })
     .listen(port, () => {
       console.log(`> Ready on http://${host}:${port}`)
+      setInterval(callApi, 3600000);
     })
 })

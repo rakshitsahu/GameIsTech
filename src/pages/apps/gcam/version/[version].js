@@ -88,6 +88,7 @@ const content = 'font-thin text-xl'
     />
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="canonical" href= {`https://www.gameistech.com/apps/gcam/version/${version}`} />
   </Head>
     <Navbar brands={brands} developers = {developers}/>
     <article>

@@ -89,28 +89,7 @@ export default function Home() {
   };
   const description = `GameIsTech is a website all about Gaming, Technology & Apps.`
   const title = `Epoch of Gaming, Technology & Apps`
-  function addPageInfo() {
-    return {
-      __html: `
-      {
-        "@context": "https://schema.org/",
-        "@type": "Product",
-        "name": "GameIsTech",
-    
-        "description": ${description} ,
-        "brand": {
-          "@type": "Brand",
-          "name": "GameIsTech"
-        }
-        ,
-          "author": {
-            "@type": "Person",
-            "name": "Rakshit Sahu"
-          }
-      }
-  `
-  };
-}
+
   return (
     <>
 
@@ -123,11 +102,7 @@ export default function Home() {
 />
 <meta name="robots" content="index, follow"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<script
-  type="application/ld+json"
-  dangerouslySetInnerHTML={addPageInfo()}
-  key="product-jsonld"
-/>
+
 
 </Head>    
 <div className="container">

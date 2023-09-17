@@ -36,11 +36,20 @@ export async function getStaticPaths(){
 }
 
 export async function getStaticProps(context){
+
     // const data = {
     //     name : 'hello'
     // }
     // console.log('working till heere')
     const phone = context.params.phone
+    const pathData = await getAllPathsForPhonePage()
+    const paths = pathData[1]
+    if( !paths.includes(encodeURIComponent(phone)))
+    {
+      return {
+        notFound: true,
+      }
+    }
     // console.log(' data of static props is', phone)
     const [data, developersData, phoneData] = await Promise.all([
       FindAllOperation (GCAM_DB_COLLECTION.Phone_Data , { phoneBrand : phone }).catch( err => {return {}} ),
@@ -50,17 +59,6 @@ export async function getStaticProps(context){
       .then((results) => {
         return results
       })
-
-
-
-    // console.log('the is of this page', data)
-    if(data.length == 0)
-    {
-      return {
-        notFound: true,
-      }
-    }
-    // console.log('the new data is', data)
 
 
       const developers = developersData.map(({ developerName }) => ({ name : developerName }))
@@ -93,9 +91,9 @@ export default function Phones({data, phone , brands, developers}) {
       content= {description}
       key="desc"
     />
-
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="canonical" href= {`https://www.gameistech.com/apps/gcam/phones/${encodeURIComponent(phone)}`} />
   </Head>
     <Navbar brands={brands} developers = {developers}/>
     <article>

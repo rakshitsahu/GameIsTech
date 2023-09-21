@@ -4,25 +4,27 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 import MongoFind from './gcam/mongo/find';
 import GCAM_URL_STATE from '@/Components/gcam/URLs/GCAM_URL_STATE';
 import { GCAM_URLS } from '@/Components/gcam/URLs/GCAM_URL_MANAGER';
+import { MdMan4 } from 'react-icons/md';
 var request = require("request");
 var { google } = require("googleapis");
 var key = require("./service_account.json");
-
+const DB_NAME = "Indexing-DB"
 
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
-const QUOTA_LIMIT = 24
+const QUOTA_LIMIT = 200
 function getUrls(indexed , urlList , limit = QUOTA_LIMIT){
     const urls = []
-    const map = new Map()
-    console.log(limit)
+    const map = {}
+    // console.log(indexed)
+    // console.log(urlList)
     indexed.forEach(element => {
       
-        map.set(element , true)
+        map[element] = true
     });
     let index = 0
     while( index < urlList.length && limit){
       const element = urlList[index++]
-      if( !map.get(element) ){ 
+      if( !map[element] ){ 
         urls.push(element)
         limit--;
     }
@@ -42,25 +44,25 @@ async function getUrlList(){
     });
     try {
       await client.connect().catch( async (err) => { 
-        console.log('the error occurred is', err)
+        // console.log('the error occurred is', err)
         await client.close() 
       }
          )
-         const data = await client.db('Webscrap-GCAM').collection(collection).find({}).toArray();
+         const data = await client.db(DB_NAME).collection(collection).find({}).toArray();
         //  console.log('list of collection is', data)
         let resultPath = []
          if(data.length == 0){
           const urlList = await GCAM_URLS(GCAM_URL_STATE.All)
           resultPath = urlList
           // console.log(urlList)
-          await client.db('Webscrap-GCAM').collection(collection).insertOne({paths :urlList}).catch((err)=>{
-            console.log(err)
+          await client.db(DB_NAME).collection(collection).insertOne({paths : getUniques(urlList)}).catch((err)=>{
+            // console.log(err)
           })
          }
          else
          resultPath = data[0].paths
          await client.close()
-         console.log(resultPath)
+         // console.log(resultPath)
          return  resultPath
     } catch (error) {
       await client.close()
@@ -78,13 +80,13 @@ async function getIndexedPaths(indexedUrls){
     });
     try {
       await client.connect().catch( async (err) => {
-        console.log('the error occurred is', err)
+        // console.log('the error occurred is', err)
         await client.close()
       }
          )
-         const indexedList = await client.db('Webscrap-GCAM').collection(collection).find({}).toArray();
+         const indexedList = await client.db(DB_NAME).collection(collection).find({}).toArray();
          let resultPaths = []
-         console.log(indexedList.length)
+         // console.log(indexedList.length)
          if(indexedList.length)
          resultPaths = indexedList[0].paths
         //  console.log('list of collection is', data)
@@ -106,25 +108,28 @@ async function insertIndexedUrls(urlList){
       deprecationErrors: true,
     }
   });
-  console.log('function called')
+  // console.log('function called')
   try {
     await client.connect().catch( async (err) => {
-      console.log('the error occurred is', err)
+      // console.log('the error occurred is', err)
       await client.close()
     }
        )
        const currentList = await getIndexedPaths()
-       const indexedList = await client.db('Webscrap-GCAM').collection(collection).find({}).toArray();
-       console.log('the indexedList is', indexedList)
+      //  console.log(currentList)
+      //  const indexedList = await client.db(DB_NAME).collection(collection).find({}).toArray();
+       // console.log('the currentList is', currentList)
        
        let resultPaths = []
-       if(indexedList.length > 0)
+       if(currentList.length > 0)
        {
-        resultPaths = indexedList[0].paths
-        await client.db('Webscrap-GCAM').collection(collection).drop()
+        resultPaths = currentList
+        await client.db(DB_NAME).collection(collection).drop()
        }
        if(urlList.length > 0)
-       await client.db('Webscrap-GCAM').collection(collection).insertOne({paths : [...resultPaths , ...urlList]});
+       {
+        await client.db(DB_NAME).collection(collection).insertOne({paths : getUniques([...resultPaths , ...urlList])});
+       }
        await client.close()
       //  console.log(resultPaths)
        
@@ -132,7 +137,7 @@ async function insertIndexedUrls(urlList){
     await client.close()
   }
 }
-const latestIndexedUrls = []
+let latestIndexedUrls = []
 async function IndexingApi(url){
   const jwtClient = new google.auth.JWT(
   key.client_email,
@@ -163,18 +168,34 @@ jwtClient.authorize(function(err, tokens) {
   request(options, function (error, response, body) {
     // Handle the response
     if(error)
-    console.log("error occured")
+    // console.log("error occured")
     else if( response.statusCode === 200  )
-    latestIndexedUrls.push(url)
+    {
+      // console.log("successfully executed")
+      latestIndexedUrls.push(url)
+    }
   return response.statusCode
   });
 });
 
 }
-
+function getUniques(array){
+  const map = {}
+  let unique = []
+  array.forEach((element =>{
+    if(!map[element]){
+      map[element] = true
+      unique.push(element)
+    }
+  }))
+  // console.log(Object.keys(map))
+  return Object.keys(map)
+}
 export async function handler(req , res){
+
   const paths = await getUrlList()
-  // console.log(paths)
+
+  // console.log(getUniques(paths))
   const indexedList = await getIndexedPaths(paths)
   // console.log(indexedList)
   const pathsToIndex = getUrls(indexedList , paths , Math.floor(QUOTA_LIMIT/ 24) )
@@ -187,9 +208,13 @@ export async function handler(req , res){
   setTimeout( async () => {
     await insertIndexedUrls(latestIndexedUrls).then(()=>{
       // console.log(paths)
+      latestIndexedUrls = []
       res.json({message : 'urls inserted successfully'})
+      
     }).catch( (err)=>{
+      latestIndexedUrls = []
       res.json({message : 'Something went wrong'})
+      
     })
   }, 2000);
   

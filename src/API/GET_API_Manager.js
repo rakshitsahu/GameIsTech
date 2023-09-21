@@ -3,7 +3,7 @@ import axios from "axios";
 import GCAM_DB_COLLECTION from "../Components/gcam/mongodb/DB_Name_State";
  export async function GCAM_GET_REQUEST(STATE ){
     // const hostName = process.env.NODE_ENV === 'production' ? 'http://localhost:3000' : 'https://gameistech.com'
-    const hostName = 'https://gameistech.com'
+    const hostName = 'https://www.gameistech.com'
     const FindUrl = hostName + '/api/gcam/mongo/find'
     const AuthenticationUrl = hostName + '/api/gcam/authentication'
     switch (STATE) {

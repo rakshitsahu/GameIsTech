@@ -5,6 +5,7 @@ import MongoFind from './gcam/mongo/find';
 import GCAM_URL_STATE from '@/Components/gcam/URLs/GCAM_URL_STATE';
 import { GCAM_URLS } from '@/Components/gcam/URLs/GCAM_URL_MANAGER';
 import { MdMan4 } from 'react-icons/md';
+import axios from 'axios';
 var request = require("request");
 var { google } = require("googleapis");
 var key = require("./service_account.json");
@@ -54,7 +55,7 @@ async function getUrlList(){
          if(data.length == 0){
           const urlList = await GCAM_URLS(GCAM_URL_STATE.All)
           resultPath = urlList
-          // console.log(urlList)
+          
           await client.db(DB_NAME).collection(collection).insertOne({paths : getUniques(urlList)}).catch((err)=>{
             // console.log(err)
           })
@@ -112,25 +113,48 @@ async function insertIndexedUrls(urlList){
   try {
     await client.connect().catch( async (err) => {
       // console.log('the error occurred is', err)
-      await client.close()
+      // await client.close()
     }
        )
        const currentList = await getIndexedPaths()
-      //  console.log(currentList)
+      //  console.log(urlList)
       //  const indexedList = await client.db(DB_NAME).collection(collection).find({}).toArray();
        // console.log('the currentList is', currentList)
        
        let resultPaths = []
-       if(currentList.length > 0)
+       if( currentList.length == 0 )
        {
-        resultPaths = currentList
+        client.db(DB_NAME).collection(collection).insertOne({paths : urlList})
+       }
+       else if ( urlList.length == 0 ){
         await client.db(DB_NAME).collection(collection).drop()
        }
-       if(urlList.length > 0)
+       else
        {
-        await client.db(DB_NAME).collection(collection).insertOne({paths : getUniques([...resultPaths , ...urlList])});
+        const updateOperation = {
+          $push: {
+            paths: { $each: urlList }
+          }
+        };
+        const response = await axios.post('http://localhost:3000/api/gcam/mongo/updateone',{
+          collection : collection,
+          filter : {},
+          data : updateOperation
+        })
        }
-       await client.close()
+
+
+       
+      //  if(currentList.length > 0)
+      //  {
+      //   resultPaths = currentList
+      //   await client.db(DB_NAME).collection(collection).drop()
+      //  }
+      //  if(urlList.length > 0)
+      //  {
+      //   await client.db(DB_NAME).collection(collection).insertOne({paths : getUniques([...resultPaths , ...urlList])});
+      //  }
+       
       //  console.log(resultPaths)
        
   } catch (error) {
@@ -168,7 +192,9 @@ jwtClient.authorize(function(err, tokens) {
   request(options, function (error, response, body) {
     // Handle the response
     if(error)
-    // console.log("error occured")
+    {
+      // console.log("error occured")
+    }
     else if( response.statusCode === 200  )
     {
       // console.log("successfully executed")

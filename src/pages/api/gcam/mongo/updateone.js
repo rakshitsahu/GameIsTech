@@ -9,6 +9,7 @@ export async function handler(req , res){
     const collection = req.body.collection
     const filter = req.body.filter
     const Data = req.body.data
+    console.log(collection , filter , Data)
     const client = new MongoClient(uri, {
         serverApi: {
           version: ServerApiVersion.v1,
@@ -16,15 +17,23 @@ export async function handler(req , res){
           deprecationErrors: true,
         }
       });
-      try {
-        await client.connect().catch( async (err) => { await client.close(true) } )
+        await client.connect()
         // console.log('the collection and filter is', collection , filter , Data)
-        const data = await client.db('Gcam').collection(collection).updateOne( filter , Data );
+        const db =  client.db('Indexing-DB').collection(collection)
+        const data = await db.updateOne( filter , Data , (updateErr, result) => {
+          console.log(updateErr)
+          if (updateErr) {
+            console.error('Error updating document:', updateErr);
+            res.send({ message: "failed" });
+          } else {
+            console.log('Document updated successfully');
+            res.send({ message: "success", result });
+          }
+        });
+        console.log(data)
         res.send(data)
         await client.close(true)
-      } catch (error) {
-        await client.close(true)
-      }
+
 
 }
 export default handler

@@ -1,6 +1,6 @@
 var request = require("request");
 var { google } = require("googleapis");
-var key = require("./service_account.json");
+var key = require("./androidapk.json");
 
 const jwtClient = new google.auth.JWT(
   key.client_email,

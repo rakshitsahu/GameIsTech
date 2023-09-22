@@ -11,13 +11,30 @@ const client = new MongoClient(uri, {
     }
   });
 export async function handler(req , res){
-    // const data = await mongoose.connection.db('Gcam').collection('Android versions').insertOne(data)
-    // const data = await AndroidVersionModel.collection.insertOne({name : '2003'})
-    await client.connect()
-    const data = await client.db('Gcam').collection('Gcam').find({}).toArray();
-    // console.log(mongoose.connection.db.collection)
+    await client.connect().then((v)=> console.log('connection done')) .catch( async (err) => { console.log('connection failed') } )
+    const itemsToInsert = ["heelllo", "thereee"];
+    const updateOperation = {
+      $push: {
+        paths: { $each: itemsToInsert }
+      }
+    };
+    
+    const db = client.db('Indexing-DB');
+    const collection = db.collection('indexedPaths');
+    const response = await collection.updateOne({}, updateOperation, (updateErr, result) => {
+      console.log(updateErr)
+      if (updateErr) {
+        console.error('Error updating document:', updateErr);
+        res.send({ message: "failed" });
+      } else {
+        console.log('Document updated successfully');
+        res.send({ message: "success", result });
+      }
+    });
+    console.log('result found is' , response)
+    res.send({ message: "failed" });
+    
     await client.close(true)
-    res.send(data)
 
 }
 export default handler

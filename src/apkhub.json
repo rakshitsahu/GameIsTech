@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "gameistech",
+  "private_key_id": "75f15b56a0419a4d4c01d7956e56b65f51e1f844",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCZL5qhh78bSTDw\nQmDaPPAANJSznUpzqTfhucQUygmn3Z8b5nX4x0LHe0CyTe90djR5nbPLMw0Mcnw+\n5N3s9d/ghBy0ZQVu6Uqaq7G3a7zgwhFQffk09Xv2yyt8zK8c/X2T4yqFcB15hoCM\nVohaBneH4p4bCYnOKY2NQ2rmiit5KXoY39ZZ856efNSv6206YzJJQg/XaAPmYKNY\nrCDCbaI64gwfliHa2z7lwlLjOwDhb9X46Vb/ZpwAssJWnoQNLrTjw/dcAz+VGMBf\nhlsZGG4pqll2F3fkUbX738SfGKEB/hodnc0642ZYRhROOA/IfMim2g3ybhufzzFL\nkYDR7/OLAgMBAAECggEASiXnQNnu0LvYUuumauzFNSw+cESqFZsqv/nF5lQ3YUhe\nrEgdAXseIWXRFp2v0x0mYFnL/gcrgUNnTaBFpd4L7Ga2aEFf5GRLJtwFzWV6iwaV\nD/OyLYbH5tlIJwQCnVM8NlnmqqlusvS+g2+dV4o60I0Kf8bZq++kI2UnOQlXarE/\nRmoeZEtL8WolpJNV4+YygVpM0R+iWVaG+THYakhO9P6zKfrMrYs+nhV9ZLsh8eGR\nilxM751EEAeVIMGalvLSpFFvdKtOSd9m+jtZ9/GpPVX/wx/aTTLY+JxNTbtcFVFR\n1XC1FZDwbUIByUmXjThQoCHDy6I/e7rqXxkpVuPcbQKBgQDUiCc+IOy6eruMeovY\nVGbZaH/ldoOVgPW0DxhTBfkjhHD5th8lirutIR4iJR20IZC4xsLhliTcnNX1Jnz3\nM21OBIkPtfwnHr2iopyaH7cNY+m1sl+3BOYwgdAyW6wrQZjUCEfazuL8C6q0DRL8\ncDWyldb4LphBw6E5tRN11ouH7wKBgQC4hDBykJzqDJn8HWXKsOSCXH43BU51e1lQ\nwDYqsXhSfqosgDK+m2zJJU6JKeSUGaJDUrbBblr9NTJYmSbkzg8J0u9SwKPxrjse\nsXJxCNhv4B6Ga8teO6FlLVI3zXm8kG+9Q0UNYKB1jBYAx7mQhRRKez39CAOlsBT7\nTdFfwLGSJQKBgCRNJTbNdOHdOM+j1uMad37HBKFy/sK4hj89HNCBgq54XruoSeWl\nrqzBrV3zrQEpgoitGnhhpuYvu7Pl4Q5wMElVKPwP/4PHEmkHEWyZ4jBdUnwAfazL\nH25FngQb+GpjB/GfgHZ1Q/v9Gikq2oVXvTRFt7QocUU6Xv12Wl6USLztAoGAeMqY\nyLcg8htTxvcbxygsP6b7PVus9D3Ox409KI/Lm/2tu7ok/iDTg453rlWNfOKXFgmU\n+GYdDLwBfHyuOIUo1R6Qa5UO/k04CKzTpWnL/tkyQn9YwBS7YHfd5ggOlMHdVIIw\nN0S1Zp5RXStisFheYy/w8a+Ia7Qs2CMmWM/Vrz0CgYADIFU3QpHDzqc9nHzmmFFt\nwRSBjfCV0zDgUMSvM3xNeNvq14De3Oqu4BYK0Dkn1Rb/UlrXpjA1yfexjsr7hyV8\nCv93qvmi1IpzEiTW6UJmjzW7XqVtZAD9Qqq7EXY1F6DXsukETzA/3EsagLI5EnDL\nOXUhPf2t+RQVygBhoS9OgA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "apkhub@gameistech.iam.gserviceaccount.com",
+  "client_id": "108150055831531129846",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/apkhub%40gameistech.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

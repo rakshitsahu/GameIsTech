@@ -1,0 +1,16 @@
+User-agent: *
+Disallow: /api/
+
+# Allow crawling of important pages
+Allow: /images/public/
+Allow: /assets/
+Allow: /index.html
+Allow: /sitemap.xml
+Allow: /favicon.ico
+Allow: /robots.txt
+
+# Crawl delay
+
+
+# Specify the location of your sitemap
+Sitemap: https://apkhub.mobi/sitemap.xml

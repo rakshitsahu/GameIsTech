@@ -4,9 +4,9 @@ const next = require('next');
 const axios = require('axios');
 
 const dev = process.env.NODE_ENV !== 'production';
-const host = 'apkhub.mobi'; // Change the host to localhost
-const port = process.env.PORT || 3000;
-
+const host = 'localhost'; // Change the host to localhost
+const port = process.env.PORT ;
+console.log("host name is", host , port)
 const callApi = async () => {
   try {
     await axios.get('http://localhost:3000/api/hello');

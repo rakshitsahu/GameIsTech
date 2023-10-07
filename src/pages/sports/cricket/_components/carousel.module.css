@@ -1,0 +1,22 @@
+/* styles/SlidingImages.module.css */
+
+.slidingImages {
+  @apply relative w-full overflow-hidden;
+
+  .slide-img {
+    @apply w-full h-auto transition-transform duration-500 ease-in-out;
+  }
+
+  .slide-button {
+    @apply absolute top-1/2 text-2xl cursor-pointer;
+    transform: translateY(-50%);
+  }
+
+  .slide-button-left {
+    @apply left-0;
+  }
+
+  .slide-button-right {
+    @apply right-0;
+  }
+}

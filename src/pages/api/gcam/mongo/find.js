@@ -12,9 +12,9 @@ async function MongoFind(req , res){
 
     const collection = req.body.collection
     const filter = req.body.filter
-    // console.log(' collection is', collection)
-    // console.log('filter is', filter)
-    // console.log('type of body is', typeof req.body)
+    console.log(' collection is', collection)
+    console.log('filter is', filter)
+    console.log('type of body is', typeof req.body)
 
 
     const client = new MongoClient(uri, {

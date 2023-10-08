@@ -18,7 +18,7 @@ function mapAgents(json) {
     addValueToKey(element.role.displayName, element);
   });
 }
-export async function getServerSideProps(){
+export async function getStaticProps(){
   const response = await axios.get( `https://apkhub.mobi/api/valorant/agents` , {
     params: {
       isPlayableCharacter: true

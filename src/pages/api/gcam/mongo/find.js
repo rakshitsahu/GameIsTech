@@ -29,7 +29,7 @@ async function MongoFind(req , res){
           await client.close() 
         }
            ).then( (result) =>{
-            console.log('database has been successfully conected', result)
+            console.log('database has been successfully conected')
            })
         // console.log('request has been fetched successfully')
         const data = await client.db(process.env.GCAM_DB_NAME).collection(collection).find(filter).toArray();

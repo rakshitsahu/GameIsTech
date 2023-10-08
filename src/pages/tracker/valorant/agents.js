@@ -19,7 +19,7 @@ function mapAgents(json) {
   });
 }
 export async function getServerSideProps(){
-  const response = await axios.get( `https://valorant-api.com/v1/agents/` , {
+  const response = await axios.get( `https://apkhub.mobi/api/valorant/agents` , {
     params: {
       isPlayableCharacter: true
     }

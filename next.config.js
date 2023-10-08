@@ -1,7 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   swcMinify: true,
-  useFileSystemPublicRoutes: false,
   async headers() {
     return [
       {

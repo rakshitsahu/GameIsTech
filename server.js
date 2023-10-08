@@ -23,11 +23,6 @@ app.prepare().then(() => {
         // Redirect to https://apkhub.mobi
         res.writeHead(301, { Location: `https://apkhub.mobi${req.url}` });
         res.end();
-      } 
-      else if (pathname === '/a') {
-        await app.render(req, res, '/a', query)
-      } else if (pathname === '/b') {
-        await app.render(req, res, '/b', query)
       } else {
         await handle(req, res, parsedUrl)
       }

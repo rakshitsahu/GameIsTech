@@ -3,7 +3,7 @@ import axios from "axios";
 import GCAM_DB_COLLECTION from "../Components/gcam/mongodb/DB_Name_State";
  export async function GCAM_GET_REQUEST(STATE ){
     // const hostName = process.env.NODE_ENV === 'production' ?  'https://apkhub.mobi' :'http://localhost:3000'
-    // const hostName = 'http://apkhub.mobi'
+    // const hostName = 'https://apkhub.mobi'
     const hostName = `http://localhost:${process.env.PORT}`
     const FindUrl = hostName + '/api/gcam/mongo/find'
     const AuthenticationUrl = hostName + '/api/gcam/authentication'

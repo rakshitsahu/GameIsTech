@@ -25,7 +25,7 @@ async function MongoFind(req , res){
       });
       try {
         await client.connect().catch( async (err) => { 
-          // console.log('the error occurred is', err)
+          console.log('the error occurred is', err)
           await client.close() 
         }
            )
@@ -35,7 +35,7 @@ async function MongoFind(req , res){
         res.send(data)
       } catch (error) {
         // console.log('error fetching data' , error)
-
+        console.log('the error occurred is', err)
         await client.close()
       }
 

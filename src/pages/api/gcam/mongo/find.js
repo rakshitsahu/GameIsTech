@@ -28,9 +28,12 @@ async function MongoFind(req , res){
           console.log('the error occurred is', err)
           await client.close() 
         }
-           )
+           ).then( (result) =>{
+            console.log('database has been successfully conected', result)
+           })
         // console.log('request has been fetched successfully')
         const data = await client.db(process.env.GCAM_DB_NAME).collection(collection).find(filter).toArray();
+        console.log('request has been fetched successfully', data)
         await client.close()
         res.send(data)
       } catch (error) {

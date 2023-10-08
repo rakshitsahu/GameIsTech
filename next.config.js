@@ -1,11 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   swcMinify: true,
+  useFileSystemPublicRoutes: false,
   async headers() {
     return [
       {
-        // matching all API routes
-        useFileSystemPublicRoutes: false,
+        
         source: "/api/:path*",
         headers: [
           { key: "Access-Control-Allow-Credentials", value: "true" },

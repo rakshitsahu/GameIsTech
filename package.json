@@ -38,7 +38,7 @@
     "redux": "^4.2.1",
     "redux-thunk": "^2.4.2",
     "request": "^2.88.2",
-    "autoprefixer": "^10.4.14",
+    "sharp": "^0.32.6",
     "tw-elements": "^1.0.0-beta2"
   },
   "devDependencies": {

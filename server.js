@@ -14,18 +14,16 @@ app.prepare().then(() => {
     try {
       const parsedUrl = parse(req.url, true);
       const { pathname, query } = parsedUrl;
-      const forwardedHost = req.headers['x-forwarded-host'];
-      console.log("X FORWARDED HOST IS" , forwardedHost , req.headers.host)
-      console.log("the headers are", req.headers)
+      const hostName = req.headers.host;
+      // console.log("X FORWARDED HOST IS" , hostName , hostName)
+      // console.log("the headers are", req.headers)
       if (
-        forwardedHost === 'www.apkhub.mobi'
+        hostName !== 'apkhub.mobi'
       ) {
         // Redirect to https://apkhub.mobi
         res.writeHead(301, { Location: `https://apkhub.mobi${req.url}` });
         res.end();
       } else {
-        // Handle other cases
-        parsedUrl.protocol = 'https';
         await handle(req, res, parsedUrl);
       }
     } catch (err) {

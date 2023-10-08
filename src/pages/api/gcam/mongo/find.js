@@ -5,14 +5,14 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
 async function MongoFind(req , res){
-  console.log( 'db name is', process.env.GCAM_DB_NAME);
+  // console.log( 'db name is', process.env.GCAM_DB_NAME);
   // console.log('the type of req body is', typeof req.body);
   const body = req.body
   // console.log('the request body is', body)
 
     const collection = req.body.collection
     const filter = req.body.filter
-    // console.log(' collection is', collection)
+    console.log(' collection is', collection)
     // console.log('filter is', filter)
 
 

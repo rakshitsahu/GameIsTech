@@ -13,7 +13,7 @@ import GCAM_DB_COLLECTION from "../Components/gcam/mongodb/DB_Name_State";
                     collection : GCAM_DB_COLLECTION.Developer_Names,
                     filter : {}
                 }).then(response => {
-                    console.log( 'the android version json is ', response.data)
+                    // console.log( 'the android version json is ', response.data)
                     return response.data
                     })
                   return developers;

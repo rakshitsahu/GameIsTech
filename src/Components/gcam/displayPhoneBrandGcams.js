@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { BsCamera2, BsReddit, BsTelegram } from 'react-icons/bs'
 import { SiXdadevelopers } from "react-icons/si"
 export default function DisplayPhoneBrandGcams({phoneData}){
-    // console.log('phonedata is', phoneData)
+    console.log('phonedata is', phoneData)
     // console.log(Object.keys(phoneData[0]))
     const colors = ['from-pink-500 to-violet-500', 'from-green-500 to-violet-500' , 'from-violet-500 to-pink-500' 
    , 'from-pink-500 to-green-500' , 'from-violet-500 to-red-500' , 'from-violet-500 to-green-500'

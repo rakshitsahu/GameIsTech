@@ -18,10 +18,10 @@ export default function GcamColorfulPoster({gcams, heading , prefix , download }
     <div className=' grid lg:grid-cols-2 overflow-clip xl:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 justify-center w-full rounded-md p-5 shadow-2xl drop-shadow-2xl gap-14 '>
     {
         Object.keys(gcams).map(  (index) => {
-        console.log ( 'the brand is ', gcams[index].developer)
+        // console.log ( 'the brand is ', gcams[index].developer)
         const encryptedDeveloper = encodeURIComponent(gcams[index].developer)
         const encryptedGcamName = encodeURIComponent(gcams[index].name)
-        console.log(encryptedDeveloper)
+        // console.log(encryptedDeveloper)
           return (
             <Link key={index} value={gcams[index].name} href={`/apps/gcam/download/${encryptedDeveloper}/${encryptedGcamName}`} >
             

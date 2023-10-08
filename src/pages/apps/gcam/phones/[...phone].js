@@ -127,7 +127,7 @@ export default function GcamDownloadForPhone({phoneBrand, phoneName , developers
    const description = `Download Gcam for ${phoneName}. We also have generic Google Camera ports which could work in ${phoneName}.`
    const title = `Gcam for ${phoneName} | Google Camera Ports`
 
- console.log(phoneBrand)
+ // console.log(phoneBrand)
   return (
     <>
     <Head>

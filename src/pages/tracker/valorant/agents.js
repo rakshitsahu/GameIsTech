@@ -18,7 +18,7 @@ function mapAgents(json) {
     addValueToKey(element.role.displayName, element);
   });
 }
-export async function getStaticProps(){
+export async function getServerSideProps(){
   const response = await axios.get( `https://valorant-api.com/v1/agents/` , {
     params: {
       isPlayableCharacter: true

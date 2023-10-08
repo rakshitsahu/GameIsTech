@@ -1,12 +1,7 @@
 import Image from "next/image";
-import { Inter } from "next/font/google";
-import Link from "next/link";
 import Head from "next/head";
-import GCAM_API_STATE from "@/API/API_States";
-import { GCAM_GET_REQUEST } from "@/API/GET_API_Manager";
 import Script from 'next/script'
 import Navbar from "@/Components/Navbar";
-const inter = Inter({ subsets: ["latin"] });
 export async function getStaticProps(){
   const data = {}
 

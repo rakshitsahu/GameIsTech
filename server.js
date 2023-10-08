@@ -17,7 +17,15 @@ app.prepare().then(() => {
       const parsedUrl = parse(req.url, true)
       const { pathname, query } = parsedUrl
  
-      if (pathname === '/a') {
+      const forwardedHost = req.headers['x-forwarded-host'];
+      if (
+        forwardedHost === 'www.apkhub.mobi'
+      ) {
+        // Redirect to https://gameistech.com
+        res.writeHead(301, { Location: `https://apkhub.mobi${req.url}` });
+        res.end();
+      }
+      else if (pathname === '/a') {
         await app.render(req, res, '/a', query)
       } else if (pathname === '/b') {
         await app.render(req, res, '/b', query)

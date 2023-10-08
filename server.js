@@ -12,25 +12,20 @@ const handle = app.getRequestHandler()
 app.prepare().then(() => {
   createServer(async (req, res) => {
     try {
-      // Be sure to pass `true` as the second argument to `url.parse`.
-      // This tells it to parse the query portion of the URL.
-      const parsedUrl = parse(req.url, true)
-      const { pathname, query } = parsedUrl
- 
+      const parsedUrl = parse(req.url, true);
+      const { pathname, query } = parsedUrl;
       const forwardedHost = req.headers['x-forwarded-host'];
+      console.log("X FORWARDED HOST IS" , forwardedHost)
       if (
         forwardedHost === 'www.apkhub.mobi'
       ) {
-        // Redirect to https://gameistech.com
+        // Redirect to https://apkhub.mobi
         res.writeHead(301, { Location: `https://apkhub.mobi${req.url}` });
         res.end();
-      }
-      else if (pathname === '/a') {
-        await app.render(req, res, '/a', query)
-      } else if (pathname === '/b') {
-        await app.render(req, res, '/b', query)
       } else {
-        await handle(req, res, parsedUrl)
+        // Handle other cases
+        parsedUrl.protocol = 'https';
+        await handle(req, res, parsedUrl);
       }
     } catch (err) {
       console.error('Error occurred handling', req.url, err)

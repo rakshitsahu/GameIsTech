@@ -5,7 +5,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
 async function MongoFind(req , res){
-  // console.log( 'the req body is', req.body);
+  console.log( 'this is find api', req.body);
   // console.log('the type of req body is', typeof req.body);
   const body = req.body
   // console.log('the request body is', body)

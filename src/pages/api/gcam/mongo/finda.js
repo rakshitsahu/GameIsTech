@@ -7,7 +7,7 @@ const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
 export async function handler(req , res){
-  // console.log( 'the data of body string is ', req.body)
+  console.log( 'this api is find a', req.body)
   // console.log( 'the type of body is ', typeof req.body)
   const body = req.body
   const collection = body.collection

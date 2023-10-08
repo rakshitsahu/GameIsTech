@@ -13,4 +13,4 @@ Allow: /robots.txt
 
 
 # Specify the location of your sitemap
-Sitemap: https://apkhub.mobi/sitemap.xml
+Sitemap: https://gameistech.com/sitemap.xml

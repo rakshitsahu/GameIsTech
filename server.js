@@ -16,7 +16,7 @@ app.prepare().then(() => {
       const { pathname, query } = parsedUrl;
       const hostName = req.headers.host;
       if (
-        hostName !== 'apkhub.mobi'
+        hostName !== 'apkhub.mobi' 
       ) {
         res.writeHead(301, { Location: `https://apkhub.mobi${req.url}` });
         res.end();

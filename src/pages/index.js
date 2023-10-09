@@ -20,7 +20,7 @@ export default function Home() {
   const descriptionCss = 'text-xl font-thin'
   console.log("worked till here on homepage")
   return (
-    <div>
+    <>
 <Head>
 <title>{title}</title>
 <meta
@@ -28,20 +28,6 @@ export default function Home() {
   content= {description}
   key="desc"
 />
-<meta name="robots" content="index, follow"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<div className="container">
-<Script src="https://www.googletagmanager.com/gtag/js?id=G-NQJL28G8E0" />
-<Script id="google-analytics">
-  {`
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-NQJL28G8E0');
-  `}
-</Script>
-</div>
 </Head> 
 <div className="w-screen h-screen">
 <div className="navbar_section p-10">
@@ -77,6 +63,6 @@ alt="Google Camera"/>
 </div>
 </div>
 </div>   
-    </div>
+    </>
   );
 }

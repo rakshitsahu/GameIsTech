@@ -3,7 +3,7 @@ import Head from "next/head";
 import Script from 'next/script'
 import Navbar from "@/Components/Navbar";
 import Link from "next/link";
-export async function getServerSideProps(){
+export async function getStaticProps(){
   const data = {}
     return {
       props :{
@@ -18,7 +18,7 @@ export default function Home() {
   const HeadingCss = ''
   const MarginCss = 'mt-5'
   const descriptionCss = 'text-xl font-thin'
-  console.log("worked till here on homepage")
+
   return (
     <>
 <Head>
@@ -28,6 +28,7 @@ export default function Home() {
   content= {description}
   key="desc"
 />
+<link rel="canonical" href= {`https://apkhub.mobi/`} />
 </Head> 
 <div className="w-screen h-screen">
 <div className="navbar_section p-10">

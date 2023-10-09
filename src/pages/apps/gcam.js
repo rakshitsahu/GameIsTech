@@ -19,9 +19,9 @@ export async function  getServerSideProps() {
     .then((results) => {
       return results
     })
-    // console.log(ob)
+
 const gcamVersions = []
-// console.log(gcamVersionsData)
+
 Object.keys(gcamVersionsData[0]).map(
   (element)=>{
     gcamVersions.push(element)
@@ -31,9 +31,7 @@ gcamVersions.splice(0 , 1)
 
 const developers = developersData.map(({ developerName }) => ({ name : developerName }))
 const brands = phoneData.map(({ phoneBrand }) => ({ name : phoneBrand }))
-// console.log('generic gcams are', genericGcams)
-// console.log('the map is ' , developers)
-// console.log(brands)
+
   return {
     props: {
       brands,

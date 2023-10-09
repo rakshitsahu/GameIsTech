@@ -18,7 +18,6 @@ app.prepare().then(() => {
       if (
         hostName !== 'apkhub.mobi'
       ) {
-        // Redirect to https://apkhub.mobi
         res.writeHead(301, { Location: `https://apkhub.mobi${req.url}` });
         res.end();
       } else {

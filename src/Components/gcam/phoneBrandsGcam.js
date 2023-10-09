@@ -21,14 +21,12 @@ export default function PhoneBrandsGcam({gcams, heading , prefix }) {
     {
         
         Object.keys(gcams).map(  (index) => {
-        //console.log ( 'the brand is ', brands.index)
+  
           return (
             <Link key={index} value={gcams[index].name} href={`/apps/gcam/phones/${ encodeURIComponent(gcams[index].brand) }/${encodeURIComponent(gcams[index].name)}`} >
             <div key={index} value={gcams[index].name}  className='grid group/item bg-white rounded-3xl p-4'>
             <div  className={`flex justify-center bg-black text-5xl font-extrabold drop-shadow-2xl rounded-3xl p-5 bg-clip-text text-transparent bg-gradient-to-r ${colors[color++ % colors.length]} `}>
             { gcams[index].name } 
-            
-            {console.log(gcams)}
             </div>
              <table class="table-auto border-spacing-x-2.5 ">
 

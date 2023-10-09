@@ -17,7 +17,7 @@ export async function handler(req , res){
         }
       });
       try {
-        // console.log('the collectiona nd filter is', collection , filter)
+        
         await client.connect().catch( async (err) => { await client.close(true) } )
       const data = await client.db('Gcam').collection(collection).deleteMany(filter);
       await client.close(true)

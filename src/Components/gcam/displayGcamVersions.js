@@ -2,7 +2,7 @@ import { Tooltip } from "@nextui-org/react";
 import Link from 'next/link';
 
 export default function DisplayGcamVersions({gcamVersions, heading }) {
-// console.log(gcamVersions)
+
   if(!gcamVersions)
   gcamVersions = true
     const colors = ['from-pink-500 to-violet-500', 'from-green-500 to-violet-500' , 'from-violet-500 to-pink-500' 
@@ -17,7 +17,6 @@ export default function DisplayGcamVersions({gcamVersions, heading }) {
     <div className='flex flex-wrap justify-center w-full rounded-md p-3 shadow-2xl drop-shadow-2xl gap-2'>
     {
         Object.keys(gcamVersions).map(  (index) => {
-        // console.log ( 'the brand is ', index)
           return (
             <Link key={index} value={gcamVersions[index]} href={`/apps/gcam/version/${gcamVersions[index]}`.toLowerCase()}>
             <Tooltip className='bg-blue-600 rounded-full text-white' content= {`Gcam ${gcamVersions[index]}`}>

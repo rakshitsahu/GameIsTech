@@ -10,7 +10,7 @@ export async function getAllPathsForDeveloperPage(){
   const developersData = await GCAM_GET_REQUEST(GCAM_API_STATE.Developers)
   const developers = developersData.map(({ developerName }) => ({ name : developerName }))
   developers.map( (element)=>{
-    // console.log(element)
+    
     paths.push({
       params:{
       developer : element.name,
@@ -20,24 +20,24 @@ export async function getAllPathsForDeveloperPage(){
   })
   return [paths , possiblePaths]
 }
-// export async function getStaticPaths(){
-//   const developersData = await GCAM_GET_REQUEST(GCAM_API_STATE.Developers)
-//   const developers = developersData.map(({ developerName }) => ({ name : developerName }))
-//     //   console.log( 'gcam versions are', res)
-//   const pathsData = await getAllPathsForDeveloperPage()
-//       const paths = pathsData[0]
-//       // console.log( 'paths are' , pathsData[1] )
-//       return {
-//         paths : [],
-//         fallback: 'blocking'
-//       }
-// }
+
+
+
+
+
+
+
+
+
+
+
+
 
 export async function getServerSideProps(context){
-    // const data = {
-    //     name : 'hello'
-    // }
-    // console.log('working till heere')
+    
+    
+    
+    
     const developer = context.params.developer
 
     const [gcamData, developersData, phoneData] = await Promise.all([
@@ -49,15 +49,15 @@ export async function getServerSideProps(context){
         return results
       })
     
-    // const gcamData = await GCAM_GET_REQUEST(GCAM_API_STATE.Gcam)
+    
 
-    // const developersData = await GCAM_GET_REQUEST(GCAM_API_STATE.Developers)
-    // const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
-    // console.log('developer name is' , developer)
+    
+    
+    
     let data = null
     Object.keys(gcamData).map(
       (element) =>{
-        // console.log(gcamData[element].developerName , developer )
+        
         if( gcamData[element].developerName === developer ){
           data = gcamData[element].data
         }
@@ -79,14 +79,14 @@ export async function getServerSideProps(context){
             developers,
             developer
         },
-        // revalidate: 20,
+        
       }
 }
 export default function Developer({data , brands, developers,developer}) {
   if(!data)
   data = []
   const GcamJson = data;
-  // console.log(GcamJson)
+  
   const description = `Download all Gcam ports made by ${developer}. We have ${GcamJson.length} Google Camera Ports that are
   made by ${developer}.`
   const title = `Gcam APK's By ${developer} | Google Camera Ports`

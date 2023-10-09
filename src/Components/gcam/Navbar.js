@@ -25,7 +25,6 @@ export default function Navbar({brands,developers}) {
           <div className='bg-white rounded-2xl group/edit invisible group-edit/item:text-gray-700  group-hover/item:visible absolute'>
           <ul className='p-4 overflow-y-auto max-h-96'>
           {
-            // console.log('the data found is ',brands)
             Object.keys(brands).map(  (index) => {
             return (
               <Link key={index} href={`/apps/gcam/phones/${brands[index].name}`}>
@@ -41,7 +40,6 @@ export default function Navbar({brands,developers}) {
           <div className=' rounded-2xl bg-white group/edit invisible group-edit/item:text-gray-700 group-hover/item:visible absolute'>
           <ul className='p-4 overflow-y-auto max-h-96'>
           {
-            // console.log('the data found is ',brands)
             Object.keys(developers).map(  (index) => {
             return (
               <Link key={index} href={`/apps/gcam/developer/${developers[index].name}`} >

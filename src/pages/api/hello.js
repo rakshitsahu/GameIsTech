@@ -5,15 +5,11 @@ import axios from 'axios';
 import MongoFind from './gcam/mongo/find';
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
 export async function handler(req , res){
-  // console.log( 'the req body is', req.body);
-  // console.log('the type of req body is', typeof req.body);
-  const body = req.body
-  // console.log('the request body is', body)
 
+  const body = req.body
     const collection = "indexedPaths"
     const filter = req.body.filter
-    // console.log(' collection is', collection)
-    // console.log('filter is', filter)
+
 
 
     const client = new MongoClient(uri, {
@@ -40,7 +36,6 @@ export async function handler(req , res){
         // });
         res.send({message : "success"})
       } catch (error) {
-        // console.log('error fetching data' , error)
         res.send({message : "error" , er : error})
         await client.close()
       }

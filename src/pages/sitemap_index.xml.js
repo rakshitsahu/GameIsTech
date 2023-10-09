@@ -36,8 +36,6 @@ function encryptAllUrls(urlList){
 export async function getServerSideProps({ res }) {
   // We make an API call to gather the URLs for our site
   const allData = await GCAM_URLS(GCAM_URL_STATE.All)
-  // console.log('all posts are', allData)
-
 
   // We generate the XML sitemap with the posts data
   const sitemap = generateSiteMap(allData);

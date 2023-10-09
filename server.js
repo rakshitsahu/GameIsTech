@@ -15,8 +15,6 @@ app.prepare().then(() => {
       const parsedUrl = parse(req.url, true);
       const { pathname, query } = parsedUrl;
       const hostName = req.headers.host;
-      // console.log("X FORWARDED HOST IS" , hostName , hostName)
-      // console.log("the headers are", req.headers)
       if (
         hostName !== 'apkhub.mobi'
       ) {

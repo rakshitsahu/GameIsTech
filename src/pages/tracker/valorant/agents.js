@@ -24,21 +24,18 @@ export async function getServerSideProps(){
       isPlayableCharacter: true
     }
   } )
-  console.log("agents data response is", response.data.data)
+
   const json = response.data.data
 
   return { props: { json } }
 }
 export default function Agents({json}) {
   const [Agents, setAgents] = useState([]);
-  // console.log( 'the response of gameistech is ', json)
-  // console.log('the agentsjsoj  is', json)
-      // setAgents(json);
-      // console.log(json);
+
       mapAgents(json);
 
       const data = Object.keys(AgentMap["Sentinel"]);
-      // console.log(AgentMap);
+
       return (
         <>
           <Navbar />

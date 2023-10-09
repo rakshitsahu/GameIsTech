@@ -9,14 +9,13 @@ import axios from "axios";
           server : "na"
         }
       }
-      const res = await axios.get( process.env.URL + '/api/valorant/leaderboard',config).then( (result)=>{
-        //console.log(result.data.players) 
+      const res = await axios.get( process.env.URL + '/api/valorant/leaderboard',config).then( (result)=>{ 
         return result
       } ) ;
-      //console.log(res)
+
       return res
     } catch (error) {
-      console.log(error)
+
     }
   }
   export {getLeaderboard}

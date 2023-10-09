@@ -11,7 +11,7 @@ const jwtClient = new google.auth.JWT(
 );
 jwtClient.authorize(function(err, tokens) {
   if (err) {
-    console.log(err);
+
     return;
   }
   let options = {
@@ -30,6 +30,5 @@ jwtClient.authorize(function(err, tokens) {
   };
   request(options, function (error, response, body) {
     // Handle the response
-    console.log(response);
   });
 });

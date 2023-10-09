@@ -12,10 +12,10 @@ export default function Login() {
     const [message , setMessage] = useState('')
     async function onLoginClick(){
       const result = await LogIn(userName , password)
-       console.log( 'the result found is', result.message)
+
       setMessage(result.message)
     }
-    console.log(getCookie('Token'))
+
   return (
     <div className='grid bg-slate-600 h-screen items-center gap-4 justify-items-center shadow-3xl drop-shadow-3xl rounded-3xl'>
 

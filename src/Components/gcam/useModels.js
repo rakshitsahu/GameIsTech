@@ -23,9 +23,7 @@ async function Androidversionrun(data){
         if(!result)
             await model.collection.insertOne(data)
     } )
-    // console.log(data)
-    
-    // console.log('inserted')
+
 }
  async function PhoneBrandsRun(data){
     const model = PhoneBrandsModel
@@ -34,7 +32,6 @@ async function Androidversionrun(data){
             await model.collection.insertOne(data)
     } )
 
-    // console.log('inserted')
 }
 async function ProcessorBrandsRun(data){
     const model = ProcessorBrandsModel
@@ -42,7 +39,7 @@ async function ProcessorBrandsRun(data){
         if(!result)
             await model.collection.insertOne(data)
     } )
-    // console.log('inserted')
+
 }
 async function DeveloperNamesRun(data){
     const model = DeveloperNamesModel
@@ -50,7 +47,7 @@ async function DeveloperNamesRun(data){
         if(!result)
             await model.collection.insertOne(data)
     } )
-    // console.log('inserted')
+
 }
 async function AddGcamVersion(data){
     const model = GcamVersionModel
@@ -58,7 +55,7 @@ async function AddGcamVersion(data){
         if(!result)
             await model.collection.insertOne(data)
     } )
-    // console.log('inserted')
+
 }
 
 export {Androidversionrun, PhoneBrandsRun , ProcessorBrandsRun,DeveloperNamesRun , AddGcamVersion  }

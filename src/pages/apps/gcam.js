@@ -1,6 +1,6 @@
 import GCAM_API_STATE from '@/API/API_States'
 import { GCAM_GET_REQUEST } from '@/API/GET_API_Manager'
-// import Navbar from '@/Components/gcam/Navbar'
+
 import DeviceBrands from '@/Components/gcam/deviceBrands'
 import DisplayDevelopers from '@/Components/gcam/displayDevelopers'
 import DisplayGcamVersions from '@/Components/gcam/displayGcamVersions'
@@ -19,9 +19,9 @@ export async function  getServerSideProps() {
     .then((results) => {
       return results
     })
-    // console.log(ob)
+    
 const gcamVersions = []
-// console.log(gcamVersionsData)
+
 Object.keys(gcamVersionsData[0]).map(
   (element)=>{
     gcamVersions.push(element)
@@ -31,9 +31,9 @@ gcamVersions.splice(0 , 1)
 
 const developers = developersData.map(({ developerName }) => ({ name : developerName }))
 const brands = phoneData.map(({ phoneBrand }) => ({ name : phoneBrand }))
-// console.log('generic gcams are', genericGcams)
-// console.log('the map is ' , developers)
-// console.log(brands)
+
+
+
   return {
     props: {
       brands,

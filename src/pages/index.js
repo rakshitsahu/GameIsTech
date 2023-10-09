@@ -2,6 +2,7 @@ import Image from "next/image";
 import Head from "next/head";
 import Script from 'next/script'
 import Navbar from "@/Components/Navbar";
+import Link from "next/link";
 export async function getStaticProps(){
   const data = {}
 
@@ -13,82 +14,14 @@ export async function getStaticProps(){
     }
 }
 export default function Home() {
-  
-  // console.log('execution came till heree')
-  const data = [
-    {
-      name: "Apex Legends",
-      PosterPath: "/ApexLegends/poster.jpg",
-    },
-    {
-      name: "BattleField",
-      PosterPath: "/BattleField/poster.jpg",
-    },
-    {
-      name: "ClashRoyale",
-      PosterPath: "/ClashRoyale/poster.jpg",
-    },
-    {
-      name: "COC",
-      PosterPath: "/COC/poster.jpg",
-    },
-    {
-      name: "COD",
-      PosterPath: "/COD/poster.jpg",
-    },
-    {
-      name: "CSGO",
-      PosterPath: "/CSGO/poster.jpg",
-    },
-    {
-      name: "Fortnite",
-      PosterPath: "/Fortnite/poster.jpg",
-    },
-    {
-      name: "LOL",
-      PosterPath: "/LOL/poster.jpg",
-    },
-    {
-      name: "OverWatch",
-      PosterPath: "/OverWatch/poster.jpg",
-    },
-    {
-      name: "PUBG",
-      PosterPath: "/PUBG/poster.jpg",
-    },
-  ];
-  const notready = ()  =>{
 
-  }
-  const SocialIcons = () => {
-    return (
-      <div className="flex flex-wrap pb-4  justify-center ">
-        <span className="pt-3 px-2 ">
-          <Image
-            src="/Social_Media_Icons/facebook.png"
-            height={30}
-            width={30}
-          />
-        </span>
-        <span className="pt-3 px-2 ">
-          <Image
-            src="/Social_Media_Icons/instagram.png"
-            height={30}
-            width={30}
-          />
-        </span>
-        <span className="pt-3 px-2 ">
-          <Image src="/Social_Media_Icons/twitter.png" height={30} width={30} />
-        </span>
-      </div>
-    );
-  };
   const description = `GameIsTech is a website all about Gaming, Technology & Apps.`
   const title = `Epoch of Gaming, Technology & Apps`
-
+  const HeadingCss = ''
+  const MarginCss = 'mt-5'
+  const descriptionCss = 'text-xl font-thin'
   return (
     <>
-
 <Head>
 <title>{title}</title>
 <meta
@@ -98,9 +31,7 @@ export default function Home() {
 />
 <meta name="robots" content="index, follow"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-
 <div className="container">
-
 <Script src="https://www.googletagmanager.com/gtag/js?id=G-NQJL28G8E0" />
 <Script id="google-analytics">
   {`
@@ -115,10 +46,38 @@ export default function Home() {
 </Head> 
 <div className="w-screen h-screen">
 <div className="navbar_section p-10">
-<Navbar className="w-full"/>
+<Navbar className="z-30"/>
+</div>
+<div className= {`${MarginCss}` }>
+
+<div className="grid justify-items-center bg-white ">
+<span className="grid justify-items-center m-4 large-shadow p-8 rounded-2xl">
+<center>
+<h1 className=" font-thin flex text-3xl flex-wrap lg:text-8xl xl:text-8xl md:text-8xl ">GameIsTech</h1>
+</center>
+<h4 className={`${MarginCss} mt-2 justify font-mono decoration-blue-500 underline`}>GameIsTech is all about Sports, Gaming & Apps</h4>
+</span>
+</div>
+
+<div className={`${descriptionCss} ${MarginCss}`}>
+GameIsTech is just started, At the moment I have only Google Camera Ports for you.
+stay tuned much more to come.
+<div className="m-4 large-shadow p-8 rounded-2xl">
+<h4 className="text-3xl ">Apps:</h4>
+
+<Link rel="canonical" href= {`/apps/gcam`}>
+<button className="grid mt-3 justify-items-center border-2 rounded-2xl p-3">
+<Image src='/gcam/gcam.jpg'
+width={120}
+height={120}
+alt="Google Camera"/>
+<font> Gcam</font>
+</button>
+</Link>
+</div>
+</div>
 </div>
 </div>   
-
 
     </>
   );

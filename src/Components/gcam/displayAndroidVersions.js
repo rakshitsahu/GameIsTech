@@ -5,7 +5,7 @@ export default function DisplayAndroidVersions({androidVersions}) {
     <div className='grid grid-cols-1 sm:grid-cols-1 xl:grid-cols-3 lg:grid-cols-3 w-full rounded-md p-5 shadow-2xl drop-shadow-2xl gap-14  font-thin shadow-2xl '>
     {
         Object.keys(androidVersions).map(  (index) => {
-        //console.log ( 'the brand is ', androidVersions.index)
+
           return (
 
             <div key={index} value={androidVersions[index].name} className=' group/item  grid grid-cols-2 gap-4 rounded-lg shadow-2xl drop-shadow-2xl '>

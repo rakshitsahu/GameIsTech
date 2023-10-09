@@ -23,7 +23,6 @@ export async function handler(req , res){
           await client.db('Gcam').collection(Collection).insertOne(data).then( (result) =>{
             res.send({message :"data has been inserted"})
           } ).catch((err)=> {
-            // console.log(err)
             res.send({message :"Error occured while inserting the data"})
            })
           

@@ -3,8 +3,6 @@ import Link from 'next/link'
 import { BsCamera2, BsReddit, BsTelegram } from 'react-icons/bs'
 import { SiXdadevelopers } from "react-icons/si"
 export default function DisplayPhoneBrandGcams({phoneData}){
-    console.log('phonedata is', phoneData)
-    // console.log(Object.keys(phoneData[0]))
     const colors = ['from-pink-500 to-violet-500', 'from-green-500 to-violet-500' , 'from-violet-500 to-pink-500' 
    , 'from-pink-500 to-green-500' , 'from-violet-500 to-red-500' , 'from-violet-500 to-green-500'
 ]
@@ -15,7 +13,6 @@ export default function DisplayPhoneBrandGcams({phoneData}){
         Object.keys(phoneData[0].data).map(  (index) => {
           let phoneBrand = encodeURIComponent(phoneData[0].phoneBrand)
           let phoneName = encodeURIComponent(phoneData[0].data[index].phoneName) 
-        //console.log ( 'the brand is ', brands.index)
           return (
             <Link key={index} value={phoneData[0].phoneName} href={`/apps/gcam/phones/${phoneBrand}/${phoneName}`}>
             <Tooltip className='bg-purple-600 rounded-full text-white' content= {`Gcam for ${phoneData[0].data[index].phoneName}`}>
@@ -28,7 +25,7 @@ export default function DisplayPhoneBrandGcams({phoneData}){
              <div className='grid grid-cols-4 justify-items-center p-3'>
              {
               Object.keys(phoneData[0].data[index].source).map(  (index) => {
-              //console.log ( 'the brand is ', brands.index)
+
                 return (
                   <div key = {index} className=''>
                   { index === 'reddit' && <BsReddit className='text-orange-400' />}

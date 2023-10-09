@@ -8,14 +8,14 @@ import Head from 'next/head'
 export async function getAllPathsForVersionPage(){
   const paths = []
   const possiblePaths = []
-  // console.log('the nodeenv is ' , process.env.NODE_ENV)
+  
   const res  = await GCAM_GET_REQUEST(GCAM_API_STATE.GcamVersions)
-  // console.log('working here ', res)
+  
   const keys = Object.keys(res[0])
   keys.splice(0,1)
-  // console.log( 'gcam versions are', keys)
+  
   keys.forEach(element => {
-    // console.log(element)
+    
     paths.push({
       params:{
       version : element,
@@ -25,24 +25,24 @@ export async function getAllPathsForVersionPage(){
   });
   return [paths , possiblePaths]
 }
-// export async function getStaticPaths(){
+
       
-//       const pathsData =  await getAllPathsForVersionPage()
-//       const paths = pathsData[0]
-//       // console.log(pathsData[1] )
-//       return {
-//         paths : [],
-//         fallback: 'blocking'
-//       }
-// }
+
+
+
+
+
+
+
+
 
 export async function getServerSideProps(context){
-    // const data = {
-    //     name : 'hello'
-    // }
-    // console.log('working till heere')
+    
+    
+    
+    
     const version = context.params.version
-    // console.log(' data of static props is', version)
+    
     const [phoneData, developersData, gcamVersions,gcamVersionsMap] = await Promise.all([
       GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData),
       GCAM_GET_REQUEST(GCAM_API_STATE.Developers),
@@ -54,7 +54,7 @@ export async function getServerSideProps(context){
       })
 
 
-    // console.log(gcamVersionsMap)
+    
     const gcamVersionData = gcamVersionsMap.get(version)
    
     if( !gcamVersionData )
@@ -74,7 +74,7 @@ export async function getServerSideProps(context){
             developers,
             version
         },
-        // revalidate: 20,
+        
       }
 }
 export default function Version({gcamVersionData ,gcamVersions , brands, developers, version}) {

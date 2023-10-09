@@ -11,7 +11,7 @@ const client = new MongoClient(uri, {
     }
   });
 export async function handler(req , res){
-    await client.connect().then((v)=> console.log('connection done')) .catch( async (err) => { console.log('connection failed') } )
+    await client.connect().then((v)=> console.log('connection done') ) .catch( async (err) => { console.log('connection failed') } )
     const itemsToInsert = ["heelllo", "thereee"];
     const updateOperation = {
       $push: {
@@ -22,16 +22,15 @@ export async function handler(req , res){
     const db = client.db('Indexing-DB');
     const collection = db.collection('indexedPaths');
     const response = await collection.updateOne({}, updateOperation, (updateErr, result) => {
-      console.log(updateErr)
+
       if (updateErr) {
         console.error('Error updating document:', updateErr);
         res.send({ message: "failed" });
       } else {
-        console.log('Document updated successfully');
+
         res.send({ message: "success", result });
       }
     });
-    console.log('result found is' , response)
     res.send({ message: "failed" });
     
     await client.close(true)

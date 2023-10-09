@@ -48,9 +48,9 @@ const options = [
 
 ]
 export const getServerSideProps = async ({ req , res }) =>{
-  // Fetch data from external API
+  
   const authentication = await Authorization(req , res)
-  // const authentication = {status :200 , message  : 'user has been logged in'}
+  
   
 
   return { props: { authentication } }
@@ -63,11 +63,11 @@ const Dashboard = ( {authentication} ) => {
   const [collection , setCollection] = useState(GCAM_DB_COLLECTION.Android_Versions)
   const [currentOption , setCurrentOption] = useState('')
   useEffect( () => {
-    console.log(collection)
+    
     const data = makeRequest(collection)
     data.then((res)=>{
       setList(res)
-      console.log(res)
+      
     })
   }, [collection]);
   if(authentication.status != 200)
@@ -75,7 +75,7 @@ const Dashboard = ( {authentication} ) => {
   
   async function makeRequest(){
     const res = await FindAllOperation(collection)
-    console.log('the result is', res)
+    
     return res
   }
 
@@ -89,7 +89,7 @@ const Dashboard = ( {authentication} ) => {
       document.getElementById(newOption).classList.remove('bg-emerald-500')
       document.getElementById(newOption).classList.add('bg-blue-500')
     
-    console.log(currentOption , newOption)
+    
     setCurrentOption(newOption)
   }
 
@@ -139,10 +139,10 @@ const Dashboard = ( {authentication} ) => {
           <button key={option} id= {options[option].name} className="bg-emerald-500 hover:ring-1 active:bg-emerald-800 p-2 drop-shadow-2xl rounded-xl" onClick={() =>{
              setName(options[option].name) ,
              setCollection(options[option].collection),
-             console.log('the collection is', options[option].collection),
+             
              handleCurrentOption(options[option].name)
              setDeletedList([])
-            //  document.getElementById(options[option].name).classList.remove('bg-emerald-500')
+            
             }} >
            {options[option].name} 
            </button>

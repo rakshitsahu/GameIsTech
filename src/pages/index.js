@@ -20,7 +20,7 @@ export default function Home() {
   const descriptionCss = 'text-xl font-thin'
   console.log("worked till here on homepage")
   return (
-    <>
+    <div>
 <Head>
 <title>{title}</title>
 <meta
@@ -77,7 +77,6 @@ alt="Google Camera"/>
 </div>
 </div>
 </div>   
-
-    </>
+    </div>
   );
 }

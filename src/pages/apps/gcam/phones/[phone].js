@@ -79,7 +79,8 @@ console.log("error in get server side props ",e)
 export default function Phones({data, phone , brands, developers}) {
   try{
     const GcamJson = data;
-    
+    console.log(GcamJson)
+    console.log(GcamJson[0].data)
     const description = `Download Gcam for ${phone} Devices. We have so many Google Camera ports for almost every ${phone} Device`
     const title = `Gcam for ${phone} Devices | Google Camera Ports`
     const H1 = 'font-semibold text-5xl'
@@ -110,7 +111,7 @@ export default function Phones({data, phone , brands, developers}) {
 
 
     </p>
-    <DisplayPhoneBrandGcams phoneData = {GcamJson} />
+    <DisplayPhoneBrandGcams phoneData = {GcamJson[0]} />
     </article>
     <Footer/>
     

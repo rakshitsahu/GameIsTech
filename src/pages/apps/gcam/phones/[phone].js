@@ -111,7 +111,7 @@ export default function Phones({data, phone , brands, developers}) {
 
 
     </p>
-    <DisplayPhoneBrandGcams phoneData = {GcamJson[0]} />
+    
     </article>
     <Footer/>
     

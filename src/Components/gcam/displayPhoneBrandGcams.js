@@ -18,7 +18,6 @@ export default function DisplayPhoneBrandGcams({phoneData}){
             <Link key={index} value={phoneData.phoneName} href={`/apps/gcam/phones/${phoneBrand}/${phoneName}`}>
             <Tooltip className='bg-purple-600 rounded-full text-white' content= {`Gcam for ${phoneData.data[index].phoneName}`}>
             <div  className='grid grid-rows-2  group/item bg-white rounded-r-full rounded-l-full p-4'>
-
             <div  className={`flex flex-wrap justify-center text-lg bg-black font-extrabold drop-shadow-2xl rounded-3xl p-3 bg-clip-text text-transparent bg-gradient-to-r ${colors[color++ % colors.length]} `}>
              {phoneData.data[index].phoneName}  
              </div>

@@ -2,7 +2,8 @@ import axios from "axios";
 import GCAM_API_STATE from '@/API/API_States'
 import GCAM_DB_COLLECTION from "../Components/gcam/mongodb/DB_Name_State";
 import { setCookie , getCookie , hasCookie } from "cookies-next";
-let URL = process.env.URL
+const URL = 'https://apkhub.mobi'
+// const URL = `http://localhost:${process.env.PORT}`
  export async function InsertOperation(collection , data , filter = null){
     
     const response = await axios.post( URL + '/api/gcam/mongo/insert' , {
@@ -19,7 +20,7 @@ let URL = process.env.URL
 }
 
 export async function FindAllOperation(collection , filter = {}){
-    let url = ""
+    
     const response = await axios.post(URL +'/api/gcam/mongo/find' , {
         collection : collection,
         filter : filter
@@ -33,7 +34,7 @@ export async function FindAllOperation(collection , filter = {}){
 }
 
 export async function DeleteMany(collection , filter){
-    let url = ""
+    
 
     const response = await axios.post( URL + '/api/gcam/mongo/deletemany' , {
         collection : collection,
@@ -48,7 +49,7 @@ export async function DeleteMany(collection , filter){
 }
 
 export async function UpdateOne(collection , filter , data){
-    let url = ""
+    
     
     const response = await axios.post( URL + '/api/gcam/mongo/updateone' , {
         collection : collection,

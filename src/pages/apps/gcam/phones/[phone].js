@@ -37,7 +37,11 @@ export async function getAllPathsForPhonePage(){
 
 
 export async function getServerSideProps(context){
-  try{
+
+    
+    
+    
+    
     const phone = context.params.phone
     const pathData = await getAllPathsForPhonePage()
     const paths = pathData[1]
@@ -57,6 +61,7 @@ export async function getServerSideProps(context){
         return results
       })
 
+
       const developers = developersData.map(({ developerName }) => ({ name : developerName }))
       const brands = phoneData.map(({ phoneBrand }) => ({ name : phoneBrand }))
       
@@ -70,15 +75,10 @@ export async function getServerSideProps(context){
         },
         
       }
-  }
-  catch(e){
-console.log("error in get server side props ",e)
-  }
 }
 export default function Phones({data, phone , brands, developers}) {
-  try{
     const GcamJson = data;
-
+    
     const description = `Download Gcam for ${phone} Devices. We have so many Google Camera ports for almost every ${phone} Device`
     const title = `Gcam for ${phone} Devices | Google Camera Ports`
     const H1 = 'font-semibold text-5xl'
@@ -115,7 +115,4 @@ export default function Phones({data, phone , brands, developers}) {
     
     </>
   )
-  } catch(e){
-    console.log("Error occured on phonepage is ",e);
-  }
 }

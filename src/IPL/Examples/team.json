@@ -1,0 +1,31 @@
+{
+    "men" : [
+        {
+    "fullName" : "Chennai SuperKing",
+    "shortName" : "CSK",
+    "seasons" : {
+        "2023" : {
+            "players" : {
+                "batters" : [],
+                "allRounders" : [],
+                "Bowlers" : [],
+                "wicketKeepers" : []
+            },
+            "totalMatches" : 20,
+            "matchesWon" : 15,
+            "matchesLost" : 5,
+            "nrr" : "FOR",
+            "against" : "2326/279.2",
+            "points" : 20 
+        }
+    },
+    "recentForm" : [],
+    "seasonWins":["2023","2022"],
+    "owner" : "Chennai Super Kings Cricket Ltd",
+    "coach" : "Stephen Fleming",
+    "Venue" : "M. A. Chidambaram Stadium"
+    }
+    ],
+
+    "women" : []
+}

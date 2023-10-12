@@ -1,0 +1,2 @@
+    print(batsmansList)
+    print(allRoundersList)

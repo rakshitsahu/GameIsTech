@@ -1,0 +1,31 @@
+{
+    "men" : [
+        {
+    "fullName" : "",
+    "shortName" : "",
+    "seasons" : {
+        "2023" : {
+            "players" : {
+                "batters" : [],
+                "allRounders" : [],
+                "Bowlers" : [],
+                "wicketKeepers" : []
+            },
+            "totalMatches" : 0,
+            "matchesWon" : 0,
+            "matchesLost" : 0,
+            "nrr" : "",
+            "against" : "",
+            "points" : 0 
+        }
+    },
+    "recentForm" : [],
+    "seasonWins":[],
+    "owner" : "",
+    "coach" : "",
+    "Venue" : ""
+    }
+    ],
+
+    "women" : []
+}

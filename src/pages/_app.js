@@ -5,8 +5,7 @@ export default function App({ Component, pageProps }) {
   
   return<>
   <div className="container">
-  <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5978783053272716"
-  crossorigin="anonymous"></Script>
+  <meta name="google-adsense-account" content="ca-pub-5978783053272716"/>
   <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5978783053272716"
      crossorigin="anonymous"></Script>
   <Script strategy="lazyOnload" src={`https://www.googletagmanager.com/gtag/js?id=G-XQQXBF2PXL`} />

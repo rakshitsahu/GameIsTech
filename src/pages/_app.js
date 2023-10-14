@@ -7,6 +7,8 @@ export default function App({ Component, pageProps }) {
   <div className="container">
   <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5978783053272716"
   crossorigin="anonymous"></Script>
+  <Script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5978783053272716"
+     crossorigin="anonymous"></Script>
   <Script strategy="lazyOnload" src={`https://www.googletagmanager.com/gtag/js?id=G-XQQXBF2PXL`} />
   <Script strategy="lazyOnload" id="google-analytics">
     {`

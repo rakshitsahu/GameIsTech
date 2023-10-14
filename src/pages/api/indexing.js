@@ -15,14 +15,14 @@ var key = {}
 let paths = []
 const keyMap = {
   "apkhub.mobi" : apkHubKey,
-  "apkhub.mobi" : GameIsTechKey,
+  "gameistech.com" : GameIsTechKey,
   "androidapkdownloads.info" : androidApkKey
 }
 var key = {}
 const DB_NAME = "Indexing-DB"
 let collection = "indexedPaths"
 let domainName = ""
-const defaultDomainName = "apkhub.mobi"
+const defaultDomainName = "gameistech.com"
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
 const QUOTA_LIMIT = 200
 function getUrls(indexed , urlList , limit = QUOTA_LIMIT){
@@ -152,11 +152,17 @@ async function insertIndexedUrls(urlList){
           filter : {},
           data : updateOperation
         })
+        console.log(response)
        }
-       await client.close()
+       setTimeout(async () => {
+        await client.close()
+       }, 1500);
+       
        
   } catch (error) {
-    await client.close()
+    setTimeout(async () => {
+      await client.close()
+     }, 1500);
   }
 }
 let latestIndexedUrls = []
@@ -187,15 +193,20 @@ jwtClient.authorize(function(err, tokens) {
     }
   };
   request(options, function (error, response, body) {
+    // console.log(body)
     if(error)
     {
-     
+     console.log("something went wrong")
     }
     else if( response.statusCode === 200  )
     {
       
       latestIndexedUrls.push(url)
-
+      console.log("url send for indexing")
+    }
+    else
+    {
+      console.log("in else condition" , response)
     }
   return response.statusCode
   });
@@ -219,7 +230,7 @@ export async function handler(req , res){
   collection = req.body.collection
   domainName = req.body.domainName
   key = keyMap[domainName]
-
+  console.log("API CALLED")
   paths = await getUrlList()
 
   const indexedList = await getIndexedPaths(paths)
@@ -240,7 +251,7 @@ export async function handler(req , res){
       res.json({message : 'Something went wrong'})
       
     })
-  }, 200);
+  }, 1500);
   
 
   

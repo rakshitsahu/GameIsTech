@@ -152,7 +152,7 @@ async function insertIndexedUrls(urlList){
           filter : {},
           data : updateOperation
         })
-        console.log(response)
+       
        }
        setTimeout(async () => {
         await client.close()
@@ -193,20 +193,20 @@ jwtClient.authorize(function(err, tokens) {
     }
   };
   request(options, function (error, response, body) {
-    // console.log(body)
+   
     if(error)
     {
-     console.log("something went wrong")
+  
     }
     else if( response.statusCode === 200  )
     {
       
       latestIndexedUrls.push(url)
-      console.log("url send for indexing")
+
     }
     else
     {
-      console.log("in else condition" , response)
+
     }
   return response.statusCode
   });
@@ -230,7 +230,6 @@ export async function handler(req , res){
   collection = req.body.collection
   domainName = req.body.domainName
   key = keyMap[domainName]
-  console.log("API CALLED")
   paths = await getUrlList()
 
   const indexedList = await getIndexedPaths(paths)

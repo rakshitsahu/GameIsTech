@@ -20,23 +20,17 @@ export async function getAllPathsForDeveloperPage(){
   })
   return [paths , possiblePaths]
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-export async function getServerSideProps(context){
-    
-    
-    
+export async function getStaticPaths(){
+  const developersData = await GCAM_GET_REQUEST(GCAM_API_STATE.Developers)
+  const developers = developersData.map(({ developerName }) => ({ name : developerName }))
+  const pathsData = await getAllPathsForDeveloperPage()
+      const paths = pathsData[0]
+      return {
+        paths : [],
+        fallback: 'blocking'
+      }
+}
+export async function getStaticProps(context){
     
     const developer = context.params.developer
 
@@ -48,12 +42,7 @@ export async function getServerSideProps(context){
       .then((results) => {
         return results
       })
-    
-    
 
-    
-    
-    
     let data = null
     Object.keys(gcamData).map(
       (element) =>{

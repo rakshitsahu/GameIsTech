@@ -56,4 +56,4 @@ function makeApiCall() {
 }
 
 // Call the API every hour (in milliseconds)
-setInterval(makeApiCall, 3600000);
+// setInterval(makeApiCall, 3600000);

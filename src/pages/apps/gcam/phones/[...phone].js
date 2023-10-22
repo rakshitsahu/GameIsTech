@@ -29,19 +29,18 @@ export async function getAllPathsForPhoneDownloadPage(){
   })
   return [paths , possiblePaths]
 }
+export async function getStaticPaths(){
+  const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
+  const pathData = await getAllPathsForPhoneDownloadPage()
+  const paths = pathData[0]
 
+    return {
+        paths : [],
+        fallback: 'blocking'
+    }
+}
 
-
-
-
-
-
-
-
-
-
-
-export async function getServerSideProps(context){
+export async function getStaticProps(context){
   const phone = context.params.phone
   const pathData = await getAllPathsForPhoneDownloadPage()
   const paths = pathData[1]

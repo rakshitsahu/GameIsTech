@@ -25,18 +25,18 @@ export async function getAllPathsForVersionPage(){
   });
   return [paths , possiblePaths]
 }
-
+export async function getStaticPaths(){
       
+      const pathsData =  await getAllPathsForVersionPage()
+      const paths = pathsData[0]
+    
+      return {
+        paths : [],
+        fallback: 'blocking'
+      }
+}
 
-
-
-
-
-
-
-
-
-export async function getServerSideProps(context){
+export async function getStaticProps(context){
     
     
     

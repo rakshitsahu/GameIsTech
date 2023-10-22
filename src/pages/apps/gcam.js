@@ -8,7 +8,7 @@ import DisplayGenericGcams from '@/Components/gcam/displayGenericGcams'
 import Footer from '@/Components/gcam/footer'
 import Head from 'next/head'
 import Navbar from '@/Components/gcam/Navbar'
-export async function  getServerSideProps() {
+export async function  getStaticProps() {
 
   const [developersData, gcamVersionsData, phoneData, genericGcams] = await Promise.all([
     GCAM_GET_REQUEST(GCAM_API_STATE.Developers),

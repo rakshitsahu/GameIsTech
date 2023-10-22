@@ -59,20 +59,16 @@ export async function getAllPathsForGcamDownload(toFind = null){
   return [paths, possiblePaths]
   return [paths, result]
 }
+export async function getStaticPaths(){
+  const pathArray = await getAllPathsForGcamDownload()
+  const paths = pathArray[0]
+  return {
+    paths : [],
+    fallback: 'blocking'
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-export async function getServerSideProps(context){
+}
+export async function getStaticProps(context){
   let gcamParams = context.params.gcam
   
   gcamParams = [gcamParams[0] , gcamParams[1]]

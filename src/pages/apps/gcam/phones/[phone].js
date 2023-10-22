@@ -24,24 +24,18 @@ export async function getAllPathsForPhonePage(){
     })
   return [paths , possiblePaths]
 }
+export async function getStaticPaths(){
 
+    const pathData = await getAllPathsForPhonePage()
+    const paths = pathData[0]
 
+      return {
+        paths : [] ,
+        fallback: false
+      }
+}
+export async function getStaticProps(context){
 
-
-
-
-
-
-
-
-
-
-export async function getServerSideProps(context){
-
-    
-    
-    
-    
     const phone = context.params.phone
     const pathData = await getAllPathsForPhonePage()
     const paths = pathData[1]

@@ -15,7 +15,7 @@ function AboutUs() {
 <>
 <Head>
 <title> AboutUs</title>
-<link rel="canonical" href= {`https://apkhub.mobi/about`} />
+<link rel="canonical" href= {`https://${process.env.HOST}/about`} />
 </Head>
 <Navbar className="z-30 "/>
 <div className="bg-white p-8 rounded-lg shadow-lg">

@@ -18,7 +18,7 @@ function ContactUs() {
 <>
 <Head>
 <title> ContactUs</title>
-<link rel="canonical" href= {`https://apkhub.mobi/contact`} />
+<link rel="canonical" href= {`https://${process.env.HOST}/contact`} />
 </Head>
 <Navbar className="z-30 "/>
 <div className="bg-white p-8 rounded-lg shadow-lg">

@@ -147,7 +147,7 @@ async function insertIndexedUrls(urlList){
             paths: { $each: urlList }
           }
         };
-        const response = await axios.post('https://apkhub.mobi/api/gcam/mongo/updateone',{
+        const response = await axios.post(`https://${process.env.HOST}/api/gcam/mongo/updateone`,{
           collection : collection,
           filter : {},
           data : updateOperation

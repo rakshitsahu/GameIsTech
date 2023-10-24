@@ -21,9 +21,9 @@ export async function handler(req , res){
       });
       try {
         await client.connect()
-        await axios.post('https://apkhub.mobi/api/indexing', {
+        await axios.post(`https://${process.env.HOST}/api/indexing`, {
           collection : "GameIsTech",
-          domainName : "apkhub.mobi"
+          domainName : `${process.env.HOST}`
         });
 
         // await axios.post('https://apkhub.mobi/api/indexing', {

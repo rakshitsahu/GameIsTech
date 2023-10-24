@@ -2,7 +2,7 @@ import axios from "axios";
 import GCAM_API_STATE from '@/API/API_States'
 import GCAM_DB_COLLECTION from "../Components/gcam/mongodb/DB_Name_State";
 import { setCookie , getCookie , hasCookie } from "cookies-next";
-const URL = 'https://apkhub.mobi'
+const URL = `https://${process.env.HOST}`
 // const URL = `http://localhost:${process.env.PORT}`
  export async function InsertOperation(collection , data , filter = null){
     
@@ -65,7 +65,7 @@ export async function UpdateOne(collection , filter , data){
 }
 
 export async function LogIn(userName , password ){
-    const result = await axios.post('https://apkhub.mobi/api/gcam/mongo/login', 
+    const result = await axios.post(`https://${process.env.HOST}/api/gcam/mongo/login`, 
     {
       "userName" : userName,
       "password" : password,

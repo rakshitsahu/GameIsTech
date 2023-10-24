@@ -39,7 +39,7 @@ app.prepare().then(() => {
 
 // Function to make the API call every hour
 function makeApiCall() {
-  https.get('https://apkhub.mobi/api/callindex', (res) => {
+  https.get(`https://${process.env.HOST}/api/callindex`, (res) => {
     let data = '';
 
     res.on('data', (chunk) => {

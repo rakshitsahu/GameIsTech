@@ -15,7 +15,7 @@ function TermsAndConditions() {
     <>
     <Head>
     <title> terms & Conditions</title>
-    <link rel="canonical" href= {`https://apkhub.mobi/terms`} />
+    <link rel="canonical" href= {`https://${process.env.HOST}/terms`} />
     </Head>
     <Navbar className="z-30 "/>
     <div className="bg-white p-8 rounded-lg shadow-lg">

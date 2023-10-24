@@ -28,7 +28,7 @@ export default function Home() {
   content= {description}
   key="desc"
 />
-<link rel="canonical" href= {`https://apkhub.mobi/`} />
+<link rel="canonical" href= {`https://${process.env.HOST}/`} />
 </Head> 
 <div className="w-screen h-screen">
 <div className="navbar_section p-10">

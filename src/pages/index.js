@@ -28,7 +28,7 @@ export default function Home() {
   content= {description}
   key="desc"
 />
-<link rel="canonical" href= {`https://${process.env.HOST}/`} />
+<link rel="canonical" href= {`https://androidapkdownloads.info/`} />
 </Head> 
 <div className="w-screen h-screen">
 <div className="navbar_section p-10">

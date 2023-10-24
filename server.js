@@ -16,8 +16,8 @@ app.prepare().then(() => {
       const parsedUrl = parse(req.url, true);
       const { pathname, query } = parsedUrl;
       const hostName = req.headers.host;
-      if (hostName !== 'apkhub.mobi') {
-        res.writeHead(301, { Location: `https://apkhub.mobi${req.url}` });
+      if (hostName !== 'androidapkdownloads.info') {
+        res.writeHead(301, { Location: `https://androidapkdownloads.info${req.url}` });
         res.end();
       } else {
         await handle(req, res, parsedUrl);

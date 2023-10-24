@@ -7,6 +7,7 @@ import Head from 'next/head'
 
 
 export async function getAllPathsForGcamDownload(toFind = null){
+  console.log("getAllPathsForGcamDownload called")
   const gcamJson = await GCAM_GET_REQUEST(GCAM_API_STATE.Gcam)
   const stableGcamJson = await GCAM_GET_REQUEST(GCAM_API_STATE.Generic)
   
@@ -60,6 +61,7 @@ export async function getAllPathsForGcamDownload(toFind = null){
   return [paths, result]
 }
 export async function getStaticPaths(){
+  console.log('getStaticPaths called')
   const pathArray = await getAllPathsForGcamDownload()
   const paths = pathArray[0]
   return {
@@ -70,7 +72,7 @@ export async function getStaticPaths(){
 }
 export async function getStaticProps(context){
   let gcamParams = context.params.gcam
-  
+  console.log("getstaticprops called")
   gcamParams = [gcamParams[0] , gcamParams[1]]
   
   const [pathArray, developersData, phoneData] = await Promise.all([

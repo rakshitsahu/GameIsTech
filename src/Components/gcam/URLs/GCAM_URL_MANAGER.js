@@ -5,7 +5,7 @@ import { getAllPathsForPhoneDownloadPage } from "@/pages/apps/gcam/phones/[...ph
 import { getAllPathsForPhonePage } from "@/pages/apps/gcam/phones/[phone]";
 import { getAllPathsForVersionPage } from "@/pages/apps/gcam/version/[version]";
 import GCAM_URL_STATE from "./GCAM_URL_STATE";
-const url = "https://apkhub.mobi";
+const url = "https://androidapkdownloads.info";
 
 
 async function getGcamVersions() {

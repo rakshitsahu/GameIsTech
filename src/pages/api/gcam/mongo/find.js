@@ -22,7 +22,7 @@ async function MongoFind(req , res){
         }
       });
       try {
-        await client.connect().catch( async (err) => { 
+        await client.connect().then((r)=> console.log("connection status "+r)) .catch( async (err) => { 
 
           await client.close() 
         }
@@ -30,6 +30,7 @@ async function MongoFind(req , res){
 
         const data = await client.db(process.env.GCAM_DB_NAME).collection(collection).find(filter).toArray();
         await client.close()
+        console.log("connection has been closed");
         res.send(data)
       } catch ( error) {
         console.log( "Error message is "+ error.message)

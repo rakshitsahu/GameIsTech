@@ -1,4 +1,5 @@
 const { createServer } = require('http');
+import { connectToMongo } from '@/MongoDb/MongoDB';
 const { parse } = require('url');
 const next = require('next');
 const https = require('https'); // Import the 'https' module
@@ -54,6 +55,10 @@ function makeApiCall() {
     console.error('API call error:', error);
   });
 }
-
+process.on('SIGINT', async () => {
+  const client = connectToMongo();
+  await client.close();
+  process.exit(0);
+});
 // Call the API every hour (in milliseconds)
 // setInterval(makeApiCall, 3600000);

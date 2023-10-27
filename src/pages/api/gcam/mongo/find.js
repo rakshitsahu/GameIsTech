@@ -3,6 +3,7 @@
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
 import { connectToMongo } from '@/MongoDb/MongoDB';
+import { stringify } from 'postcss';
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
 async function MongoFind(req , res){
   // console.log( 'the req body is', req.body);
@@ -12,10 +13,11 @@ async function MongoFind(req , res){
 
     const collection = req.body.collection
     const filter = req.body.filter
+    console.log("Collection and filter is "+ collection + " "+ stringify(filter));
     const client =await connectToMongo();
       try {
         const data = await client.collection(collection).find(filter).toArray();
-        console.log("Data found is "+data)
+        
         // await client.close()
         res.send(data)
       } catch ( error) {

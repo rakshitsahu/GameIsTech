@@ -25,18 +25,18 @@ export async function getAllPathsForVersionPage(){
   });
   return [paths , possiblePaths]
 }
-export async function getStaticPaths(){
+// export async function getStaticPaths(){
       
-      const pathsData =  await getAllPathsForVersionPage()
-      const paths = pathsData[0]
+//       const pathsData =  await getAllPathsForVersionPage()
+//       const paths = pathsData[0]
     
-      return {
-        paths : [],
-        fallback: 'blocking'
-      }
-}
+//       return {
+//         paths : [],
+//         fallback: 'blocking'
+//       }
+// }
 
-export async function getStaticProps(context){
+export async function getServerSideProps(context){
     
     
     
@@ -51,7 +51,7 @@ export async function getStaticProps(context){
     ])
       .then((results) => {
         return results
-      })
+      }).catch((e)=>console.log("Error has been encountered " + e))
 
 
     

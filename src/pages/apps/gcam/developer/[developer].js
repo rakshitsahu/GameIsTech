@@ -20,17 +20,17 @@ export async function getAllPathsForDeveloperPage(){
   })
   return [paths , possiblePaths]
 }
-export async function getStaticPaths(){
-  const developersData = await GCAM_GET_REQUEST(GCAM_API_STATE.Developers)
-  const developers = developersData.map(({ developerName }) => ({ name : developerName }))
-  const pathsData = await getAllPathsForDeveloperPage()
-      const paths = pathsData[0]
-      return {
-        paths : [],
-        fallback: 'blocking'
-      }
-}
-export async function getStaticProps(context){
+// export async function getStaticPaths(){
+//   const developersData = await GCAM_GET_REQUEST(GCAM_API_STATE.Developers)
+//   const developers = developersData.map(({ developerName }) => ({ name : developerName }))
+//   const pathsData = await getAllPathsForDeveloperPage()
+//       const paths = pathsData[0]
+//       return {
+//         paths : [],
+//         fallback: 'blocking'
+//       }
+// }
+export async function getServerSideProps(context){
     
     const developer = context.params.developer
 
@@ -41,7 +41,7 @@ export async function getStaticProps(context){
     ])
       .then((results) => {
         return results
-      })
+      }).catch((e)=>console.log("Error has been encountered " + e))
 
     let data = null
     Object.keys(gcamData).map(

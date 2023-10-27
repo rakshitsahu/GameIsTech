@@ -8,7 +8,7 @@ import DisplayGenericGcams from '@/Components/gcam/displayGenericGcams'
 import Footer from '@/Components/gcam/footer'
 import Head from 'next/head'
 import Navbar from '@/Components/gcam/Navbar'
-export async function  getStaticProps() {
+export async function  getServerSideProps() {
 
   const [developersData, gcamVersionsData, phoneData, genericGcams] = await Promise.all([
     GCAM_GET_REQUEST(GCAM_API_STATE.Developers),
@@ -18,7 +18,7 @@ export async function  getStaticProps() {
   ])
     .then((results) => {
       return results
-    })
+    }).catch((e)=>console.log("Error has been encountered " + e))
 
 const gcamVersions = []
 
@@ -57,7 +57,7 @@ export default function home({ brands, developers, gcamVersions, genericGcams })
     />
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="canonical" href= {`https://androidapkdownloads.info/apps/gcam`} />
+    <link rel="canonical" href= {`https://apkhub.mobi/apps/gcam`} />
 
   </Head>
       <Navbar brands={brands} developers = {developers} className="w-full h-full"/>

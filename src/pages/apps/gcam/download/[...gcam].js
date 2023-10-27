@@ -60,17 +60,17 @@ export async function getAllPathsForGcamDownload(toFind = null){
   return [paths, possiblePaths]
   return [paths, result]
 }
-export async function getStaticPaths(){
+// export async function getStaticPaths(){
 
-  const pathArray = await getAllPathsForGcamDownload()
-  const paths = pathArray[0]
-  return {
-    paths : [],
-    fallback: 'blocking'
-}
+//   const pathArray = await getAllPathsForGcamDownload()
+//   const paths = pathArray[0]
+//   return {
+//     paths : [],
+//     fallback: 'blocking'
+// }
 
-}
-export async function getStaticProps(context){
+// }
+export async function getServerSideProps(context){
   let gcamParams = context.params.gcam
 
   gcamParams = [gcamParams[0] , gcamParams[1]]
@@ -82,7 +82,7 @@ export async function getStaticProps(context){
   ])
     .then((results) => {
       return results
-    })
+    }).catch((e)=>console.log("Error has been encountered " + e))
     
 
   

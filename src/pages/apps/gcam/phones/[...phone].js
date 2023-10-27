@@ -29,18 +29,18 @@ export async function getAllPathsForPhoneDownloadPage(){
   })
   return [paths , possiblePaths]
 }
-export async function getStaticPaths(){
-  const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
-  const pathData = await getAllPathsForPhoneDownloadPage()
-  const paths = pathData[0]
+// export async function getStaticPaths(){
+//   const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
+//   const pathData = await getAllPathsForPhoneDownloadPage()
+//   const paths = pathData[0]
 
-    return {
-        paths : [],
-        fallback: 'blocking'
-    }
-}
+//     return {
+//         paths : [],
+//         fallback: 'blocking'
+//     }
+// }
 
-export async function getStaticProps(context){
+export async function getServerSideProps(context){
   const phone = context.params.phone
   const pathData = await getAllPathsForPhoneDownloadPage()
   const paths = pathData[1]
@@ -70,7 +70,7 @@ export async function getStaticProps(context){
   ])
     .then((results) => {
       return results
-    })
+    }).catch((e)=>console.log("Error has been encountered " + e))
 
     const gcamVersions = []
   

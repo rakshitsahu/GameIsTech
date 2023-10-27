@@ -53,7 +53,7 @@ export async function getServerSideProps(context){
     ])
       .then((results) => {
         return results
-      })
+      }).catch((e)=>console.log("Error has been encountered " + e))
 
 
       const developers = developersData.map(({ developerName }) => ({ name : developerName }))

@@ -2,7 +2,7 @@ import GCAM_API_STATE from '@/API/API_States';
 import axios from "axios";
 import GCAM_DB_COLLECTION from "../Components/gcam/mongodb/DB_Name_State";
  export async function GCAM_GET_REQUEST(STATE ){
-    // const hostName = process.env.NODE_ENV === 'production' ?  'https://apkhub.mobi' :'http://localhost:3000'
+    // const hostName = process.env.NODE_ENV === 'production' ?  'https://androidapkdownloads.info' :'http://localhost:3000'
     const hostName = "https://androidapkdownloads.info"
     // const hostName = `http://localhost:${process.env.PORT}`
     const FindUrl = hostName + '/api/gcam/mongo/find'

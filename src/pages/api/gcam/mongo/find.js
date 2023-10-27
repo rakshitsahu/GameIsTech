@@ -7,11 +7,11 @@ const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrite
 async function MongoFind(req , res){
 
   const body = req.body
-
+    console.log("type of Body is "+ typeof body)
     const collection = req.body.collection
     const filter = req.body.filter
 
-
+    console.log("collection request is "+collection)
 
 
     const client = new MongoClient(uri, {
@@ -31,9 +31,8 @@ async function MongoFind(req , res){
         const data = await client.db(process.env.GCAM_DB_NAME).collection(collection).find(filter).toArray();
         await client.close()
         res.send(data)
-      } catch (error) {
-
-
+      } catch ( error) {
+        console.log( "Error message is "+ error.message)
         await client.close()
       }
 

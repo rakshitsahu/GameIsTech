@@ -11,7 +11,7 @@ async function MongoFind(req , res){
     const collection = req.body.collection
     const filter = req.body.filter
 
-    console.log("collection request is "+collection)
+    // console.log("collection request is "+collection)
 
 
     const client = new MongoClient(uri, {
@@ -22,13 +22,14 @@ async function MongoFind(req , res){
         }
       });
       try {
-        await client.connect().then((r)=> console.log("connection status "+r)) .catch( async (err) => { 
-          console.log("error occured while establishing connection ")
+        await client.connect().then((r)=> console.log("connection Done ")) .catch( async (err) => { 
+          // console.log("error occured while establishing connection ")
           await client.close() 
         }
            )
 
         const data = await client.db(process.env.GCAM_DB_NAME).collection(collection).find(filter).toArray();
+        console.log( "The result is "+ data);
         await client.close()
         console.log("connection has been closed");
         res.send(data)

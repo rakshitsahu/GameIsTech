@@ -14,7 +14,7 @@ async function MongoFind(req , res){
 
     const client =await connectToMongo();
       try {
-        console.log("request for collection '" + collection );
+        console.log("request for collection " + collection );
         const data = await client.collection(collection).find(filter).toArray();
         console.log("result for collection "+ collection+" is"+ data);
         // await client.close()

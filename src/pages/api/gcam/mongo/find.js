@@ -7,7 +7,7 @@ const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrite
 async function MongoFind(req , res){
 
   const body = req.body
-    console.log("type of Body is "+ typeof body)
+    // console.log("type of Body is "+ typeof body)
     const collection = req.body.collection
     const filter = req.body.filter
 
@@ -23,7 +23,7 @@ async function MongoFind(req , res){
       });
       try {
         await client.connect().then((r)=> console.log("connection status "+r)) .catch( async (err) => { 
-
+          console.log("error occured while establishing connection ")
           await client.close() 
         }
            )

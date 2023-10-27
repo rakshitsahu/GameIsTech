@@ -2,7 +2,7 @@
 // import GCAM_DB_STATE from "@/Components/gcam/mongodb/DB_Name_State";
 
 const { MongoClient, ServerApiVersion } = require('mongodb');
-
+import connectMongo from '../../../../../middleware/ConnectMongo';
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
 async function MongoFind(req , res){
 
@@ -11,30 +11,25 @@ async function MongoFind(req , res){
     const collection = req.body.collection
     const filter = req.body.filter
 
-    console.log("collection request is "+collection)
+    // console.log("collection request is "+collection)
 
 
-    const client = new MongoClient(uri, {
-        serverApi: {
-          version: ServerApiVersion.v1,
-          strict: true,
-          deprecationErrors: true,
-        }
-      });
+    const client = connectMongo();
       try {
-        await client.connect().then((r)=> console.log("connection status "+r)) .catch( async (err) => { 
-          console.log("error occured while establishing connection ")
-          await client.close() 
+        await client.connect().then((r)=> console.log("connection Done ")) .catch( async (err) => { 
+          // console.log("error occured while establishing connection ")
+          // await client.close() 
         }
            )
 
-        const data = await client.db(process.env.GCAM_DB_NAME).collection(collection).find(filter).toArray();
-        await client.close()
-        console.log("connection has been closed");
+        const data = await client.collection(collection).find(filter).toArray();
+        console.log( "The result is "+ data);
+        // await client.close()
+        // console.log("connection has been closed");
         res.send(data)
       } catch ( error) {
-        console.log( "Error message is "+ error.message)
-        await client.close()
+        // console.log( "Error message is "+ error.message)
+        // await client.close()
       }
 
 }

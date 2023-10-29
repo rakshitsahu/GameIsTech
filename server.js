@@ -16,7 +16,6 @@ app.prepare().then(() => {
       const { pathname, query } = parsedUrl;
       const hostName = req.headers.host;
 
-      console.log("Hostname found is "+req.headers.host)
 
       // await handle(req, res, parsedUrl)
       // console.log("X FORWARDED HOST IS" , hostName , hostName)

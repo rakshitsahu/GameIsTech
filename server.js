@@ -16,20 +16,20 @@ app.prepare().then(() => {
       const { pathname, query } = parsedUrl;
       const hostName = req.headers.host;
 
-      console.log("Hostname found is "+hostname)
+      console.log("Hostname found is "+req.headers.host)
 
-      await handle(req, res, parsedUrl)
+      // await handle(req, res, parsedUrl)
       // console.log("X FORWARDED HOST IS" , hostName , hostName)
       // console.log("the headers are", req.headers)
-      // if (
-      //   hostName !== 'localhost'
-      // ) {
-      //   // Redirect to https://apkhub.mobi
-      //   res.writeHead(301, { Location: `http://localhost:3000${req.url}` });
-      //   res.end();
-      // } else {
-      //   await handle(req, res, parsedUrl)
-      // }
+      if (
+        req.headers.host !== process.env.HOST
+      ) {
+        // Redirect to https://apkhub.mobi
+        res.writeHead(301, { Location: `https://${process.env.HOST}${req.url}` });
+        res.end();
+      } else {
+        await handle(req, res, parsedUrl)
+      }
     } catch (err) {
       console.error('Error occurred handling', req.url, err)
       res.statusCode = 500

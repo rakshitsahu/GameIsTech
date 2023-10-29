@@ -23,25 +23,11 @@ async function connectToMongo() {
 
 async function closeMongoConnection() {
   if (client) {
-    console.log('Closing database connection');
+
     await client.close();
     console.log('Database connection closed');
   }
 }
 
-window.addEventListener('beforeunload', async (event) => {
-  // Check if the destination URL is within the same domain
-  const destinationURL = event.target.getAttribute('href');
-  const currentDomain = window.location.origin;
-
-  if (destinationURL && destinationURL.startsWith(currentDomain)) {
-    // Keep the database connection open
-    console.log('Clicked on another link');
-    return;
-  }
-
-  // Close the database connection
-  await closeMongoConnection();
-});
 
 module.exports = { connectToMongo, closeMongoConnection };

@@ -1,4 +1,4 @@
-import { connectToMongo, closeMongoConnection } from '../mongodb';
+import { connectToMongo, closeMongoConnection } from '../src/MongoDb/MongoDb';
 
 export default async function databaseMiddleware(req, res, next) {
   // Connect to the database
@@ -14,7 +14,7 @@ export default async function databaseMiddleware(req, res, next) {
   res.on('finish', async () => {
     // Check if the destination URL is within the same domain
     const destinationURL = req.headers['referer'];
-    const currentDomain = window.location.origin;
+    const currentDomain = process.env.HOST;
 
     if (destinationURL && destinationURL.startsWith(currentDomain)) {
       // Keep the database connection open

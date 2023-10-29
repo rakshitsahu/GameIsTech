@@ -1,4 +1,4 @@
-import { connectToMongo, closeMongoConnection } from '../src/MongoDb/MongoDb';
+import { connectToMongo , closeMongoConnection } from "@/MongoDb/MongoDb";
 
 export default async function databaseMiddleware(req, res, next) {
   // Connect to the database

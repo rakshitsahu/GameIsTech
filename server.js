@@ -17,8 +17,8 @@ app.prepare().then(() => {
       const parsedUrl = parse(req.url, true);
       const { pathname, query } = parsedUrl;
       const hostName = req.headers.host;
-      if (hostName !== process.env.HOST) {
-        res.writeHead(301, { Location: `https://${process.env.HOST}${req.url}` });
+      if (hostName !== "androidapkdownloads.info") {
+        res.writeHead(301, { Location: `https://androidapkdownloads.info${req.url}` });
         res.end();
       } else {
         await handle(req, res, parsedUrl);

@@ -1,7 +1,7 @@
 
 // import GCAM_DB_STATE from "@/Components/gcam/mongodb/DB_Name_State";
 
-import connectMongo from "../../../../../temp/ConnectMongo";
+
 import mongoose from "mongoose";
 const { MongoClient, ServerApiVersion } = require('mongodb');
 

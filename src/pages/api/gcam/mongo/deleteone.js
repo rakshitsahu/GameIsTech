@@ -1,7 +1,7 @@
 
 // import GCAM_DB_STATE from "@/Components/gcam/mongodb/DB_Name_State";
 
-import connectMongo from "../../../../../middleware/ConnectMongo";
+import connectMongo from "../../../../../temp/ConnectMongo";
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";

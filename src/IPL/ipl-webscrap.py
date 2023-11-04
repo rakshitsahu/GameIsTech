@@ -101,7 +101,6 @@ def is_element_clickable(element, timeout=10):
         return True
     except TimeoutException:
         return False
-
 def ClickByXpath(xpath, timeout=10):
     try:
         wait = WebDriverWait(driver, timeout)

@@ -2,7 +2,7 @@ import { connectToMongo , closeMongoConnection } from "@/MongoDb/MongoDB";
 
 export default async function databaseMiddleware(req, res, next) {
   // Connect to the database
-  const db = await connectToMongo();
+  const db = await connectToMongo(process.env.GCAM_DB_NAME);
 
   // Set the database object on the request object
   req.db = db;

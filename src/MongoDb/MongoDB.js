@@ -4,7 +4,7 @@ const uri = 'mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrite
 
 let client; // Singleton client instance
 
-async function connectToMongo() {
+async function connectToMongo(DbName) {
   if (!client) {
     client = new MongoClient(uri, {
       serverApi: {
@@ -18,7 +18,7 @@ async function connectToMongo() {
     await client.connect();
   }
 
-  return client.db(process.env.GCAM_DB_NAME);
+  return client.db( DbName );
 }
 
 async function closeMongoConnection() {

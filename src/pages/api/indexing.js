@@ -166,13 +166,11 @@ jwtClient.authorize(function(err, tokens) {
     }
     else if( response.statusCode === 200  )
     {
-      console.log("success url is "+ url)
       latestIndexedUrls.push(url)
 
     }
     else
     {
-      console.log("failed url is "+ url)
     }
   return response.statusCode
   });
@@ -195,7 +193,6 @@ export async function handler(req , res){
 
   collection = req.body.collection
   domainName = req.body.domainName
-  console.log(domainName)
   key = keyMap[domainName]
   paths = await getUrlList()
 

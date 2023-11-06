@@ -7,7 +7,6 @@ import Head from 'next/head'
 
 
 export async function getAllPathsForGcamDownload(toFind = null){
-  // console.log("getAllPathsForGcamDownload called")
   const gcamJson = await GCAM_GET_REQUEST(GCAM_API_STATE.Gcam)
   const stableGcamJson = await GCAM_GET_REQUEST(GCAM_API_STATE.Generic)
   

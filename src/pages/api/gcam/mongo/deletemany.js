@@ -3,23 +3,15 @@
 
 
 import mongoose from "mongoose";
-const { MongoClient, ServerApiVersion } = require('mongodb');
-
+import { connectToMongo } from "@/MongoDb/MongoDB";
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
 export async function handler(req , res){
     const collection = req.body.collection
     const filter = req.body.filter
-    const client = new MongoClient(uri, {
-        serverApi: {
-          version: ServerApiVersion.v1,
-          strict: true,
-          deprecationErrors: true,
-        }
-      });
       try {
-        
+        const client = connectToMongo('Gcam')
         await client.connect().catch( async (err) => { await client.close(true) } )
-      const data = await client.db('Gcam').collection(collection).deleteMany(filter);
+      const data = await client.collection(collection).deleteMany(filter);
       await client.close(true)
       res.send(data)
       } catch (error) {

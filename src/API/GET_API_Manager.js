@@ -4,6 +4,7 @@ import GCAM_DB_COLLECTION from "../Components/gcam/mongodb/DB_Name_State";
  export async function GCAM_GET_REQUEST(STATE ){
     // const hostName = process.env.NODE_ENV === 'production' ?  'https://androidapkdownloads.info' :'http://localhost:3000'
     const hostName = "https://androidapkdownloads.info"
+    
     // const hostName = `http://localhost:${process.env.PORT}`
     const FindUrl = hostName + '/api/gcam/mongo/find'
     const AuthenticationUrl = hostName + '/api/gcam/authentication'
@@ -13,7 +14,6 @@ import GCAM_DB_COLLECTION from "../Components/gcam/mongodb/DB_Name_State";
                     collection : GCAM_DB_COLLECTION.Developer_Names,
                     filter : {}
                 }).then(response => {
-        
                     return response.data
                     })
                   return developers;

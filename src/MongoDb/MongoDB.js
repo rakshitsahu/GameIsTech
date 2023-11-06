@@ -25,7 +25,6 @@ async function closeMongoConnection() {
   if (client) {
 
     await client.close();
-    console.log('Database connection closed');
   }
 }
 

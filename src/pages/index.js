@@ -28,6 +28,7 @@ export default function Home() {
   content= {description}
   key="desc"
 />
+
 <link rel="canonical" href= {`https://androidapkdownloads.info/`} />
 </Head> 
 <div className="w-screen h-screen">

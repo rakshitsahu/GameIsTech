@@ -26,14 +26,6 @@ export async function handler(req , res){
           domainName : `${process.env.HOST}`
         });
 
-        // await axios.post('https://apkhub.mobi/api/indexing', {
-        //   collection : "AndroidApkDownloads",
-        //   domainName : "androidapkdownloads.info"
-        // });
-        // await axios.post('https://apkhub.mobi/api/indexing', {
-        //   collection : "ApkHub",
-        //   domainName : "apkhub.mobi"
-        // });
         res.send({message : "success"})
       } catch (error) {
         res.send({message : "error" , er : error})

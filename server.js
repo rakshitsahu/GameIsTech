@@ -19,7 +19,6 @@ app.prepare().then(() => {
       const hostName = req.headers.host;
 
       if (req.headers.host !== process.env.HOST) {
-        // Redirect to https://apkhub.mobi
         res.writeHead(301, { Location: `https://${process.env.HOST}${req.url}` });
         res.end();
       } else {

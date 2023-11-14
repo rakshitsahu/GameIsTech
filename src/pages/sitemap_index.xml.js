@@ -8,6 +8,7 @@ import { GCAM_URLS } from "@/Components/gcam/URLs/GCAM_URL_MANAGER";
 // <url>
 // <loc>https://jsonplaceholder.typicode.com/guide</loc>
 // </url>
+//TODO find a way to use only one sitemap
 const EXTERNAL_DATA_URL = 'https://jsonplaceholder.typicode.com/posts';
 function generateSiteMap(posts) {
   return `<?xml version="1.0" encoding="UTF-8"?>

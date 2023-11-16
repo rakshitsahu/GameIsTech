@@ -10,6 +10,10 @@ from selenium.common.exceptions import TimeoutException
 import re
 import requests
 import random
+from multiprocessing import Pool
+from multiprocessing import Process
+from selenium import webdriver
+import time
 SEASON = "seasons"
 MEN = "men"
 WOMEN = "women"
@@ -50,6 +54,7 @@ teamDictonary = {
 IplFirstSeason = 2008
 IplLastSeason = 2023
 pageNotFoundMessage = "oop's something went wrong" 
+TEAMS_PAGE = "https://www.iplt20.com/teams"
 class BrowserBase:
     acceptCookiesXpath = "(//button[normalize-space()='Accept cookies'])[1]"
     def __init__(self):
@@ -65,6 +70,7 @@ class BrowserBase:
         return wait.until(EC.presence_of_element_located((_by, _for)))
     def OpenWindow(self,URL):
         self.driver.get(URL)
+
         # self.AcceptCookies()
     def GetHTML(self,className, _by ):
         return self.GetHTMLByPageSource()
@@ -89,7 +95,7 @@ class BrowserBase:
         except TimeoutException:
             return False
         
-
+playerPageMap = {}
 class IplBase(BrowserBase):
     browserTabObjects = []
 
@@ -97,10 +103,10 @@ class IplBase(BrowserBase):
         super().__init__()
     def GetBrowserObject(self):
         #TODO must be fixed while using multithreading
-
+        
         if len(self.browserTabObjects) == BrowserTabLimit:
             random_index = random.randrange(len(self.browserTabObjects))
-            print("array length is ", len(self.browserTabObjects) ,random_index )
+            # print("array length is ", len(self.browserTabObjects) ,random_index )
             return self.browserTabObjects[random_index]
         newIplBaseObject = IplBase()
         self.browserTabObjects.append(newIplBaseObject)
@@ -113,10 +119,20 @@ class IplBase(BrowserBase):
                     return True
             return False
         teamPlayersJson = {}
+        playerDataJson = {}
         def PlayerDetailFromPlayerPage(URL):
             playerPageObject = self.GetBrowserObject()
             playerPageObject.OpenWindow(URL)
+            SourceCode = playerPageObject.GetHTMLByPageSource()
+            playerNationality = SourceCode.find('div', {"class":"plyr-name-nationality"}).find('span').text
+            playerDetailGridArray = SourceCode.find('div', {"class":"player-overview-detail"}).find_all('div' , {"class": "grid-items"})
+            playerMatchesPlayed = playerDetailGridArray[3].find('p').text
+            playerIplDebut = playerDetailGridArray[0].find('p').text
+            playerDob = playerDetailGridArray[2].find('p').text
+            playerJson = {"Nationality": playerNationality.strip(), "MatchesPlayed": playerMatchesPlayed.strip() , "IplDebut": playerIplDebut.strip() , "Dob":playerDob.strip() }
+            return playerJson
         def PlayerDetailFromPlayerCard (playerCard):
+            global playerPageMap
             imagePath = playerCard.find('div',{"class": "ih-p-img"}).find('img').get('src')
             playerList = []
             imgTags = playerCard.find('div',{"class": "teams-icon"}).find('span').find_all("img")
@@ -129,23 +145,29 @@ class IplBase(BrowserBase):
             playerJson["Role"] = playerRole.strip()
             playerJson["Name"] = playerName.strip()
             playerJson["Id"] = playerId.strip()
-            if teamPlayersJson.get(playerRole) == None:
-                teamPlayersJson[playerRole] = []
-            teamPlayersJson[playerRole].append(playerJson)
             if isCaptain(imgTags):
-                teamPlayersJson['Captain'] = playerJson
-                print("Captain is *******************"+ playerName)
+                playerJson['Captain'] = playerJson
+                # print("Captain is *******************"+ playerName)
             # print(playerName , playerRole , playerId , roleSvg , imagePath, isCaptain(imgTags) )
             # print(teamPlayersJson)
-            return (playerName , playerRole , playerId , roleSvg , imagePath, isCaptain(imgTags))
-        soup = ipl.GetHTMLByPageSource()
+            return playerJson
+        soup = self.GetHTMLByPageSource()
         playerCards = soup.find_all('li',{"class": "dys-box-color"})
         for card in playerCards:
-            teamDataJson = {}
-            playerName , playerRole , playerId , roleSvg , imagePath, captain = PlayerDetailFromPlayerCard(card)
+            playerJson = PlayerDetailFromPlayerCard(card)
+            if playerPageMap.get(playerJson["Id"]) != None:
+                continue
             playPageUrl = card.find('a').get('href')
-            PlayerDetailFromPlayerPage(playPageUrl)
-            print(playPageUrl)
+            playerJson.update(PlayerDetailFromPlayerPage(playPageUrl))
+            if teamPlayersJson.get(playerJson["Role"]) == None:
+                teamPlayersJson[playerJson["Role"]] = []
+            teamPlayersJson[playerJson["Role"]].append(playerJson)
+            teamPlayersJson['Captain'] = playerJson
+            if(playerDataJson.get(playerJson["Id"]) == None):
+                playerDataJson[playerJson["Id"]] = playerJson
+            playerPageMap[playerJson["Id"]] = playerJson
+            print(playerJson.get("Name"))
+        print(playerDataJson)
         
     def PageExists(self,url):
         html_doc = requests.get(url).content
@@ -163,9 +185,28 @@ class IplBase(BrowserBase):
                 print("data found for season "+str(season))
             else:
                 print("data not found for season "+str(season))
+    def GetAllTeamData(self):
+        iplObject = IplBase()
+        self.OpenWindow(TEAMS_PAGE)
+        sourceCode = self.GetHTMLByPageSource()
+        allTeamsLiList = sourceCode.find("div" , {"class" , "vn-teamswrap"}).find_all("li")
+        urlList = []
+        for team in allTeamsLiList:
+            teamShortName = team.get("class")[0].split("_")[-1]
+            teamPageUrl = team.find("a").get("href")
+            urlList.append(teamPageUrl+"/squad/")
+            self.GetTeamAllSeasonData(teamPageUrl+"/squad/")
+            print(teamShortName , teamPageUrl)
+        # with Pool() as pool:
+        #     pool.map(self.GetTeamAllSeasonData, urlList)
 
-# dys-box-color
-ipl = IplBase()
+if __name__ == "__main__":
+    ipl = IplBase()
+    ipl.GetAllTeamData()
+
+
+
+
 # ipl.GenericTeam("https://www.iplt20.com/teams/chennai-super-kings/squad/")
 # ipl.OpenWindow("https://www.iplt20.com/teams/chennai-super-kings/squad/")
 # soup = ipl.GetHTMLByPageSource()
@@ -174,7 +215,6 @@ ipl = IplBase()
 #     print(row.text)
 # print(len(result))
 # ipl.GetTeamPlayers("https://www.iplt20.com/teams/chennai-super-kings/squad-details/297")
-ipl.GetTeamPlayers("https://www.iplt20.com/teams/chennai-super-kings/squad/2009")
 
 # ipl.GetTeamAllSeasonData("https://www.iplt20.com/teams/chennai-super-kings/squad/")
 

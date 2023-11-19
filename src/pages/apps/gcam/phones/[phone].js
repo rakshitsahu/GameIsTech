@@ -88,7 +88,7 @@ export default function Phones({data, phone , brands, developers}) {
     />
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="canonical" href= {`https://androidapkdownloads.info/apps/gcam/phones/${encodeURIComponent(phone)}`} />
+    <link rel="canonical" href= {`https://gameistech.com/apps/gcam/phones/${encodeURIComponent(phone)}`} />
   </Head>
     <Navbar brands={brands} developers = {developers}/>
     <article>

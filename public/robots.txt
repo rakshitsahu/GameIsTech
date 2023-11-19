@@ -13,4 +13,4 @@ Allow: /robots.txt
 
 
 # Specify the location of your sitemap
-Sitemap: https://androidapkdownloads.info/sitemap.xml
+Sitemap: https://gameistech.com/sitemap.xml

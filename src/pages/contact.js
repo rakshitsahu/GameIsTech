@@ -35,7 +35,7 @@ function ContactUs() {
   </p>
 
   <p className="text-lg">
-    Thank you for choosing <Link href={'/'}><span className="text-blue-500 font-semibold">apkhub.mobi</span></Link>!
+    Thank you for choosing <Link href={'/'}><span className="text-blue-500 font-semibold">GameIsTech.com</span></Link>!
   </p>
 </div>
 </>

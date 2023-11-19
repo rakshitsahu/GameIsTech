@@ -6,7 +6,7 @@ const axios = require('axios'); // Add this line to use Axios for API calls
 const dev = process.env.NODE_ENV !== 'production';
 const hostname = 'localhost';
 const port = process.env.PORT || 3000;
-const apiUrl = 'https://androidapkdownloads.info/api/callindex'; // Replace with your API endpoint
+const apiUrl = 'https://gameistech.com/api/callindex'; // Replace with your API endpoint
 
 const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
@@ -19,7 +19,7 @@ app.prepare().then(() => {
       const hostName = req.headers.host;
 
       if (req.headers.host !== process.env.HOST) {
-        res.writeHead(301, { Location: `https://${process.env.HOST}${req.url}` });
+        res.writeHead(301, { Location: `https://${process.env.HOST}${req.url}`});
         res.end();
       } else {
         await handle(req, res, parsedUrl);

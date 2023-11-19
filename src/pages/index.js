@@ -29,7 +29,7 @@ export default function Home() {
   key="desc"
 />
 
-<link rel="canonical" href= {`https://androidapkdownloads.info/`} />
+<link rel="canonical" href= {`https://gameistech.com/`} />
 </Head> 
 <div className="w-screen h-screen">
 <div className="navbar_section p-10">

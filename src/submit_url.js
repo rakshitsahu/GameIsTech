@@ -24,7 +24,7 @@ jwtClient.authorize(function(err, tokens) {
     auth: { "bearer": tokens.access_token },
     // Define contents here. The structure of the content is described in the next step.
     json: {
-      "url": "https://www.androidapkdownloads.info/apps/gcam/phones/Lenovo/Lenovo%20ZUK%20Z2%20(Plus)",
+      "url": "https://www.gameistech.com/apps/gcam/phones/Lenovo/Lenovo%20ZUK%20Z2%20(Plus)",
       "type": "URL_UPDATED"
     }
   };

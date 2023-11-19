@@ -23,7 +23,7 @@ function TermsAndConditions() {
 
       <h2 className="text-xl font-semibold">1. Acceptance of Terms</h2>
       <p className="mb-4">
-        By accessing and using the website apkhub.mobi (hereinafter referred to as the Website) or any services provided on the Website, you agree to comply with and be bound by these Terms and Conditions. 
+        By accessing and using the website GameIsTech.com (hereinafter referred to as the Website) or any services provided on the Website, you agree to comply with and be bound by these Terms and Conditions. 
         If you do not agree to these Terms and Conditions, please do not use the Website.
       </p>
 
@@ -54,7 +54,7 @@ function TermsAndConditions() {
 
       <h2 className="text-xl font-semibold">7. Limitation of Liability</h2>
       <p className="mb-4">
-        In no event shall apkhub.mobi be liable for any direct, indirect, incidental, special, or consequential damages arising out of or in any way connected with your use of the Website or the content on the Website.
+        In no event shall GameIsTech.com be liable for any direct, indirect, incidental, special, or consequential damages arising out of or in any way connected with your use of the Website or the content on the Website.
       </p>
 
       <h2 className="text-xl font-semibold">8. Termination</h2>

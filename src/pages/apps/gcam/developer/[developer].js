@@ -93,7 +93,7 @@ const content = 'font-thin text-xl'
     />
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="canonical" href= {`https://androidapkdownloads.info/apps/gcam/developer/${encodeURIComponent(developer)}`} />
+    <link rel="canonical" href= {`https://gameistech.com/apps/gcam/developer/${encodeURIComponent(developer)}`} />
   </Head>
     <Navbar brands={brands} developers = {developers}/>
     <article>

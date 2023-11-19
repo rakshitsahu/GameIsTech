@@ -22,7 +22,7 @@ function AboutUs() {
   <h1 className="text-4xl font-bold mb-6 text-center">About Us</h1>
 
   <p className="text-lg leading-relaxed mb-4">
-    Welcome to <Link href={'/'}><span className="text-blue-500 font-semibold">apkhub.mobi</span></Link>, your ultimate destination for all things tech, sports, video games, and apps. We&apos;re passionate about delivering the latest updates, news, and reviews in the world of technology and entertainment.
+    Welcome to <Link href={'/'}><span className="text-blue-500 font-semibold">GameIsTech.com</span></Link>, your ultimate destination for all things tech, sports, video games, and apps. We&apos;re passionate about delivering the latest updates, news, and reviews in the world of technology and entertainment.
   </p>
 
   <p className="text-lg leading-relaxed mb-4">
@@ -30,7 +30,7 @@ function AboutUs() {
   </p>
 
   <p className="text-lg leading-relaxed mb-4">
-    At <Link href={'/'}><span className="text-blue-500 font-semibold">apkhub.mobi</span></Link>, we believe in the power of information and strive to keep you informed and entertained. Our goal is to create a vibrant community where tech enthusiasts, sports fans, and gamers can come together to explore, learn, and share their passion.
+    At <Link href={'/'}><span className="text-blue-500 font-semibold">GameIsTech.com</span></Link>, we believe in the power of information and strive to keep you informed and entertained. Our goal is to create a vibrant community where tech enthusiasts, sports fans, and gamers can come together to explore, learn, and share their passion.
   </p>
 
   <p className="text-lg leading-relaxed mb-4">
@@ -38,7 +38,7 @@ function AboutUs() {
   </p>
 
   <p className="text-lg">
-    Thank you for visiting <Link href={'/'}><span className="text-blue-500 font-semibold">apkhub.mobi</span></Link>!
+    Thank you for visiting <Link href={'/'}><span className="text-blue-500 font-semibold">GameIsTech.com</span></Link>!
   </p>
 </div></>
   );

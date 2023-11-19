@@ -14,6 +14,7 @@ from multiprocessing import Pool
 from multiprocessing import Process
 from selenium import webdriver
 import time
+from selenium.webdriver.common.keys import Keys
 SEASON = "seasons"
 MEN = "men"
 WOMEN = "women"
@@ -70,8 +71,30 @@ class BrowserBase:
         return wait.until(EC.presence_of_element_located((_by, _for)))
     def OpenWindow(self,URL):
         self.driver.get(URL)
+    def CloseWindow(self):
+        self.driver.quit()
+    def OpenInNewTab(self,URL):
+        if len(self.driver.window_handles) == 0:
+            self.OpenWindow(URL)
+        else:
+            self.driver.execute_script("window.open('', '_blank');")
+            # Switch to the new tab
+            self.driver.switch_to.window(self.driver.window_handles[-1])
+            # Open a website in the new tab
+            self.driver.get(URL)
+    def OpenInLastTabAfterLimit(self,LIMIT , URL):
+        if len(self.driver.window_handles) < LIMIT:
+            self.OpenInNewTab(URL)
+        else:
+            self.driver.switch_to.window(self.driver.window_handles[-1])
+            self.driver.get(URL)
+    def OpenInTabNo(self,TabNo,URL):
+        if len(self.driver.window_handles) < TabNo:
+            self.OpenWindow(URL)
+        else:
+            self.driver.switch_to.window(self.driver.window_handles[TabNo-1])
+            self.OpenWindow(URL)
 
-        # self.AcceptCookies()
     def GetHTML(self,className, _by ):
         return self.GetHTMLByPageSource()
     def ClickElement(self , _by , _for):
@@ -112,7 +135,8 @@ class IplBase(BrowserBase):
         self.browserTabObjects.append(newIplBaseObject)
         return newIplBaseObject
     def GetTeamPlayers(self,URL):
-        self.OpenWindow(URL)
+        
+        
         def isCaptain(imgTags):
             for imgTag in imgTags:
                 if imgTag.get('src') == CAPTAIN_ICON:
@@ -121,9 +145,9 @@ class IplBase(BrowserBase):
         teamPlayersJson = {}
         playerDataJson = {}
         def PlayerDetailFromPlayerPage(URL):
-            playerPageObject = self.GetBrowserObject()
-            playerPageObject.OpenWindow(URL)
-            SourceCode = playerPageObject.GetHTMLByPageSource()
+            # playerPageObject = self.GetBrowserObject()
+            self.OpenInLastTabAfterLimit(2,URL)
+            SourceCode = self.GetHTMLByPageSource()
             playerNationality = SourceCode.find('div', {"class":"plyr-name-nationality"}).find('span').text
             playerDetailGridArray = SourceCode.find('div', {"class":"player-overview-detail"}).find_all('div' , {"class": "grid-items"})
             playerMatchesPlayed = playerDetailGridArray[3].find('p').text
@@ -151,6 +175,7 @@ class IplBase(BrowserBase):
             # print(playerName , playerRole , playerId , roleSvg , imagePath, isCaptain(imgTags) )
             # print(teamPlayersJson)
             return playerJson
+        self.OpenInTabNo(1,URL)
         soup = self.GetHTMLByPageSource()
         playerCards = soup.find_all('li',{"class": "dys-box-color"})
         for card in playerCards:
@@ -169,6 +194,8 @@ class IplBase(BrowserBase):
             print(playerJson.get("Name"))
         print(playerDataJson)
         
+        
+        
     def PageExists(self,url):
         html_doc = requests.get(url).content
         soup = BeautifulSoup(html_doc, 'html.parser').text
@@ -185,24 +212,45 @@ class IplBase(BrowserBase):
                 print("data found for season "+str(season))
             else:
                 print("data not found for season "+str(season))
-    def GetAllTeamData(self):
-        iplObject = IplBase()
-        self.OpenWindow(TEAMS_PAGE)
-        sourceCode = self.GetHTMLByPageSource()
-        allTeamsLiList = sourceCode.find("div" , {"class" , "vn-teamswrap"}).find_all("li")
-        urlList = []
-        for team in allTeamsLiList:
-            teamShortName = team.get("class")[0].split("_")[-1]
-            teamPageUrl = team.find("a").get("href")
-            urlList.append(teamPageUrl+"/squad/")
-            self.GetTeamAllSeasonData(teamPageUrl+"/squad/")
-            print(teamShortName , teamPageUrl)
-        # with Pool() as pool:
-        #     pool.map(self.GetTeamAllSeasonData, urlList)
+    # def GetAllTeamData(self):
+    #     self.OpenInNewTab(TEAMS_PAGE)
+    #     sourceCode = self.GetHTMLByPageSource()
+    #     allTeamsLiList = sourceCode.find("div" , {"class" , "vn-teamswrap"}).find_all("li")
+    #     urlList = []
+    #     for team in allTeamsLiList:
+    #         teamShortName = team.get("class")[0].split("_")[-1]
+    #         teamPageUrl = team.find("a").get("href")
+    #         urlList.append(teamPageUrl+"/squad/")
+    #         # iplObject.GetTeamAllSeasonData(teamPageUrl+"/squad/")
+    #         print(teamShortName , teamPageUrl)
+    #     with Pool() as pool:
+    #         pool.map(self.GetTeamAllSeasonData, urlList[:2])
+def MapUrl(url):
+    iplObject = IplBase()
+    iplObject.GetTeamAllSeasonData(url)
+    iplObject.CloseWindow()
+def GetAllTeamData():
+    iplObject = IplBase()
+    iplObject.OpenWindow(TEAMS_PAGE)
+    sourceCode = iplObject.GetHTMLByPageSource()
+    allTeamsLiList = sourceCode.find("div" , {"class" , "vn-teamswrap"}).find_all("li")
+    urlList = []
+    for team in allTeamsLiList:
+        teamShortName = team.get("class")[0].split("_")[-1]
+        teamPageUrl = team.find("a").get("href")
+        urlList.append(teamPageUrl+"/squad/")
+        # iplObject.GetTeamAllSeasonData(teamPageUrl+"/squad/")
+        print(teamShortName , teamPageUrl)
+    iplObject.CloseWindow()
+    with Pool(processes=5) as pool:
+        pool.map(MapUrl, urlList)
 
 if __name__ == "__main__":
-    ipl = IplBase()
-    ipl.GetAllTeamData()
+    # ipl = IplBase()
+    # ipl.OpenInNewTab("https://www.iplt20.com/teams/chennai-super-kings/squad/")
+    # ipl.OpenInNewTab("https://www.iplt20.com/teams/chennai-super-kings/squad/")
+    GetAllTeamData()
+    # ipl.GetAllTeamData()
 
 
 

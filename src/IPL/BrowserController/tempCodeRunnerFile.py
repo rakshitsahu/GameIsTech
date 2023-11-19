@@ -1,1 +1,1 @@
-process_season_url
+CloseWindow

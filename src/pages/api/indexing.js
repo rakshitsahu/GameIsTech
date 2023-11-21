@@ -25,7 +25,7 @@ let collection = "indexedPaths"
 const client = await connectToMongo(process.env.INDEXING_DB_NAME)
 const defaultDomainName = "gameistech.com"
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
-const QUOTA_LIMIT = 25
+const QUOTA_LIMIT = 200
 function getUrls(indexed , urlList , limit = QUOTA_LIMIT){
     const urls = []
     const map = {}

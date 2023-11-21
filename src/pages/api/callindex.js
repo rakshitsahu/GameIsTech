@@ -9,10 +9,6 @@ export async function handler(req , res){
   const body = req.body
     const collection = "indexedPaths"
     const filter = req.body.filter
-
-
-
-
       try {
         
         await axios.post(`https://${process.env.HOST}/api/indexing`, {

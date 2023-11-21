@@ -25,7 +25,7 @@ let collection = "indexedPaths"
 const client = await connectToMongo(process.env.INDEXING_DB_NAME)
 const defaultDomainName = "gameistech.com"
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
-const QUOTA_LIMIT = 200
+const QUOTA_LIMIT = 25
 function getUrls(indexed , urlList , limit = QUOTA_LIMIT){
     const urls = []
     const map = {}
@@ -104,14 +104,16 @@ async function insertIndexedUrls(urlList){
 
        if( isEmptyCollection )
        {
-
+   
         client.collection(collection).insertOne({paths : urlList})
        }
        else if ( urlList.length + currentList.length >= paths.length ){
+       
         await client.collection(collection).drop()
        }
        else
        {
+        
         const updateOperation = {
           $push: {
             paths: { $each: urlList }
@@ -159,7 +161,7 @@ jwtClient.authorize(function(err, tokens) {
     }
   };
   request(options, function (error, response, body) {
-   
+  
     if(error)
     {
   
@@ -205,6 +207,7 @@ export async function handler(req , res){
     const statusCode = await IndexingApi(element)
   })
   setTimeout( async () => {
+    
     await insertIndexedUrls(latestIndexedUrls).then(()=>{
       latestIndexedUrls = []
       res.json({message : 'urls inserted successfully'})
@@ -214,7 +217,7 @@ export async function handler(req , res){
       res.json({message : 'Something went wrong'})
       
     })
-  }, 1500);
+  }, 2000);
   
 
   

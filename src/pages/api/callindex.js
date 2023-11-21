@@ -12,15 +12,9 @@ export async function handler(req , res){
 
 
 
-    const client = new MongoClient(uri, {
-        serverApi: {
-          version: ServerApiVersion.v1,
-          strict: true,
-          deprecationErrors: true,
-        }
-      });
+
       try {
-        await client.connect()
+        
         await axios.post(`https://${process.env.HOST}/api/indexing`, {
           collection : "GameIsTech",
           domainName : `${process.env.HOST}`
@@ -29,7 +23,7 @@ export async function handler(req , res){
         res.send({message : "success"})
       } catch (error) {
         res.send({message : "error" , er : error})
-        await client.close()
+        
       }
 
 }

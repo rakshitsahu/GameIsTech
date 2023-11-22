@@ -21,6 +21,49 @@ WOMEN = "women"
 PLAYERS = "players"
 CAPTAIN_ICON ="https://www.iplt20.com/assets/images/teams-captain-icon.svg"
 BrowserTabLimit = 1
+TeamNamesJson = [
+{
+    "FullName" : "Chennai Super Kings",
+    "ShortName" : "CSK"
+},
+{
+    "FullName" : "Delhi Capitals",
+    "ShortName" : "DC"
+},
+{
+    "FullName" : "Gujarat Titans",
+    "ShortName" : "GT"
+},
+{
+    "FullName" : "Kolkata Knight Riders",
+    "ShortName" : "KKR"
+},
+{
+    "FullName" : "Lucknow Super Giants",
+    "ShortName" : "LSG"
+},
+{
+    "FullName" : "Mumbai Indians",
+    "ShortName" : "MI"
+},
+{
+    "FullName" : "Punjab Kings",
+    "ShortName" : "PK"
+},
+
+{
+    "FullName" : "Rajasthan Royals",
+    "ShortName" : "RR"
+},
+{
+    "FullName" : "Royal Challengers Bangalore",
+    "ShortName" : "RCB"
+},
+{
+    "FullName" : "Sunrisers Hyderabad",
+    "ShortName" : "SRH"
+},
+]
 teamDictonary = {
     "men" : [
         {
@@ -82,7 +125,7 @@ class BrowserBase:
             self.driver.switch_to.window(self.driver.window_handles[-1])
             # Open a website in the new tab
             self.driver.get(URL)
-    def OpenInLastTabAfterLimit(self,LIMIT , URL):
+    def OpenInLastTabAfterLimit(self,LIMIT , URL , xpath = ""):
         if len(self.driver.window_handles) < LIMIT:
             self.OpenInNewTab(URL)
         else:
@@ -144,16 +187,43 @@ class IplBase(BrowserBase):
             return False
         teamPlayersJson = {}
         playerDataJson = {}
+        def ExtractTableDetails(table):
+            headings = table.find('thead').findAll('th')
+            tableRows = table.findAll('tr')
+
+            dataJson = {}
+            for tableRow in tableRows[1:]:
+                tdTags = tableRow.findAll('td')
+                # print(tableRow)
+                rowDataJson = {}
+                for i in range(1 , len(tdTags)):
+                    heading = headings[i].text.strip()
+                    rowDataJson[heading] = tdTags[i].text.strip()
+                leftHeading = tdTags[0].text.strip()
+                dataJson[leftHeading] = rowDataJson
+            if len(dataJson.keys()) == 1:
+                print("Data Not Found")
+            else:
+                print(dataJson)
+            return dataJson
+
         def PlayerDetailFromPlayerPage(URL):
-            # playerPageObject = self.GetBrowserObject()
-            self.OpenInLastTabAfterLimit(2,URL)
+
+            playerStatsTableXpath = "//div[@class='SMplayerStatsWidget ng-scope']"
+            self.OpenInLastTabAfterLimit(2,URL,playerStatsTableXpath)
+            self.WaitForElement(By.XPATH,playerStatsTableXpath)
             SourceCode = self.GetHTMLByPageSource()
             playerNationality = SourceCode.find('div', {"class":"plyr-name-nationality"}).find('span').text
             playerDetailGridArray = SourceCode.find('div', {"class":"player-overview-detail"}).find_all('div' , {"class": "grid-items"})
             playerMatchesPlayed = playerDetailGridArray[3].find('p').text
             playerIplDebut = playerDetailGridArray[0].find('p').text
             playerDob = playerDetailGridArray[2].find('p').text
-            playerJson = {"Nationality": playerNationality.strip(), "MatchesPlayed": playerMatchesPlayed.strip() , "IplDebut": playerIplDebut.strip() , "Dob":playerDob.strip() }
+            statsTable = SourceCode.findAll('table', 'sm-pp-table')
+            BattingAndFieldingStats = ExtractTableDetails(statsTable[0])
+            BowlingStats = ExtractTableDetails(statsTable[0])
+
+            # print("***************************** "+ str(len(statsTable)))
+            playerJson = {"Nationality": playerNationality.strip(), "MatchesPlayed": playerMatchesPlayed.strip() , "IplDebut": playerIplDebut.strip() , "Dob":playerDob.strip() , "BattingAndFielding" :BattingAndFieldingStats , "BowlingStats" :BowlingStats }
             return playerJson
         def PlayerDetailFromPlayerCard (playerCard):
             global playerPageMap
@@ -212,6 +282,62 @@ class IplBase(BrowserBase):
                 print("data found for season "+str(season))
             else:
                 print("data not found for season "+str(season))
+    def GetMatchData(self , URL):
+        self.OpenInNewTab(URL)
+        MatchResultsListXpath = "//div[@class='vn-sheduleList vn-resultsList posRel vn-fullArchiveList col-100 floatLft menT mb-4']"
+        LastElementXpath = "(//div[@class='vn-sheduleLogo'])[1]"
+        self.WaitForElement( By.XPATH, LastElementXpath)
+        sourceCode = self.GetHTMLByPageSource()
+        MatchesList = sourceCode.find('div',{'class' :'vn-resultsList'}).find_all('li')
+        Match = MatchesList[0]
+        # print(MatchesList[0])
+        Result = Match.find('div', {'class':'live-score'})
+        print(Result)
+    def MatchCentrePageData(self,url):
+        def GetTeamName(teamName):
+            global TeamNamesJson
+            for teamNameJson in TeamNamesJson:
+                if teamNameJson["ShortName"].strip().lower() == teamName.strip().lower() or teamNameJson["FullName"].strip().lower() == teamName.strip().lower():
+                    return teamNameJson
+            raise ValueError("++++++++++++++++++THE TEAM NAME IS NOT FOUND IN JSON+++++++++++++++++++")
+        def ExtractTextData(Text):
+            char_index = Text.find('-')
+            TeamName = Text[:char_index].strip()
+            scorePattern = r'\b\d+/\d+\b'
+            rpoPattern = r'\((\d+\.\d+)\s+rpo'
+            foursPattern = r'\b(\d+)x4\b'
+            sixesPattern = r'\b(\d+)x6\b'
+            match = re.search(scorePattern, Text)
+            Score = match.group().strip()
+            match = re.search(rpoPattern, Text)
+            RPO = match.group(1).strip()
+            match = re.search(foursPattern, Text)
+            Fours = match.group(1).strip() if match else "0"
+            match = re.search(sixesPattern, Text)
+            Sixes = match.group(1).strip() if match else "0"
+            dataJson = { 'FullName' : TeamName ,'Score' :Score , 'Rpo' :RPO , 'Fours' :Fours , 'Sixes' :Sixes}
+            print(GetTeamName(TeamName))
+            return dataJson
+        self.OpenWindow(url)
+        LestElementXpath = "(//div[@id='ball-by-ball'])[1]"
+        self.WaitForElement( By.XPATH, LestElementXpath)
+        sourceCode = self.GetHTMLByPageSource()
+        outerContainer = sourceCode.find('div',{'id':'cmdBlockSmipl'})
+        ListOfPTages = outerContainer.find_all('p')[:7]
+        useFullPTags = [ ListOfPTages[2] , ListOfPTages[4] , ListOfPTages[6] ]
+        # for PTag in ListOfPTages:
+        #     BlueResult = PTag.find('span',{'style':'color:#2980b9'})
+        for i in useFullPTags:
+            print(i.text.strip())
+            ComparisonResult = i.text.split('||')
+            print(ComparisonResult[0].strip())
+            print(ComparisonResult[1].strip())
+            ExtractTextData(ComparisonResult[0].strip())
+        # print(len(BlueTeamList))
+        # print(len(YellowTeamList))
+        # print(BlueTeamList[0].text)
+        
+        print("h")
     # def GetAllTeamData(self):
     #     self.OpenInNewTab(TEAMS_PAGE)
     #     sourceCode = self.GetHTMLByPageSource()
@@ -246,11 +372,13 @@ def GetAllTeamData():
         pool.map(MapUrl, urlList)
 
 if __name__ == "__main__":
-    # ipl = IplBase()
+    ipl = IplBase()
     # ipl.OpenInNewTab("https://www.iplt20.com/teams/chennai-super-kings/squad/")
-    # ipl.OpenInNewTab("https://www.iplt20.com/teams/chennai-super-kings/squad/")
-    GetAllTeamData()
-    # ipl.GetAllTeamData()
+    # ipl.GetTeamPlayers("https://www.iplt20.com/teams/chennai-super-kings/squad/")
+    # ipl.GetMatchData("https://www.iplt20.com/matches/results/2023")
+    ipl.MatchCentrePageData("https://www.iplt20.com/match/2023/1046")
+    # GetAllTeamData()
+   
 
 
 

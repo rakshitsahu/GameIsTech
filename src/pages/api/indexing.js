@@ -31,7 +31,6 @@ function getUrls(indexed , urlList , limit = QUOTA_LIMIT){
     const map = {}
 
     indexed.forEach(element => {
-      
         map[element] = true
     });
     let index = 0
@@ -98,7 +97,7 @@ async function insertIndexedUrls(urlList){
 
        
        let resultPaths = []
-
+       console.log(collection)
        const documents = await client.collection(collection).find({}).toArray();
        const isEmptyCollection = documents.length == 0
 
@@ -133,51 +132,44 @@ async function insertIndexedUrls(urlList){
 
   }
 }
-let latestIndexedUrls = []
-async function IndexingApi(url){
-  const jwtClient = new google.auth.JWT(
-  key.client_email,
-  null,
-  key.private_key,
-  ["https://www.googleapis.com/auth/indexing"],
-  null
-);
-jwtClient.authorize(function(err, tokens) {
-  if (err) {
-    return;
-  }
-  let options = {
-    url: "https://indexing.googleapis.com/v3/urlNotifications:publish",
-    method: "POST",
-    // Your options, which must include the Content-Type and auth headers
-    headers: {
-      "Content-Type": "application/json"
-    },
-    auth: { "bearer": tokens.access_token },
-    // Define contents here. The structure of the content is described in the next step.
-    json: {
-      "url": url,
-      "type": "URL_UPDATED"
-    }
-  };
-  request(options, function (error, response, body) {
-  
-    if(error)
-    {
-  
-    }
-    else if( response.statusCode === 200  )
-    {
-      latestIndexedUrls.push(url)
 
-    }
-    else
-    {
-    }
-  return response.statusCode
+async function IndexingApi(url) {
+  return new Promise((resolve, reject) => {
+    const jwtClient = new google.auth.JWT(
+      key.client_email,
+      null,
+      key.private_key,
+      ["https://www.googleapis.com/auth/indexing"],
+      null
+    );
+
+    jwtClient.authorize(async function (err, tokens) {
+      if (err) {
+        reject(501);
+      }
+
+      let options = {
+        url: "https://indexing.googleapis.com/v3/urlNotifications:publish",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        auth: { "bearer": tokens.access_token },
+        json: {
+          "url": url,
+          "type": "URL_UPDATED"
+        }
+      };
+
+      try {
+        const response = await request(options);
+        console.log(url);
+        resolve(response.statusCode);
+      } catch (error) {
+        reject(error.statusCode);
+      }
+    });
   });
-});
-
 }
 function getUniques(array){
   const map = {}
@@ -199,25 +191,36 @@ export async function handler(req , res){
   paths = await getUrlList()
 
   const indexedList = await getIndexedPaths(paths)
-
+  console.log(indexedList)
+  console.log(paths)
   const pathsToIndex = getUrls(indexedList , paths , Math.floor(QUOTA_LIMIT/ 24) )
-
-  const indexedPaths = []
-  pathsToIndex.forEach(async (element)=>{
-    const statusCode = await IndexingApi(element)
-  })
-  setTimeout( async () => {
-    
-    await insertIndexedUrls(latestIndexedUrls).then(()=>{
-      latestIndexedUrls = []
-      res.json({message : 'urls inserted successfully'})
+  console.log(pathsToIndex)
+  const latestIndexedUrls = []
+  const promises = pathsToIndex.map(async (element) => {
+    try {
+      await IndexingApi(element).then((status)=>{
+        console.log(status);
+        console.log(element);
+        latestIndexedUrls.push(element);
+      });
       
-    }).catch( (err)=>{
-      latestIndexedUrls = []
-      res.json({message : 'Something went wrong'})
-      
-    })
-  }, 2000);
+    } catch (error) {
+      console.log("Problem occurred "+ error.message);
+    }
+  });
+  
+  // Use Promise.all to wait for all promises to resolve
+  await Promise.all(promises);
+  
+  // Handle the insertion of indexed URLs
+  try {
+    console.log(latestIndexedUrls)
+    await insertIndexedUrls(latestIndexedUrls);
+    res.json({ message: 'Urls inserted successfully' });
+  } catch (err) {
+    res.json({ message: 'Something went wrong' });
+  }
+ 
   
 
   

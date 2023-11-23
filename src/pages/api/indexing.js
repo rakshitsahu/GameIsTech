@@ -1,7 +1,7 @@
 
 // import GCAM_DB_STATE from "@/Components/gcam/mongodb/DB_Name_State";
 const { MongoClient, ServerApiVersion } = require('mongodb');
-import { connectToMongo } from "@/MongoDb/MongoDB";
+import MongoFind from './gcam/mongo/find';
 import GCAM_URL_STATE from '@/Components/gcam/URLs/GCAM_URL_STATE';
 import { GCAM_URLS } from '@/Components/gcam/URLs/GCAM_URL_MANAGER';
 import { MdMan4 } from 'react-icons/md';
@@ -13,17 +13,16 @@ var GameIsTechKey = require("./gameistech.json");
 var androidApkKey = require("./androidapk.json");
 var key = {}
 let paths = []
-let domainName = ""
 const keyMap = {
   "apkhub.mobi" : apkHubKey,
-  "gameistech.com" : GameIsTechKey,
+  "apkhub.mobi" : GameIsTechKey,
   "androidapkdownloads.info" : androidApkKey
 }
 var key = {}
 const DB_NAME = "Indexing-DB"
 let collection = "indexedPaths"
-const client = await connectToMongo(process.env.INDEXING_DB_NAME)
-const defaultDomainName = "gameistech.com"
+let domainName = ""
+const defaultDomainName = "apkhub.mobi"
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
 const QUOTA_LIMIT = 200
 function getUrls(indexed , urlList , limit = QUOTA_LIMIT){
@@ -48,22 +47,33 @@ function getUrls(indexed , urlList , limit = QUOTA_LIMIT){
 
 async function getUrlList(){
   const collection = "urlPaths"
-
+  const client = new MongoClient(uri, {
+      serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+      }
+    });
     try {
+      await client.connect().catch( async (err) => { 
 
-         const data = await client.collection(collection).find({}).toArray();
+        await client.close() 
+      }
+         )
+         const data = await client.db(DB_NAME).collection(collection).find({}).toArray();
 
         let resultPath = []
          if(data.length == 0){
           const urlList = await GCAM_URLS(GCAM_URL_STATE.All)
           resultPath = urlList
           
-          await client.collection(collection).insertOne({paths : getUniques(urlList)}).catch((err)=>{
+          await client.db(DB_NAME).collection(collection).insertOne({paths : getUniques(urlList)}).catch((err)=>{
 
           })
          }
          else
          resultPath = data[0].paths
+         await client.close()
          const replacedDomain = []
          resultPath.forEach((element)=>{
           const updatedURL = element.replace(defaultDomainName , domainName)
@@ -72,43 +82,63 @@ async function getUrlList(){
 
          return  replacedDomain
     } catch (error) {
+      await client.close()
     }
 }
 
 async function getIndexedPaths(indexedUrls){
-
+  const client = new MongoClient(uri, {
+      serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+      }
+    });
     try {
-
-         const indexedList = await client.collection(collection).find({}).toArray();
+      await client.connect().catch( async (err) => {
+        await client.close()
+      }
+         )
+         const indexedList = await client.db(DB_NAME).collection(collection).find({}).toArray();
          let resultPaths = []
          if(indexedList.length)
          resultPaths = indexedList[0].paths
 
+
+         await client.close()
+
          return  resultPaths
     } catch (error) {
+      await client.close()
     }
 }
 
 async function insertIndexedUrls(urlList){
-
+  const client = new MongoClient(uri, {
+    serverApi: {
+      version: ServerApiVersion.v1,
+      strict: true,
+      deprecationErrors: true,
+    }
+  });
 
   try {
-    
+    await client.connect()
        const currentList = await getIndexedPaths()
 
        
        let resultPaths = []
 
-       const documents = await client.collection(collection).find({}).toArray();
+       const documents = await client.db(DB_NAME).collection(collection).find({}).toArray();
        const isEmptyCollection = documents.length == 0
 
        if( isEmptyCollection )
        {
 
-        client.collection(collection).insertOne({paths : urlList})
+        client.db(DB_NAME).collection(collection).insertOne({paths : urlList})
        }
        else if ( urlList.length + currentList.length >= paths.length ){
-        await client.collection(collection).drop()
+        await client.db(DB_NAME).collection(collection).drop()
        }
        else
        {
@@ -117,18 +147,16 @@ async function insertIndexedUrls(urlList){
             paths: { $each: urlList }
           }
         };
-        const response = await axios.post(`https://${process.env.HOST}/api/gcam/mongo/updateone`,{
+        const response = await axios.post('https://apkhub.mobi/api/gcam/mongo/updateone',{
           collection : collection,
           filter : {},
           data : updateOperation
         })
-       
        }
-
-       
+       await client.close()
        
   } catch (error) {
-
+    await client.close()
   }
 }
 let latestIndexedUrls = []
@@ -159,18 +187,15 @@ jwtClient.authorize(function(err, tokens) {
     }
   };
   request(options, function (error, response, body) {
-   
     if(error)
     {
-  
+     
     }
     else if( response.statusCode === 200  )
     {
+      
       latestIndexedUrls.push(url)
 
-    }
-    else
-    {
     }
   return response.statusCode
   });
@@ -194,6 +219,7 @@ export async function handler(req , res){
   collection = req.body.collection
   domainName = req.body.domainName
   key = keyMap[domainName]
+
   paths = await getUrlList()
 
   const indexedList = await getIndexedPaths(paths)
@@ -214,7 +240,7 @@ export async function handler(req , res){
       res.json({message : 'Something went wrong'})
       
     })
-  }, 1500);
+  }, 200);
   
 
   

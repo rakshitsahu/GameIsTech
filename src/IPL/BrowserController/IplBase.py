@@ -142,7 +142,8 @@ class BrowserBase:
         return self.GetHTMLByPageSource()
     def ClickElement(self , _by , _for):
         button = self.WaitForElement(_by , _for)
-        button.click()
+        if self.IsClickableElement(button):
+            button.click()
         return True
     def AcceptCookies(self):
         self.ClickElement(By.XPATH , self.acceptCookiesXpath)
@@ -177,9 +178,11 @@ class IplBase(BrowserBase):
         newIplBaseObject = IplBase()
         self.browserTabObjects.append(newIplBaseObject)
         return newIplBaseObject
+    def WaitForLoaderToDisappear(self):
+        loader = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "loader-main")))
+        WebDriverWait(self.driver, 10).until(EC.invisibility_of_element(loader))
+
     def GetTeamPlayers(self,URL):
-        
-        
         def isCaptain(imgTags):
             for imgTag in imgTags:
                 if imgTag.get('src') == CAPTAIN_ICON:
@@ -264,7 +267,7 @@ class IplBase(BrowserBase):
             print(playerJson.get("Name"))
         print(playerDataJson)
         
-        
+    
         
     def PageExists(self,url):
         html_doc = requests.get(url).content
@@ -293,6 +296,49 @@ class IplBase(BrowserBase):
         # print(MatchesList[0])
         Result = Match.find('div', {'class':'live-score'})
         print(Result)
+    def GetScorecardData(self , url):
+        def ExtractTableData(index, tableRows):
+            # index 0 for batsmans and 1 for bowlers
+            HeadingList = [['Runs','Balls','Fours','sixes','StrikeRate'] ,['Overs','Runs','Wickets','Economy','Dots'] ]
+            PlayerIdMapToStatsJson = {}
+            # todo: make sure to map data with playerid 
+            for row in tableRows:
+                cols = row.findAll('td')
+                playerStatsJson = {}
+                statsCols = cols[2:7]
+                for i in range(len(statsCols)):
+                    playerStatsJson[HeadingList[index][i]] = statsCols[i].text.strip()
+                print(playerStatsJson)
+        def GetInningsScoreBoard():
+            ScorecardXpath = "(//a[normalize-space()='Scorecard'])[1]"
+            # self.WaitForElement(By.XPATH, ScorecardXpath)
+            # self.ClickElement(By.XPATH, ScorecardXpath)
+            sourceCode = self.GetHTMLByPageSource()
+            scoreBoardTables = sourceCode.find_all('table',{'class':'ap-scroreboard-table'})
+            TableRows = scoreBoardTables[0].find('tbody' , {'class' : 'team1'}).find_all('tr')
+            ExtractTableData(0,TableRows[:len(TableRows) - 1])
+            print("++++++++++++++++")
+            TableRows = scoreBoardTables[1].find('tbody' , {'class' : 'team1'}).find_all('tr')
+            ExtractTableData(1,TableRows)
+        self.OpenWindow(url)
+        self.WaitForLoaderToDisappear()
+        GetInningsScoreBoard()
+        SwitchTeamButtonXpath = "(//span[@class='mob-hide'][normalize-space()='Innings'])[1]"
+        self.WaitForElement(By.XPATH , SwitchTeamButtonXpath)
+        self.ClickElement(By.XPATH , SwitchTeamButtonXpath)
+        GetInningsScoreBoard()
+        # sourceCode = self.GetHTMLByPageSource()
+        # scoreBoardTables = sourceCode.find_all('table',{'class':'ap-scroreboard-table'})
+        # TableRows = scoreBoardTables[0].find('tbody' , {'class' : 'team1'}).find_all('tr')
+        # ExtractTableData(0,TableRows[:len(TableRows) - 1])
+        # print("++++++++++++++++")
+        # TableRows = scoreBoardTables[1].find('tbody' , {'class' : 'team1'}).find_all('tr')
+        # ExtractTableData(1,TableRows)
+        # self.WaitForElement(By.XPATH, ScorecardXpath)
+        # self.ClickElement(By.XPATH, ScorecardXpath)
+        
+        # resultElement = self.WaitForElement(By.XPATH , SwitchTeamButtonXpath)
+
     def MatchCentrePageData(self,url):
         def GetTeamName(teamName):
             global TeamNamesJson
@@ -376,7 +422,9 @@ if __name__ == "__main__":
     # ipl.OpenInNewTab("https://www.iplt20.com/teams/chennai-super-kings/squad/")
     # ipl.GetTeamPlayers("https://www.iplt20.com/teams/chennai-super-kings/squad/")
     # ipl.GetMatchData("https://www.iplt20.com/matches/results/2023")
-    ipl.MatchCentrePageData("https://www.iplt20.com/match/2023/1046")
+    # ipl.MatchCentrePageData("https://www.iplt20.com/match/2023/1046")
+    ipl.GetScorecardData("https://www.iplt20.com/match/2023/1046")
+
     # GetAllTeamData()
    
 

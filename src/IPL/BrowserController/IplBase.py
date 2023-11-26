@@ -110,7 +110,7 @@ class BrowserBase:
         soup = BeautifulSoup(html_content_cleaned, 'html.parser')
         return soup
     def WaitForElement(self,_by , _for):
-        wait = WebDriverWait(self.driver, 100)
+        wait = WebDriverWait(self.driver, 10)
         return wait.until(EC.presence_of_element_located((_by, _for)))
     def OpenWindow(self,URL):
         self.driver.get(URL)
@@ -161,8 +161,11 @@ class BrowserBase:
             return True
         except TimeoutException:
             return False
+
         
 playerPageMap = {}
+
+    
 class IplBase(BrowserBase):
     browserTabObjects = []
 
@@ -181,7 +184,12 @@ class IplBase(BrowserBase):
     def WaitForLoaderToDisappear(self):
         loader = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "loader-main")))
         WebDriverWait(self.driver, 10).until(EC.invisibility_of_element(loader))
-
+    def GetTeamName(teamName):
+        global TeamNamesJson
+        for teamNameJson in TeamNamesJson:
+            if teamNameJson["ShortName"].strip().lower() == teamName.strip().lower() or teamNameJson["FullName"].strip().lower() == teamName.strip().lower():
+                return teamNameJson
+        raise ValueError("++++++++++++++++++THE TEAM NAME IS NOT FOUND IN JSON+++++++++++++++++++")
     def GetTeamPlayers(self,URL):
         def isCaptain(imgTags):
             for imgTag in imgTags:
@@ -311,8 +319,8 @@ class IplBase(BrowserBase):
                 print(playerStatsJson)
         def GetInningsScoreBoard():
             ScorecardXpath = "(//a[normalize-space()='Scorecard'])[1]"
-            # self.WaitForElement(By.XPATH, ScorecardXpath)
-            # self.ClickElement(By.XPATH, ScorecardXpath)
+            self.WaitForElement(By.XPATH, ScorecardXpath)
+            self.ClickElement(By.XPATH, ScorecardXpath)
             sourceCode = self.GetHTMLByPageSource()
             scoreBoardTables = sourceCode.find_all('table',{'class':'ap-scroreboard-table'})
             TableRows = scoreBoardTables[0].find('tbody' , {'class' : 'team1'}).find_all('tr')
@@ -320,6 +328,39 @@ class IplBase(BrowserBase):
             print("++++++++++++++++")
             TableRows = scoreBoardTables[1].find('tbody' , {'class' : 'team1'}).find_all('tr')
             ExtractTableData(1,TableRows)
+        def ExtractWagonWheelData():
+            wagonWheelManager = WagonWheelManager(self)
+            wagonWheelButtonXpath = "(//a[normalize-space()='Wagon Wheel'])[1]"
+            inningsXpath = "//select[@class='mcSelectDefault inningsList innsFilter ng-pristine ng-untouched ng-valid']"
+            inningsXpathList = wagonWheelManager.GetAllInningsNameAndXpath()
+
+            inningsOpetion1Xpath =inningsXpathList[0]['Xpath']
+            inningsOpetion2Xpath = inningsXpathList[1]['Xpath']
+            inningsXpathClicked =  "(//select[@class='mcSelectDefault inningsList innsFilter ng-valid ng-dirty ng-valid-parse ng-touched'])[1]"
+            self.ClickElement(By.XPATH ,wagonWheelButtonXpath)
+            batsmanNameAndXpath = wagonWheelManager.GetAllBatsmansNameAndXpath()
+            BowlerNameAndXpath = wagonWheelManager.GetAllBowlersNameAndXpath()
+            print(len(batsmanNameAndXpath))
+            print(len(BowlerNameAndXpath))
+            print(BowlerNameAndXpath[2])
+            wagonWheelManager.GetRuns()
+            wagonWheelManager.SwitchBowlerOption(BowlerNameAndXpath[2]['Xpath'])
+            wagonWheelManager.GetRuns()
+            # self.ClickElement(By.XPATH , inningsXpath)
+            # self.ClickElement(By.XPATH, inningsOpetion1Xpath)
+            # # self.driver.implicitly_wait(10)
+            # self.ClickElement(By.XPATH , inningsXpathClicked)
+            # self.ClickElement(By.XPATH, inningsOpetion2Xpath)
+            
+            bowler1Xpath = "(//option[@value='2018-100mb00000000047-1bfc8ff2f88b11'])[1]"
+            bowler2Xpath = "(//option[@value='2018-100mb00000000054-e3ebefa2050a11'])[1]"
+            # wagonWheelManager.SwitchBowlerOption(bowler1Xpath)
+            # wagonWheelManager.SwitchBowlerOption (bowler2Xpath)
+            wagonWheelManager.SwitchInningsOption(inningsOpetion1Xpath)
+            wagonWheelManager.SwitchInningsOption(inningsOpetion2Xpath)
+            # self.ClickElement(By.XPATH , inningsXpathClicked)
+            # self.ClickElement(By.XPATH, inningsOpetion1Xpath)
+
         self.OpenWindow(url)
         self.WaitForLoaderToDisappear()
         GetInningsScoreBoard()
@@ -327,6 +368,7 @@ class IplBase(BrowserBase):
         self.WaitForElement(By.XPATH , SwitchTeamButtonXpath)
         self.ClickElement(By.XPATH , SwitchTeamButtonXpath)
         GetInningsScoreBoard()
+        ExtractWagonWheelData()
         # sourceCode = self.GetHTMLByPageSource()
         # scoreBoardTables = sourceCode.find_all('table',{'class':'ap-scroreboard-table'})
         # TableRows = scoreBoardTables[0].find('tbody' , {'class' : 'team1'}).find_all('tr')
@@ -340,12 +382,7 @@ class IplBase(BrowserBase):
         # resultElement = self.WaitForElement(By.XPATH , SwitchTeamButtonXpath)
 
     def MatchCentrePageData(self,url):
-        def GetTeamName(teamName):
-            global TeamNamesJson
-            for teamNameJson in TeamNamesJson:
-                if teamNameJson["ShortName"].strip().lower() == teamName.strip().lower() or teamNameJson["FullName"].strip().lower() == teamName.strip().lower():
-                    return teamNameJson
-            raise ValueError("++++++++++++++++++THE TEAM NAME IS NOT FOUND IN JSON+++++++++++++++++++")
+
         def ExtractTextData(Text):
             char_index = Text.find('-')
             TeamName = Text[:char_index].strip()
@@ -362,7 +399,7 @@ class IplBase(BrowserBase):
             match = re.search(sixesPattern, Text)
             Sixes = match.group(1).strip() if match else "0"
             dataJson = { 'FullName' : TeamName ,'Score' :Score , 'Rpo' :RPO , 'Fours' :Fours , 'Sixes' :Sixes}
-            print(GetTeamName(TeamName))
+            print(self.GetTeamName(TeamName))
             return dataJson
         self.OpenWindow(url)
         LestElementXpath = "(//div[@id='ball-by-ball'])[1]"
@@ -397,6 +434,133 @@ class IplBase(BrowserBase):
     #         print(teamShortName , teamPageUrl)
     #     with Pool() as pool:
     #         pool.map(self.GetTeamAllSeasonData, urlList[:2])
+class WagonWheelManager():
+    wagonWheelButtonXpath = "(//a[normalize-space()='Wagon Wheel'])[1]"
+    isInningsDropDownClicked = False
+    ipl = None
+    inningsXpath = "//select[@class='mcSelectDefault inningsList innsFilter ng-pristine ng-untouched ng-valid']"
+    inningsXpathClickedXpath =  "(//select[@class='mcSelectDefault inningsList innsFilter ng-valid ng-dirty ng-valid-parse ng-touched'])[1]"
+
+    batsmanXpath = "(//select[@class='mcSelectDefault batsmenFilter ng-pristine ng-untouched ng-valid'])[1]"
+    batsmanClickedXpath = "(//select[@class='mcSelectDefault batsmenFilter ng-valid ng-dirty ng-valid-parse ng-touched'])[1]"
+    runsSectionXpath = '//ul[@class="wagon-points uniform-grid wp-values"]'
+    isBatsmanClicked = False
+    def SwitchBatsmanOption(self , optionXpath):
+        if self.isBatsmanClicked == True:
+            self.batsmanXpath = self.batsmanClickedXpath
+        else:
+            self.batsmanXpath = True
+        self.ipl.ClickElement(By.XPATH , self.batsmanXpath)
+        self.ipl.ClickElement(By.XPATH , optionXpath)
+    def GetRuns(self):
+        print(self.runsSectionXpath)
+        sourceCode = self.ipl.GetSourceCodeByXpath(self.runsSectionXpath)
+        iTagsList = sourceCode.findAll('i')[1:]
+        scoreKeys = ['ones','Twos','Threes','Fours','Sixes']
+        wagonWheenRunsjson = {}
+        for i in range(0 , len(iTagsList)) :
+            wagonWheenRunsjson[scoreKeys[i]] = int(iTagsList[i].text.strip())
+        # print(wagonWheenRunsjson)
+        return wagonWheenRunsjson
+    def GetAllStats(self):
+        def AddScoresOfScoreJson(json1: {}, json2 :{}):
+            for key in json1.keys():
+                json2[key] += json1[key]
+            return json2
+
+            
+        teamVsTeamStatsJson = {}
+        teamVsPlayerStatsJson = {}
+        playersVsTeamStatsJson = {}
+        playerVsPlayerStatsJson = {}
+        inningsXpathList = self.GetAllInningsNameAndXpath()
+        text = self.SwitchInningsOption(inningsXpathList[0]['Xpath'])
+        team1NameJson = self.ipl.GetTeamName(text.split()[0])
+        text = self.SwitchInningsOption(inningsXpathList[1]['Xpath'])
+        team2NameJson = self.ipl.GetTeamName(text.split()[0])
+        teamsNameJsonList = [team1NameJson , team2NameJson]
+
+        bowlersXpathList = self.GetAllBatsmansNameAndXpath()
+        batsmanXpathList = self.GetAllBowlersNameAndXpath()
+        for inningsIndex in range(0, len(inningsIndex)):
+
+            for batsman in batsmanXpathList:
+                self.SwitchBatsmanOption(batsman['Xpath'])
+                for bowler in bowlersXpathList:
+                    self.SwitchBowlerOption(bowler['Xpath'])
+                    runsJson = self.GetRuns()
+                    currentTeam = teamsNameJsonList[inningsIndex]
+                    opponentTeam = teamsNameJsonList[(inningsIndex + 1) % 2]
+                    
+
+                    
+    def GetAllBatsmansNameAndXpath(self):
+        sourceCode = self.ipl.GetSourceCodeByXpath(self.batsmanXpath)
+        options = sourceCode.findAll('option')[1:]
+        playerNameAndXpath = []
+        for option in options:
+            playerNameAndXpath.append({
+                "Name" : option.text.strip(),
+                "Xpath" : f"(//option[@value='{option.get('value')}'])[1]"
+            })
+        # print( "sorce code is ", playerNameAndXpath)
+        return playerNameAndXpath
+    def GetAllInningsNameAndXpath(self):
+        sourceCode = self.ipl.GetSourceCodeByXpath(self.inningsXpath)
+        options = sourceCode.findAll('option')
+        InningsNameAndXpath = []
+        for option in options:
+            InningsNameAndXpath.append({
+                "Name" : option.text.strip(),
+                "Xpath" : f"//option[normalize-space()='{option.text.strip()}']"
+            })
+        print( "sorce code is ", InningsNameAndXpath)
+        return InningsNameAndXpath
+
+    bowlerXpath = "(//select[@class='mcSelectDefault bowlerFilter ng-pristine ng-untouched ng-valid'])[1]"
+    bowlerClickedXpath = "(//select[@class='mcSelectDefault bowlerFilter ng-valid ng-dirty ng-valid-parse ng-touched'])[1]"
+    isBowlerClicked = False
+
+    def GetAllBowlersNameAndXpath(self):
+        sourceCode = self.ipl.GetSourceCodeByXpath(self.bowlerXpath)
+        options = sourceCode.findAll('option')
+        playerNameAndXpath = []
+        for option in options:
+            playerNameAndXpath.append({
+                "Name" : option.text.strip(),
+                "Xpath" : f"(//option[@value='{option.get('value')}'])[1]"
+            })
+        # print( "sorce code is ", playerNameAndXpath)
+        return playerNameAndXpath
+    
+    def SwitchBowlerOption(self , optionXpath):
+        if self.isBowlerClicked == False:
+            print("inside If ", self.bowlerXpath)
+            self.ipl.ClickElement(By.XPATH , self.bowlerXpath)
+            self.isBowlerClicked = True
+        else:
+            print("inside Else ", self.bowlerClickedXpath)
+            self.ipl.ClickElement(By.XPATH , self.bowlerClickedXpath)
+        self.ipl.ClickElement(By.XPATH , optionXpath)
+
+    def SwitchInningsOption(self , optionXpath):
+        if self.isInningsDropDownClicked == True:
+            self.inningsXpath = self.inningsXpathClickedXpath
+        else:
+            self.isInningsDropDownClicked = True
+        print(self.inningsXpath)
+        self.ipl.ClickElement(By.XPATH , self.inningsXpath)
+        self.ipl.ClickElement(By.XPATH , optionXpath)
+        sourceCode = self.ipl.GetSourceCodeByXpath(optionXpath)
+        print(sourceCode.text.strip())
+        return sourceCode.text.strip()
+        
+    def __init__(self, Ipl : IplBase ):
+        super().__init__()
+        self.ipl = Ipl
+
+
+
 def MapUrl(url):
     iplObject = IplBase()
     iplObject.GetTeamAllSeasonData(url)

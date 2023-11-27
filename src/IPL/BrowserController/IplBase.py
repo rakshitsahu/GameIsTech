@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from bs4 import BeautifulSoup
+import json
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -147,7 +148,7 @@ class BrowserBase:
         return True
     def AcceptCookies(self):
         self.ClickElement(By.XPATH , self.acceptCookiesXpath)
-    def  GetSourceCodeByXpath(self,xpath, timeout = 10):
+    def  GetSourceCodeByXpath(self,xpath, timeout = 100):
         selenium_element = self.WaitForElement(By.XPATH, xpath)
         selenium_element_html = selenium_element.get_attribute("outerHTML")
         soup_element = BeautifulSoup(selenium_element_html, 'html.parser')
@@ -184,7 +185,7 @@ class IplBase(BrowserBase):
     def WaitForLoaderToDisappear(self):
         loader = WebDriverWait(self.driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "loader-main")))
         WebDriverWait(self.driver, 10).until(EC.invisibility_of_element(loader))
-    def GetTeamName(teamName):
+    def GetTeamName(self ,teamName : str):
         global TeamNamesJson
         for teamNameJson in TeamNamesJson:
             if teamNameJson["ShortName"].strip().lower() == teamName.strip().lower() or teamNameJson["FullName"].strip().lower() == teamName.strip().lower():
@@ -338,28 +339,16 @@ class IplBase(BrowserBase):
             inningsOpetion2Xpath = inningsXpathList[1]['Xpath']
             inningsXpathClicked =  "(//select[@class='mcSelectDefault inningsList innsFilter ng-valid ng-dirty ng-valid-parse ng-touched'])[1]"
             self.ClickElement(By.XPATH ,wagonWheelButtonXpath)
-            batsmanNameAndXpath = wagonWheelManager.GetAllBatsmansNameAndXpath()
             BowlerNameAndXpath = wagonWheelManager.GetAllBowlersNameAndXpath()
+            batsmanNameAndXpath = wagonWheelManager.GetAllBatsmansNameAndXpath()
+            wagonWheelManager.GetAllStats()
             print(len(batsmanNameAndXpath))
             print(len(BowlerNameAndXpath))
             print(BowlerNameAndXpath[2])
+
             wagonWheelManager.GetRuns()
-            wagonWheelManager.SwitchBowlerOption(BowlerNameAndXpath[2]['Xpath'])
-            wagonWheelManager.GetRuns()
-            # self.ClickElement(By.XPATH , inningsXpath)
-            # self.ClickElement(By.XPATH, inningsOpetion1Xpath)
-            # # self.driver.implicitly_wait(10)
-            # self.ClickElement(By.XPATH , inningsXpathClicked)
-            # self.ClickElement(By.XPATH, inningsOpetion2Xpath)
-            
-            bowler1Xpath = "(//option[@value='2018-100mb00000000047-1bfc8ff2f88b11'])[1]"
-            bowler2Xpath = "(//option[@value='2018-100mb00000000054-e3ebefa2050a11'])[1]"
-            # wagonWheelManager.SwitchBowlerOption(bowler1Xpath)
-            # wagonWheelManager.SwitchBowlerOption (bowler2Xpath)
-            wagonWheelManager.SwitchInningsOption(inningsOpetion1Xpath)
-            wagonWheelManager.SwitchInningsOption(inningsOpetion2Xpath)
-            # self.ClickElement(By.XPATH , inningsXpathClicked)
-            # self.ClickElement(By.XPATH, inningsOpetion1Xpath)
+
+
 
         self.OpenWindow(url)
         self.WaitForLoaderToDisappear()
@@ -437,7 +426,10 @@ class IplBase(BrowserBase):
 class WagonWheelManager():
     wagonWheelButtonXpath = "(//a[normalize-space()='Wagon Wheel'])[1]"
     isInningsDropDownClicked = False
-    ipl = None
+    ipl : IplBase = None
+    BowlersNamesAndXPaths = None
+    BatsmansNamesAndXPaths = None
+    InningsNamesAndXPaths = None
     inningsXpath = "//select[@class='mcSelectDefault inningsList innsFilter ng-pristine ng-untouched ng-valid']"
     inningsXpathClickedXpath =  "(//select[@class='mcSelectDefault inningsList innsFilter ng-valid ng-dirty ng-valid-parse ng-touched'])[1]"
 
@@ -446,55 +438,105 @@ class WagonWheelManager():
     runsSectionXpath = '//ul[@class="wagon-points uniform-grid wp-values"]'
     isBatsmanClicked = False
     def SwitchBatsmanOption(self , optionXpath):
-        if self.isBatsmanClicked == True:
-            self.batsmanXpath = self.batsmanClickedXpath
+        if self.isBatsmanClicked == False:
+            self.ipl.ClickElement(By.XPATH , self.batsmanXpath)
+            self.isBatsmanClicked = True
         else:
-            self.batsmanXpath = True
-        self.ipl.ClickElement(By.XPATH , self.batsmanXpath)
+
+            self.ipl.ClickElement(By.XPATH , self.batsmanClickedXpath)
         self.ipl.ClickElement(By.XPATH , optionXpath)
-    def GetRuns(self):
-        print(self.runsSectionXpath)
+        time.sleep(0.3)
+
+    def GetRuns(self ):
         sourceCode = self.ipl.GetSourceCodeByXpath(self.runsSectionXpath)
         iTagsList = sourceCode.findAll('i')[1:]
-        scoreKeys = ['ones','Twos','Threes','Fours','Sixes']
+        scoreKeys = ['1','2','3','4','6']
         wagonWheenRunsjson = {}
         for i in range(0 , len(iTagsList)) :
             wagonWheenRunsjson[scoreKeys[i]] = int(iTagsList[i].text.strip())
-        # print(wagonWheenRunsjson)
         return wagonWheenRunsjson
     def GetAllStats(self):
         def AddScoresOfScoreJson(json1: {}, json2 :{}):
+            newjson = {}
             for key in json1.keys():
-                json2[key] += json1[key]
-            return json2
+                newjson =  json2[key] + json1[key]
+            return newjson
 
-            
         teamVsTeamStatsJson = {}
         teamVsPlayerStatsJson = {}
         playersVsTeamStatsJson = {}
-        playerVsPlayerStatsJson = {}
+        templateJson = {
+            "Batting" : {},
+            "Bowling" : {},
+            "Team" : {}
+        }  
+        PlayerStatsJson = {}
+        TeamStatsJson = {}
+         # make sure you maintain the orded of arguments
+        def GetPlayerVsData(T :{} , V :{} , S : str , data):
+            if PlayerStatsJson.get(T['Name']) == None:
+                PlayerStatsJson[T['Name']] = templateJson
+            if PlayerStatsJson[T['Name']][S].get(V['Name']) == None:
+                PlayerStatsJson[T['Name']][S][V['Name']] = []
+            PlayerStatsJson[T['Name']][S][V['Name']].append(data)
+            return PlayerStatsJson
+        def GetTeamVsData( team1 , team2 , S: str , data):
+            if TeamStatsJson[team1] == None:
+                TeamStatsJson[team1] = templateJson
+            if TeamStatsJson[team1][S][team2] == None:
+                TeamStatsJson[team1][S][team2] = data
+            else:
+                TeamStatsJson[team1][S][team2] = AddScoresOfScoreJson(TeamStatsJson[team1][S][team2] , runsJson)
+            return TeamStatsJson
+        
         inningsXpathList = self.GetAllInningsNameAndXpath()
         text = self.SwitchInningsOption(inningsXpathList[0]['Xpath'])
-        team1NameJson = self.ipl.GetTeamName(text.split()[0])
+        word = text.split()[0].strip()
+        
+        team1NameJson = ipl.GetTeamName(word)
+        print(team1NameJson)
         text = self.SwitchInningsOption(inningsXpathList[1]['Xpath'])
-        team2NameJson = self.ipl.GetTeamName(text.split()[0])
+        word = text.split()[0].strip()
+        
+        team2NameJson = ipl.GetTeamName(word)
+        print(team2NameJson)
         teamsNameJsonList = [team1NameJson , team2NameJson]
 
-        bowlersXpathList = self.GetAllBatsmansNameAndXpath()
-        batsmanXpathList = self.GetAllBowlersNameAndXpath()
-        for inningsIndex in range(0, len(inningsIndex)):
-
+        # for i in range(0 , len(batsmanXpathList)):
+        #     self.SwitchBatsmanOption(batsmanXpathList[i]['Xpath'])
+        # for i in range(0 , len(bowlersXpathList)):
+        #     self.SwitchBowlerOption(bowlersXpathList[i]['Xpath'])
+        # self.SwitchBowlerOption(bowlersXpathList[0]['Xpath'])
+        print("*********************")
+        for inningsIndex in range(0 , len(inningsXpathList)):
+            self.SwitchInningsOption(inningsXpathList[inningsIndex]['Xpath'])
+            batsmanXpathList = self.GetAllBatsmansNameAndXpath()
+            bowlersXpathList = self.GetAllBowlersNameAndXpath()
             for batsman in batsmanXpathList:
                 self.SwitchBatsmanOption(batsman['Xpath'])
                 for bowler in bowlersXpathList:
                     self.SwitchBowlerOption(bowler['Xpath'])
                     runsJson = self.GetRuns()
+                    if sum(runsJson.values()) == 0:
+                        continue
                     currentTeam = teamsNameJsonList[inningsIndex]
                     opponentTeam = teamsNameJsonList[(inningsIndex + 1) % 2]
-                    
+                    # batsman vs bowler part
+                    GetPlayerVsData(batsman , bowler , "Bowling" , runsJson) 
+                    # Bowler vs Batsman part
+                    GetPlayerVsData(bowler , batsman , "Batting" , runsJson)
+                    # firstTeam vs Second team
+                    # TeamStatsJson[currentTeam]["Team"][opponentTeam] = GetTeamVsData(currentTeam , opponentTeam , "Team")
+        PlayerVsJson = json.dumps(PlayerStatsJson, indent=4)
+        with open("PlayerVsJson.txt", "a") as f:
+            print(PlayerVsJson, file=f)
+        print(PlayerStatsJson)
+        # print(TeamStatsJson)
 
                     
     def GetAllBatsmansNameAndXpath(self):
+        if self.BatsmansNamesAndXPaths != None:
+            return self.BatsmansNamesAndXPaths
         sourceCode = self.ipl.GetSourceCodeByXpath(self.batsmanXpath)
         options = sourceCode.findAll('option')[1:]
         playerNameAndXpath = []
@@ -503,9 +545,14 @@ class WagonWheelManager():
                 "Name" : option.text.strip(),
                 "Xpath" : f"(//option[@value='{option.get('value')}'])[1]"
             })
+        self.BatsmansNamesAndXPaths = playerNameAndXpath
+        
         # print( "sorce code is ", playerNameAndXpath)
         return playerNameAndXpath
     def GetAllInningsNameAndXpath(self):
+
+        if self.InningsNamesAndXPaths != None:
+            return self.InningsNamesAndXPaths
         sourceCode = self.ipl.GetSourceCodeByXpath(self.inningsXpath)
         options = sourceCode.findAll('option')
         InningsNameAndXpath = []
@@ -514,6 +561,7 @@ class WagonWheelManager():
                 "Name" : option.text.strip(),
                 "Xpath" : f"//option[normalize-space()='{option.text.strip()}']"
             })
+        self.InningsNamesAndXPaths = InningsNameAndXpath
         print( "sorce code is ", InningsNameAndXpath)
         return InningsNameAndXpath
 
@@ -522,28 +570,32 @@ class WagonWheelManager():
     isBowlerClicked = False
 
     def GetAllBowlersNameAndXpath(self):
+        if self.BowlersNamesAndXPaths != None:
+            return self.BowlersNamesAndXPaths
+        
         sourceCode = self.ipl.GetSourceCodeByXpath(self.bowlerXpath)
-        options = sourceCode.findAll('option')
+        options = sourceCode.findAll('option')[1:]
         playerNameAndXpath = []
         for option in options:
             playerNameAndXpath.append({
                 "Name" : option.text.strip(),
                 "Xpath" : f"(//option[@value='{option.get('value')}'])[1]"
             })
+        self.BowlersNamesAndXPaths = playerNameAndXpath
         # print( "sorce code is ", playerNameAndXpath)
         return playerNameAndXpath
-    
     def SwitchBowlerOption(self , optionXpath):
         if self.isBowlerClicked == False:
-            print("inside If ", self.bowlerXpath)
             self.ipl.ClickElement(By.XPATH , self.bowlerXpath)
             self.isBowlerClicked = True
         else:
-            print("inside Else ", self.bowlerClickedXpath)
             self.ipl.ClickElement(By.XPATH , self.bowlerClickedXpath)
         self.ipl.ClickElement(By.XPATH , optionXpath)
+        time.sleep(0.3)
 
     def SwitchInningsOption(self , optionXpath):
+        self.BowlersNamesAndXPaths = None
+        self.BatsmansNamesAndXPaths = None
         if self.isInningsDropDownClicked == True:
             self.inningsXpath = self.inningsXpathClickedXpath
         else:
@@ -553,6 +605,7 @@ class WagonWheelManager():
         self.ipl.ClickElement(By.XPATH , optionXpath)
         sourceCode = self.ipl.GetSourceCodeByXpath(optionXpath)
         print(sourceCode.text.strip())
+        time.sleep(0.3)
         return sourceCode.text.strip()
         
     def __init__(self, Ipl : IplBase ):

@@ -14,7 +14,6 @@ import random
 from multiprocessing import Pool
 from multiprocessing import Process
 from selenium import webdriver
-import time
 from selenium.webdriver.common.keys import Keys
 SEASON = "seasons"
 MEN = "men"
@@ -145,6 +144,7 @@ class BrowserBase:
         button = self.WaitForElement(_by , _for)
         if self.IsClickableElement(button):
             button.click()
+        time.sleep(0.3)
         return True
     def AcceptCookies(self):
         self.ClickElement(By.XPATH , self.acceptCookiesXpath)
@@ -528,7 +528,7 @@ class WagonWheelManager():
                     # firstTeam vs Second team
                     # TeamStatsJson[currentTeam]["Team"][opponentTeam] = GetTeamVsData(currentTeam , opponentTeam , "Team")
         PlayerVsJson = json.dumps(PlayerStatsJson, indent=4)
-        with open("PlayerVsJson.txt", "a") as f:
+        with open("PlayerVsJson.txt", "w") as f:
             print(PlayerVsJson, file=f)
         print(PlayerStatsJson)
         # print(TeamStatsJson)
@@ -537,7 +537,8 @@ class WagonWheelManager():
     def GetAllBatsmansNameAndXpath(self):
         if self.BatsmansNamesAndXPaths != None:
             return self.BatsmansNamesAndXPaths
-        sourceCode = self.ipl.GetSourceCodeByXpath(self.batsmanXpath)
+        XpathToCLick =  self.batsmanClickedXpath if self.isBatsmanClicked else self.batsmanXpath
+        sourceCode = self.ipl.GetSourceCodeByXpath(XpathToCLick)
         options = sourceCode.findAll('option')[1:]
         playerNameAndXpath = []
         for option in options:
@@ -572,8 +573,8 @@ class WagonWheelManager():
     def GetAllBowlersNameAndXpath(self):
         if self.BowlersNamesAndXPaths != None:
             return self.BowlersNamesAndXPaths
-        
-        sourceCode = self.ipl.GetSourceCodeByXpath(self.bowlerXpath)
+        XpathToCLick =  self.bowlerClickedXpath if self.isBowlerClicked else self.bowlerXpath
+        sourceCode = self.ipl.GetSourceCodeByXpath(XpathToCLick)
         options = sourceCode.findAll('option')[1:]
         playerNameAndXpath = []
         for option in options:
@@ -596,17 +597,19 @@ class WagonWheelManager():
     def SwitchInningsOption(self , optionXpath):
         self.BowlersNamesAndXPaths = None
         self.BatsmansNamesAndXPaths = None
-        if self.isInningsDropDownClicked == True:
-            self.inningsXpath = self.inningsXpathClickedXpath
-        else:
+        if self.isInningsDropDownClicked == False:
+            self.ipl.ClickElement(By.XPATH , self.inningsXpath)
             self.isInningsDropDownClicked = True
-        print(self.inningsXpath)
-        self.ipl.ClickElement(By.XPATH , self.inningsXpath)
+        else:
+            self.ipl.ClickElement(By.XPATH , self.inningsXpathClickedXpath)
         self.ipl.ClickElement(By.XPATH , optionXpath)
         sourceCode = self.ipl.GetSourceCodeByXpath(optionXpath)
         print(sourceCode.text.strip())
-        time.sleep(0.3)
+        time.sleep(1)
+        # self.ipl.WaitForElement(By.XPATH , self.batsmanXpath)
+        # self.ipl.WaitForElement(By.XPATH , self.bowlerXpath)
         return sourceCode.text.strip()
+
         
     def __init__(self, Ipl : IplBase ):
         super().__init__()

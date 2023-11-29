@@ -165,7 +165,9 @@ class BrowserBase:
 
         
 playerPageMap = {}
-
+def ToPascalCase(s):
+    words = s.split(' ')  # Split the string into words using underscores
+    return ''.join(word.capitalize() for word in words)
     
 class IplBase(BrowserBase):
     browserTabObjects = []
@@ -218,7 +220,7 @@ class IplBase(BrowserBase):
             else:
                 print(dataJson)
             return dataJson
-
+        
         def PlayerDetailFromPlayerPage(URL):
 
             playerStatsTableXpath = "//div[@class='SMplayerStatsWidget ng-scope']"
@@ -348,8 +350,6 @@ class IplBase(BrowserBase):
 
             wagonWheelManager.GetRuns()
 
-
-
         self.OpenWindow(url)
         self.WaitForLoaderToDisappear()
         GetInningsScoreBoard()
@@ -369,6 +369,47 @@ class IplBase(BrowserBase):
         # self.ClickElement(By.XPATH, ScorecardXpath)
         
         # resultElement = self.WaitForElement(By.XPATH , SwitchTeamButtonXpath)
+    
+    def GetMathesList(self,url):
+        Xpath = "(//ul[@id='team_archive'])[1]"
+        self.OpenWindow(url)
+        self.WaitForLoaderToDisappear()
+        # time.sleep(6)
+        self.WaitForElement(By.XPATH , Xpath )
+        sourceCode = self.GetHTMLByPageSource()
+        mathesListLiTags = sourceCode.find('ul' , {'id' : 'team_archive'}).findAll('li')
+        urlList = []
+        for liTag in mathesListLiTags:
+            lastAnchorTag = liTag.findAll('a')[-1]
+            urlList.append(lastAnchorTag.get('href'))
+        print(urlList , len(urlList))
+        return urlList
+    def GetTeamLeaderboard(self , url):
+        self.OpenInTabNo(1,url)
+        self.WaitForLoaderToDisappear()
+        tableXpath = "(//tbody)[2]"
+        self.WaitForElement(By.XPATH , tableXpath )
+        sourceCode = self.GetHTMLByPageSource()
+        tableBody = sourceCode.find('table')
+        # print(tableBody)
+        tableRows = tableBody.findAll('tr')
+        tableHead = tableRows[0].findAll('th')
+        print(tableRows[0])
+        tableRows = tableRows[1:]
+        teamLeaderboardJsonList = []
+        for tableRow in tableRows:
+            tableColumns = tableRow.findAll('td')
+            teamDataJson = {}
+            for i in range(0 , len(tableColumns)):
+                if i == 1:
+                    continue
+                headingText = ToPascalCase(tableHead[i].text.strip()) 
+                dataText = tableColumns[i].text.strip()
+                teamDataJson[headingText] = dataText
+            teamLeaderboardJsonList.append(teamDataJson)
+        print(teamLeaderboardJsonList)
+        return teamLeaderboardJsonList
+
 
     def MatchCentrePageData(self,url):
 
@@ -643,7 +684,9 @@ if __name__ == "__main__":
     # ipl.GetTeamPlayers("https://www.iplt20.com/teams/chennai-super-kings/squad/")
     # ipl.GetMatchData("https://www.iplt20.com/matches/results/2023")
     # ipl.MatchCentrePageData("https://www.iplt20.com/match/2023/1046")
-    ipl.GetScorecardData("https://www.iplt20.com/match/2023/1046")
+    # ipl.GetScorecardData("https://www.iplt20.com/match/2023/1046")
+    # ipl.GetMathesList("https://www.iplt20.com/matches/results/2023")
+    ipl.GetTeamLeaderboard("https://www.iplt20.com/points-table/men/2023")
 
     # GetAllTeamData()
    

@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from bs4 import BeautifulSoup
 import json
 import time
+import functools
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -11,7 +12,7 @@ from selenium.common.exceptions import TimeoutException
 import re
 import requests
 import random
-from multiprocessing import Pool
+from multiprocessing import Pool , Manager
 from multiprocessing import Process
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -193,14 +194,12 @@ class IplBase(BrowserBase):
             if teamNameJson["ShortName"].strip().lower() == teamName.strip().lower() or teamNameJson["FullName"].strip().lower() == teamName.strip().lower():
                 return teamNameJson
         raise ValueError("++++++++++++++++++THE TEAM NAME IS NOT FOUND IN JSON+++++++++++++++++++")
-    def GetTeamPlayers(self,URL):
+    def GetTeamPlayers(self,URL, teamPlayersJson , playerDataJson):
         def isCaptain(imgTags):
             for imgTag in imgTags:
                 if imgTag.get('src') == CAPTAIN_ICON:
                     return True
             return False
-        teamPlayersJson = {}
-        playerDataJson = {}
         def ExtractTableDetails(table):
             headings = table.find('thead').findAll('th')
             tableRows = table.findAll('tr')
@@ -288,12 +287,12 @@ class IplBase(BrowserBase):
         # print(result)
         # print(soup.find(pageNotFoundMessage))
         return result
-    def GetTeamAllSeasonData(self, baseUrl):
+    def GetTeamAllSeasonData(self, baseUrl , shared_dict1, shared_dict2):
         for season in range(IplFirstSeason , IplLastSeason + 1):
             seasonUrl = baseUrl + str(season)
             if self.PageExists(seasonUrl):
-                self.GetTeamPlayers(seasonUrl)
                 print("data found for season "+str(season))
+                return self.GetTeamPlayers(seasonUrl , shared_dict1, shared_dict2)
             else:
                 print("data not found for season "+str(season))
     def GetMatchData(self , URL):
@@ -658,11 +657,16 @@ class WagonWheelManager():
 
 
 
-def MapUrl(url):
+def MapUrl(url, shared_dict1, shared_dict2):
     iplObject = IplBase()
-    iplObject.GetTeamAllSeasonData(url)
+    
+    result = iplObject.GetTeamAllSeasonData(url , shared_dict1, shared_dict2)
     iplObject.CloseWindow()
+    return result
 def GetAllTeamData():
+    manager = Manager()
+    shared_dict1 = manager.dict()
+    shared_dict2 = manager.dict()
     iplObject = IplBase()
     iplObject.OpenWindow(TEAMS_PAGE)
     sourceCode = iplObject.GetHTMLByPageSource()
@@ -676,7 +680,8 @@ def GetAllTeamData():
         print(teamShortName , teamPageUrl)
     iplObject.CloseWindow()
     with Pool(processes=5) as pool:
-        pool.map(MapUrl, urlList)
+        partial_MapUrl = functools.partial(MapUrl, shared_dict1=shared_dict1, shared_dict2=shared_dict2)
+        pool.map(partial_MapUrl, urlList)
 
 if __name__ == "__main__":
     ipl = IplBase()
@@ -686,9 +691,9 @@ if __name__ == "__main__":
     # ipl.MatchCentrePageData("https://www.iplt20.com/match/2023/1046")
     # ipl.GetScorecardData("https://www.iplt20.com/match/2023/1046")
     # ipl.GetMathesList("https://www.iplt20.com/matches/results/2023")
-    ipl.GetTeamLeaderboard("https://www.iplt20.com/points-table/men/2023")
+    # ipl.GetTeamLeaderboard("https://www.iplt20.com/points-table/men/2023")
 
-    # GetAllTeamData()
+    GetAllTeamData()
    
 
 

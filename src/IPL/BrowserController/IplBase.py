@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
 from bs4 import BeautifulSoup
+import sys
 import json
 import time
 import functools
@@ -16,7 +17,10 @@ from multiprocessing import Pool , Manager
 from multiprocessing import Process
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-from pymongo import MongoClient, ServerApi
+from pymongo.mongo_client import MongoClient
+from pymongo.server_api import ServerApi
+import json
+sys.setrecursionlimit(10**6)
 uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority"
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
@@ -189,7 +193,8 @@ class IplBase(BrowserBase):
         collection = database[PlayerDataCollection]
         # Specify the key and the new value you want to set
         # Update the first document that contains the specified key
-        result = collection.insert_one(playerData)
+        serialized_data = json.dumps(playerData)
+        result = collection.insert_one(serialized_data)
         # result = collection.update_one({}, {"$set": playerData})
         print("Result found is " , result.acknowledged)
     def __init__(self):

@@ -16,6 +16,14 @@ from multiprocessing import Pool , Manager
 from multiprocessing import Process
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+from pymongo import MongoClient, ServerApi
+uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority"
+# Create a new client and connect to the server
+client = MongoClient(uri, server_api=ServerApi('1'))
+playerCounterDebug = 0
+TeamDataCollection = "Team-Data"
+PlayerDataCollection = "Player-Data"
+IplDataBase = "Ipl-DataBase" 
 SEASON = "seasons"
 MEN = "men"
 WOMEN = "women"
@@ -172,7 +180,18 @@ def ToPascalCase(s):
     
 class IplBase(BrowserBase):
     browserTabObjects = []
-
+    def UpdatePlayerDataOfGivenId(self ,playerData):
+        global IplDataBase
+        global PlayerDataCollection
+        global client
+        print("UpdatePlayerDataOfGivenId has been called" , len(playerData.keys()))
+        database = client[IplDataBase]
+        collection = database[PlayerDataCollection]
+        # Specify the key and the new value you want to set
+        # Update the first document that contains the specified key
+        result = collection.insert_one(playerData)
+        # result = collection.update_one({}, {"$set": playerData})
+        print("Result found is " , result.acknowledged)
     def __init__(self):
         super().__init__()
     def GetBrowserObject(self):
@@ -639,7 +658,8 @@ def GetAllTeamData():
     iplObject.CloseWindow()
     with Pool(processes=4) as pool:
         partial_MapUrl = functools.partial(MapUrl, shared_dict1=shared_dict1, shared_dict2=shared_dict2)
-        pool.map(partial_MapUrl, urlList[:1])
+        pool.map(partial_MapUrl, urlList)
+    iplObject.UpdatePlayerDataOfGivenId(dict(shared_dict2))
     print(len(shared_dict2.keys()))
 
 if __name__ == "__main__":

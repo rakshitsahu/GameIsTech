@@ -16,16 +16,12 @@ from multiprocessing import Pool , Manager
 from multiprocessing import Process
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
-
-teamPlayersJson = {}
-playerDataJson = {}
 SEASON = "seasons"
 MEN = "men"
 WOMEN = "women"
 PLAYERS = "players"
 CAPTAIN_ICON ="https://www.iplt20.com/assets/images/teams-captain-icon.svg"
 BrowserTabLimit = 1
-playersDataCountDebug = 0
 TeamNamesJson = [
 {
     "FullName" : "Chennai Super Kings",
@@ -198,9 +194,7 @@ class IplBase(BrowserBase):
             if teamNameJson["ShortName"].strip().lower() == teamName.strip().lower() or teamNameJson["FullName"].strip().lower() == teamName.strip().lower():
                 return teamNameJson
         raise ValueError("++++++++++++++++++THE TEAM NAME IS NOT FOUND IN JSON+++++++++++++++++++")
-    def GetTeamPlayers(self,URL):
-        global playerDataJson
-        global teamPlayersJson
+    def GetTeamPlayers(self,URL, teamPlayersJson , playerDataJson):
         def isCaptain(imgTags):
             for imgTag in imgTags:
                 if imgTag.get('src') == CAPTAIN_ICON:
@@ -213,7 +207,6 @@ class IplBase(BrowserBase):
             dataJson = {}
             for tableRow in tableRows[1:]:
                 tdTags = tableRow.findAll('td')
-                # print(tableRow)
                 rowDataJson = {}
                 for i in range(1 , len(tdTags)):
                     heading = headings[i].text.strip()
@@ -240,8 +233,6 @@ class IplBase(BrowserBase):
             statsTable = SourceCode.findAll('table', 'sm-pp-table')
             BattingAndFieldingStats = ExtractTableDetails(statsTable[0])
             BowlingStats = ExtractTableDetails(statsTable[0])
-
-            # print("***************************** "+ str(len(statsTable)))
             playerJson = {"Nationality": playerNationality.strip(), "MatchesPlayed": playerMatchesPlayed.strip() , "IplDebut": playerIplDebut.strip() , "Dob":playerDob.strip() , "BattingAndFielding" :BattingAndFieldingStats , "BowlingStats" :BowlingStats }
             return playerJson
         def PlayerDetailFromPlayerCard (playerCard):
@@ -260,9 +251,6 @@ class IplBase(BrowserBase):
             playerJson["Id"] = playerId.strip()
             if isCaptain(imgTags):
                 playerJson['Captain'] = playerJson
-                # print("Captain is *******************"+ playerName)
-            # print(playerName , playerRole , playerId , roleSvg , imagePath, isCaptain(imgTags) )
-            # print(teamPlayersJson)
             return playerJson
         self.OpenInTabNo(1,URL)
         soup = self.GetHTMLByPageSource()
@@ -280,29 +268,24 @@ class IplBase(BrowserBase):
             if(playerDataJson.get(playerJson["Id"]) == None):
                 playerDataJson[playerJson["Id"]] = playerJson
             playerPageMap[playerJson["Id"]] = playerJson
-            print(playerJson.get("Name"))
-            playersDataCountDebug += 1
-        print( playersDataCountDebug)
+
         
     
         
     def PageExists(self,url):
         html_doc = requests.get(url).content
         soup = BeautifulSoup(html_doc, 'html.parser').text
-        # print(soup)
         result = soup.find(pageNotFoundMessage) == -1
-        # print(result)
-        # print(soup.find(pageNotFoundMessage))
+
         return result
-    def GetTeamAllSeasonData(self, baseUrl ):
+    def GetTeamAllSeasonData(self, baseUrl , shared_dict1, shared_dict2):
         for season in range(IplFirstSeason , IplLastSeason + 1):
             seasonUrl = baseUrl + str(season)
             if self.PageExists(seasonUrl):
                 print("data found for season "+str(season))
-                return self.GetTeamPlayers(seasonUrl )
+                self.GetTeamPlayers(seasonUrl , shared_dict1, shared_dict2)
             else:
                 print("data not found for season "+str(season))
-                print(seasonUrl)
     def GetMatchData(self , URL):
         self.OpenInNewTab(URL)
         MatchResultsListXpath = "//div[@class='vn-sheduleList vn-resultsList posRel vn-fullArchiveList col-100 floatLft menT mb-4']"
@@ -311,9 +294,7 @@ class IplBase(BrowserBase):
         sourceCode = self.GetHTMLByPageSource()
         MatchesList = sourceCode.find('div',{'class' :'vn-resultsList'}).find_all('li')
         Match = MatchesList[0]
-        # print(MatchesList[0])
         Result = Match.find('div', {'class':'live-score'})
-        print(Result)
     def GetScorecardData(self , url):
         def ExtractTableData(index, tableRows):
             # index 0 for batsmans and 1 for bowlers
@@ -326,7 +307,6 @@ class IplBase(BrowserBase):
                 statsCols = cols[2:7]
                 for i in range(len(statsCols)):
                     playerStatsJson[HeadingList[index][i]] = statsCols[i].text.strip()
-                print(playerStatsJson)
         def GetInningsScoreBoard():
             ScorecardXpath = "(//a[normalize-space()='Scorecard'])[1]"
             self.WaitForElement(By.XPATH, ScorecardXpath)
@@ -335,7 +315,6 @@ class IplBase(BrowserBase):
             scoreBoardTables = sourceCode.find_all('table',{'class':'ap-scroreboard-table'})
             TableRows = scoreBoardTables[0].find('tbody' , {'class' : 'team1'}).find_all('tr')
             ExtractTableData(0,TableRows[:len(TableRows) - 1])
-            print("++++++++++++++++")
             TableRows = scoreBoardTables[1].find('tbody' , {'class' : 'team1'}).find_all('tr')
             ExtractTableData(1,TableRows)
         def ExtractWagonWheelData():
@@ -351,9 +330,6 @@ class IplBase(BrowserBase):
             BowlerNameAndXpath = wagonWheelManager.GetAllBowlersNameAndXpath()
             batsmanNameAndXpath = wagonWheelManager.GetAllBatsmansNameAndXpath()
             wagonWheelManager.GetAllStats()
-            print(len(batsmanNameAndXpath))
-            print(len(BowlerNameAndXpath))
-            print(BowlerNameAndXpath[2])
 
             wagonWheelManager.GetRuns()
 
@@ -369,7 +345,7 @@ class IplBase(BrowserBase):
         # scoreBoardTables = sourceCode.find_all('table',{'class':'ap-scroreboard-table'})
         # TableRows = scoreBoardTables[0].find('tbody' , {'class' : 'team1'}).find_all('tr')
         # ExtractTableData(0,TableRows[:len(TableRows) - 1])
-        # print("++++++++++++++++")
+
         # TableRows = scoreBoardTables[1].find('tbody' , {'class' : 'team1'}).find_all('tr')
         # ExtractTableData(1,TableRows)
         # self.WaitForElement(By.XPATH, ScorecardXpath)
@@ -389,7 +365,6 @@ class IplBase(BrowserBase):
         for liTag in mathesListLiTags:
             lastAnchorTag = liTag.findAll('a')[-1]
             urlList.append(lastAnchorTag.get('href'))
-        print(urlList , len(urlList))
         return urlList
     def GetTeamLeaderboard(self , url):
         self.OpenInTabNo(1,url)
@@ -398,10 +373,8 @@ class IplBase(BrowserBase):
         self.WaitForElement(By.XPATH , tableXpath )
         sourceCode = self.GetHTMLByPageSource()
         tableBody = sourceCode.find('table')
-        # print(tableBody)
         tableRows = tableBody.findAll('tr')
         tableHead = tableRows[0].findAll('th')
-        print(tableRows[0])
         tableRows = tableRows[1:]
         teamLeaderboardJsonList = []
         for tableRow in tableRows:
@@ -414,7 +387,6 @@ class IplBase(BrowserBase):
                 dataText = tableColumns[i].text.strip()
                 teamDataJson[headingText] = dataText
             teamLeaderboardJsonList.append(teamDataJson)
-        print(teamLeaderboardJsonList)
         return teamLeaderboardJsonList
 
 
@@ -436,7 +408,6 @@ class IplBase(BrowserBase):
             match = re.search(sixesPattern, Text)
             Sixes = match.group(1).strip() if match else "0"
             dataJson = { 'FullName' : TeamName ,'Score' :Score , 'Rpo' :RPO , 'Fours' :Fours , 'Sixes' :Sixes}
-            print(self.GetTeamName(TeamName))
             return dataJson
         self.OpenWindow(url)
         LestElementXpath = "(//div[@id='ball-by-ball'])[1]"
@@ -448,16 +419,11 @@ class IplBase(BrowserBase):
         # for PTag in ListOfPTages:
         #     BlueResult = PTag.find('span',{'style':'color:#2980b9'})
         for i in useFullPTags:
-            print(i.text.strip())
             ComparisonResult = i.text.split('||')
-            print(ComparisonResult[0].strip())
-            print(ComparisonResult[1].strip())
+
             ExtractTextData(ComparisonResult[0].strip())
-        # print(len(BlueTeamList))
-        # print(len(YellowTeamList))
-        # print(BlueTeamList[0].text)
+
         
-        print("h")
     # def GetAllTeamData(self):
     #     self.OpenInNewTab(TEAMS_PAGE)
     #     sourceCode = self.GetHTMLByPageSource()
@@ -468,7 +434,7 @@ class IplBase(BrowserBase):
     #         teamPageUrl = team.find("a").get("href")
     #         urlList.append(teamPageUrl+"/squad/")
     #         # iplObject.GetTeamAllSeasonData(teamPageUrl+"/squad/")
-    #         print(teamShortName , teamPageUrl)
+
     #     with Pool() as pool:
     #         pool.map(self.GetTeamAllSeasonData, urlList[:2])
 class WagonWheelManager():
@@ -542,12 +508,10 @@ class WagonWheelManager():
         word = text.split()[0].strip()
         
         team1NameJson = ipl.GetTeamName(word)
-        print(team1NameJson)
         text = self.SwitchInningsOption(inningsXpathList[1]['Xpath'])
         word = text.split()[0].strip()
         
         team2NameJson = ipl.GetTeamName(word)
-        print(team2NameJson)
         teamsNameJsonList = [team1NameJson , team2NameJson]
 
         # for i in range(0 , len(batsmanXpathList)):
@@ -555,7 +519,6 @@ class WagonWheelManager():
         # for i in range(0 , len(bowlersXpathList)):
         #     self.SwitchBowlerOption(bowlersXpathList[i]['Xpath'])
         # self.SwitchBowlerOption(bowlersXpathList[0]['Xpath'])
-        print("*********************")
         for inningsIndex in range(0 , len(inningsXpathList)):
             self.SwitchInningsOption(inningsXpathList[inningsIndex]['Xpath'])
             batsmanXpathList = self.GetAllBatsmansNameAndXpath()
@@ -575,12 +538,6 @@ class WagonWheelManager():
                     GetPlayerVsData(bowler , batsman , "Batting" , runsJson)
                     # firstTeam vs Second team
                     # TeamStatsJson[currentTeam]["Team"][opponentTeam] = GetTeamVsData(currentTeam , opponentTeam , "Team")
-        PlayerVsJson = json.dumps(PlayerStatsJson, indent=4)
-        with open("PlayerVsJson.txt", "w") as f:
-            print(PlayerVsJson, file=f)
-        print(PlayerStatsJson)
-        # print(TeamStatsJson)
-
                     
     def GetAllBatsmansNameAndXpath(self):
         if self.BatsmansNamesAndXPaths != None:
@@ -595,8 +552,7 @@ class WagonWheelManager():
                 "Xpath" : f"(//option[@value='{option.get('value')}'])[1]"
             })
         self.BatsmansNamesAndXPaths = playerNameAndXpath
-        
-        # print( "sorce code is ", playerNameAndXpath)
+    
         return playerNameAndXpath
     def GetAllInningsNameAndXpath(self):
 
@@ -611,7 +567,6 @@ class WagonWheelManager():
                 "Xpath" : f"//option[normalize-space()='{option.text.strip()}']"
             })
         self.InningsNamesAndXPaths = InningsNameAndXpath
-        print( "sorce code is ", InningsNameAndXpath)
         return InningsNameAndXpath
 
     bowlerXpath = "(//select[@class='mcSelectDefault bowlerFilter ng-pristine ng-untouched ng-valid'])[1]"
@@ -631,7 +586,6 @@ class WagonWheelManager():
                 "Xpath" : f"(//option[@value='{option.get('value')}'])[1]"
             })
         self.BowlersNamesAndXPaths = playerNameAndXpath
-        # print( "sorce code is ", playerNameAndXpath)
         return playerNameAndXpath
     def SwitchBowlerOption(self , optionXpath):
         if self.isBowlerClicked == False:
@@ -652,7 +606,6 @@ class WagonWheelManager():
             self.ipl.ClickElement(By.XPATH , self.inningsXpathClickedXpath)
         self.ipl.ClickElement(By.XPATH , optionXpath)
         sourceCode = self.ipl.GetSourceCodeByXpath(optionXpath)
-        print(sourceCode.text.strip())
         time.sleep(1)
         # self.ipl.WaitForElement(By.XPATH , self.batsmanXpath)
         # self.ipl.WaitForElement(By.XPATH , self.bowlerXpath)
@@ -665,18 +618,16 @@ class WagonWheelManager():
 
 
 
-def MapUrl(url):
+def MapUrl(url, shared_dict1, shared_dict2):
     iplObject = IplBase()
     
-    result = iplObject.GetTeamAllSeasonData(url)
+    result = iplObject.GetTeamAllSeasonData(url , shared_dict1, shared_dict2)
     iplObject.CloseWindow()
     return result
 def GetAllTeamData():
     manager = Manager()
-    global teamPlayersJson
-    global teamPlayersJson
-    teamPlayersJson = manager.dict()
-    playerDataJson = manager.dict()
+    shared_dict1 = manager.dict()
+    shared_dict2 = manager.dict()
     iplObject = IplBase()
     iplObject.OpenWindow(TEAMS_PAGE)
     sourceCode = iplObject.GetHTMLByPageSource()
@@ -687,11 +638,11 @@ def GetAllTeamData():
         teamPageUrl = team.find("a").get("href")
         urlList.append(teamPageUrl+"/squad/")
         # iplObject.GetTeamAllSeasonData(teamPageUrl+"/squad/")
-        print(teamShortName , teamPageUrl)
     iplObject.CloseWindow()
-    with Pool(processes=2) as pool:
-        pool.map(MapUrl, urlList)
-    print( len(playerDataJson.keys()))
+    with Pool(processes=4) as pool:
+        partial_MapUrl = functools.partial(MapUrl, shared_dict1=shared_dict1, shared_dict2=shared_dict2)
+        pool.map(partial_MapUrl, urlList)
+    print(len(shared_dict2.keys()))
 
 if __name__ == "__main__":
     ipl = IplBase()
@@ -714,8 +665,6 @@ if __name__ == "__main__":
 # soup = ipl.GetHTMLByPageSource()
 # result = soup.find_all('li',{"class": "dys-box-color"})
 # for row in result:
-#     print(row.text)
-# print(len(result))
 # ipl.GetTeamPlayers("https://www.iplt20.com/teams/chennai-super-kings/squad-details/297")
 
 # ipl.GetTeamAllSeasonData("https://www.iplt20.com/teams/chennai-super-kings/squad/")

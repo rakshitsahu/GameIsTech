@@ -296,7 +296,7 @@ class IplBase(BrowserBase):
                 playersDataJson[playerJson["Id"]] = playerJson
             playerPageMap[playerJson["Id"]] = playerJson
             playerCounterDebug += 1
-        print(playerCounterDebug)
+        print("total is", playerCounterDebug)
     
         
     def PageExists(self,url):
@@ -559,9 +559,6 @@ class WagonWheelManager():
                     GetPlayerVsData(bowler , batsman , "Batting" , runsJson)
                     # firstTeam vs Second team
                     # TeamStatsJson[currentTeam]["Team"][opponentTeam] = GetTeamVsData(currentTeam , opponentTeam , "Team")
-        PlayerVsJson = json.dumps(PlayerStatsJson, indent=4)
-        with open("PlayerVsJson.txt", "w") as f:
-            print(PlayerVsJson, file=f)
 
                     
     def GetAllBatsmansNameAndXpath(self):

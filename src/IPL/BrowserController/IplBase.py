@@ -659,11 +659,12 @@ def GetAllTeamData():
         urlList.append(teamPageUrl+"/squad/")
         # iplObject.GetTeamAllSeasonData(teamPageUrl+"/squad/")
     iplObject.CloseWindow()
-    MapUrl(urlList[0])
+    for url in urlList:
+        MapUrl(url)
     # with Pool(processes=4) as pool:
     #     pool.map(MapUrl, urlList[:1])
     print("Execution done")
-    print(playersDataJson)
+    print(len(playersDataJson.keys()))
     # for key , value in playersDataJson.items():
     iplObject.UpdatePlayerDataOfGivenId(playersDataJson)
     # uploadData("Team-Details" , dict(teamPlayersJson))

@@ -25,8 +25,8 @@ uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true
 # Create a new client and connect to the server
 client = MongoClient(uri, server_api=ServerApi('1'))
 playerCounterDebug = 0
-TeamDataCollection = "Team-Data"
-PlayerDataCollection = "Player-Data"
+PlayerDataCollection = "PlayerData"
+TeamDataCollection = "TeamData"
 IplDataBase = "Ipl-DataBase" 
 SEASON = "seasons"
 MEN = "men"
@@ -184,19 +184,20 @@ def ToPascalCase(s):
     
 class IplBase(BrowserBase):
     browserTabObjects = []
-    def UpdatePlayerDataOfGivenId(self ,playerData):
-        global IplDataBase
-        global PlayerDataCollection
-        global client
-        print("UpdatePlayerDataOfGivenId has been called" , len(playerData.keys()))
-        database = client[IplDataBase]
-        collection = database[PlayerDataCollection]
-        # Specify the key and the new value you want to set
-        # Update the first document that contains the specified key
-        serialized_data = json.dumps(playerData)
-        result = collection.insert_one(serialized_data)
-        # result = collection.update_one({}, {"$set": playerData})
-        print("Result found is " , result.acknowledged)
+    def UpdateToDatabase(self ,playerData , collection):
+        try:
+            global IplDataBase
+            global client
+            print("UpdatePlayerDataOfGivenId has been called" , len(playerData.keys()))
+            database = client[IplDataBase]
+            Collection = database[collection]
+            # Specify the key and the new value you want to set
+            # Update the first document that contains the specified key
+            result = Collection.insert_one(playerData)
+            # result = collection.update_one({}, {"$set": playerData})
+            print("Result found is " , result.acknowledged)
+        except Exception as ex:
+            print(ex)
     def __init__(self):
         super().__init__()
     def GetBrowserObject(self):
@@ -272,7 +273,7 @@ class IplBase(BrowserBase):
             playerJson["Name"] = playerName.strip()
             playerJson["Id"] = playerId.strip()
             if isCaptain(imgTags):
-                playerJson['Captain'] = playerJson
+                playerJson['Captain'] = True
             return playerJson
         self.OpenInTabNo(1,URL)
         soup = self.GetHTMLByPageSource()
@@ -286,10 +287,12 @@ class IplBase(BrowserBase):
             if teamPlayersJson.get(playerJson["Role"]) == None:
                 teamPlayersJson[playerJson["Role"]] = []
             teamPlayersJson[playerJson["Role"]].append(playerJson)
-            teamPlayersJson['Captain'] = playerJson
+            if playerJson.get("Captain") == True:
+                teamPlayersJson['Captain'] = playerJson
             if(playerDataJson.get(playerJson["Id"]) == None):
                 playerDataJson[playerJson["Id"]] = playerJson
             playerPageMap[playerJson["Id"]] = playerJson
+            print(teamPlayersJson)
         print("Total found is " , len(playerDataJson.keys()))
         
     
@@ -647,6 +650,8 @@ def MapUrl(url, shared_dict1, shared_dict2):
     iplObject.CloseWindow()
     return result
 def GetAllTeamData():
+    global PlayerDataCollection
+    global TeamDataCollection
     manager = Manager()
     shared_dict1 = manager.dict()
     shared_dict2 = manager.dict()
@@ -664,7 +669,8 @@ def GetAllTeamData():
     with Pool(processes=4) as pool:
         partial_MapUrl = functools.partial(MapUrl, shared_dict1=shared_dict1, shared_dict2=shared_dict2)
         pool.map(partial_MapUrl, urlList)
-    iplObject.UpdatePlayerDataOfGivenId(dict(shared_dict2))
+    iplObject.UpdateToDatabase(dict(shared_dict2) , PlayerDataCollection)
+    iplObject.UpdateToDatabase(dict(shared_dict1) ,TeamDataCollection)
     print(len(shared_dict2.keys()))
 
 if __name__ == "__main__":
@@ -676,13 +682,7 @@ if __name__ == "__main__":
     # ipl.GetScorecardData("https://www.iplt20.com/match/2023/1046")
     # ipl.GetMathesList("https://www.iplt20.com/matches/results/2023")
     # ipl.GetTeamLeaderboard("https://www.iplt20.com/points-table/men/2023")
-
     GetAllTeamData()
-   
-
-
-
-
 # ipl.GenericTeam("https://www.iplt20.com/teams/chennai-super-kings/squad/")
 # ipl.OpenWindow("https://www.iplt20.com/teams/chennai-super-kings/squad/")
 # soup = ipl.GetHTMLByPageSource()

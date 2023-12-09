@@ -215,8 +215,6 @@ class IplBase(BrowserBase):
                 dataJson[leftHeading] = rowDataJson
             if len(dataJson.keys()) == 1:
                 print("Data Not Found")
-            else:
-                print(dataJson)
             return dataJson
         
         def PlayerDetailFromPlayerPage(URL):
@@ -268,7 +266,7 @@ class IplBase(BrowserBase):
             if(playerDataJson.get(playerJson["Id"]) == None):
                 playerDataJson[playerJson["Id"]] = playerJson
             playerPageMap[playerJson["Id"]] = playerJson
-
+        print("Total found is " , len(playerDataJson.keys()))
         
     
         
@@ -641,7 +639,7 @@ def GetAllTeamData():
     iplObject.CloseWindow()
     with Pool(processes=4) as pool:
         partial_MapUrl = functools.partial(MapUrl, shared_dict1=shared_dict1, shared_dict2=shared_dict2)
-        pool.map(partial_MapUrl, urlList)
+        pool.map(partial_MapUrl, urlList[:1])
     print(len(shared_dict2.keys()))
 
 if __name__ == "__main__":

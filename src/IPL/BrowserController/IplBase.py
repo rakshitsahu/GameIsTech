@@ -16,12 +16,16 @@ from multiprocessing import Pool , Manager
 from multiprocessing import Process
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+
+teamPlayersJson = {}
+playerDataJson = {}
 SEASON = "seasons"
 MEN = "men"
 WOMEN = "women"
 PLAYERS = "players"
 CAPTAIN_ICON ="https://www.iplt20.com/assets/images/teams-captain-icon.svg"
 BrowserTabLimit = 1
+playersDataCountDebug = 0
 TeamNamesJson = [
 {
     "FullName" : "Chennai Super Kings",
@@ -194,7 +198,9 @@ class IplBase(BrowserBase):
             if teamNameJson["ShortName"].strip().lower() == teamName.strip().lower() or teamNameJson["FullName"].strip().lower() == teamName.strip().lower():
                 return teamNameJson
         raise ValueError("++++++++++++++++++THE TEAM NAME IS NOT FOUND IN JSON+++++++++++++++++++")
-    def GetTeamPlayers(self,URL, teamPlayersJson , playerDataJson):
+    def GetTeamPlayers(self,URL):
+        global playerDataJson
+        global teamPlayersJson
         def isCaptain(imgTags):
             for imgTag in imgTags:
                 if imgTag.get('src') == CAPTAIN_ICON:
@@ -263,7 +269,7 @@ class IplBase(BrowserBase):
         playerCards = soup.find_all('li',{"class": "dys-box-color"})
         for card in playerCards:
             playerJson = PlayerDetailFromPlayerCard(card)
-            if playerPageMap.get(playerJson["Id"]) != None:
+            if playerDataJson.get(playerJson["Id"]) != None:
                 continue
             playPageUrl = card.find('a').get('href')
             playerJson.update(PlayerDetailFromPlayerPage(playPageUrl))
@@ -275,7 +281,8 @@ class IplBase(BrowserBase):
                 playerDataJson[playerJson["Id"]] = playerJson
             playerPageMap[playerJson["Id"]] = playerJson
             print(playerJson.get("Name"))
-        print(playerDataJson)
+            playersDataCountDebug += 1
+        print( playersDataCountDebug)
         
     
         
@@ -287,14 +294,15 @@ class IplBase(BrowserBase):
         # print(result)
         # print(soup.find(pageNotFoundMessage))
         return result
-    def GetTeamAllSeasonData(self, baseUrl , shared_dict1, shared_dict2):
+    def GetTeamAllSeasonData(self, baseUrl ):
         for season in range(IplFirstSeason , IplLastSeason + 1):
             seasonUrl = baseUrl + str(season)
             if self.PageExists(seasonUrl):
                 print("data found for season "+str(season))
-                return self.GetTeamPlayers(seasonUrl , shared_dict1, shared_dict2)
+                return self.GetTeamPlayers(seasonUrl )
             else:
                 print("data not found for season "+str(season))
+                print(seasonUrl)
     def GetMatchData(self , URL):
         self.OpenInNewTab(URL)
         MatchResultsListXpath = "//div[@class='vn-sheduleList vn-resultsList posRel vn-fullArchiveList col-100 floatLft menT mb-4']"
@@ -657,16 +665,18 @@ class WagonWheelManager():
 
 
 
-def MapUrl(url, shared_dict1, shared_dict2):
+def MapUrl(url):
     iplObject = IplBase()
     
-    result = iplObject.GetTeamAllSeasonData(url , shared_dict1, shared_dict2)
+    result = iplObject.GetTeamAllSeasonData(url)
     iplObject.CloseWindow()
     return result
 def GetAllTeamData():
     manager = Manager()
-    shared_dict1 = manager.dict()
-    shared_dict2 = manager.dict()
+    global teamPlayersJson
+    global teamPlayersJson
+    teamPlayersJson = manager.dict()
+    playerDataJson = manager.dict()
     iplObject = IplBase()
     iplObject.OpenWindow(TEAMS_PAGE)
     sourceCode = iplObject.GetHTMLByPageSource()
@@ -679,9 +689,9 @@ def GetAllTeamData():
         # iplObject.GetTeamAllSeasonData(teamPageUrl+"/squad/")
         print(teamShortName , teamPageUrl)
     iplObject.CloseWindow()
-    with Pool(processes=5) as pool:
-        partial_MapUrl = functools.partial(MapUrl, shared_dict1=shared_dict1, shared_dict2=shared_dict2)
-        pool.map(partial_MapUrl, urlList)
+    with Pool(processes=2) as pool:
+        pool.map(MapUrl, urlList)
+    print( len(playerDataJson.keys()))
 
 if __name__ == "__main__":
     ipl = IplBase()

@@ -18,26 +18,24 @@ function mapAgents(json) {
     addValueToKey(element.role.displayName, element);
   });
 }
-export async function getStaticProps(){
-  const response = await axios.get( `https://valorant-api.com/v1/agents/` , {
+export async function getServerSideProps(){
+  const response = await axios.get( `https://${process.env.HOST}/api/valorant/agents` , {
     params: {
       isPlayableCharacter: true
     }
   } )
+
   const json = response.data.data
 
   return { props: { json } }
 }
 export default function Agents({json}) {
   const [Agents, setAgents] = useState([]);
-  // console.log( 'the response of gameistech is ', json)
-  // console.log('the agentsjsoj  is', json)
-      // setAgents(json);
-      // console.log(json);
+
       mapAgents(json);
 
       const data = Object.keys(AgentMap["Sentinel"]);
-      // console.log(AgentMap);
+
       return (
         <>
           <Navbar />

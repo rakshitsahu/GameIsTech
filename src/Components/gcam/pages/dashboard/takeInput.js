@@ -59,7 +59,7 @@ const TakeInput =  ({State , SetName}) => {
         GcamVersionStructure[SetName] = trimmed
         data = GcamVersionStructure
         DbName = GCAM_DB_COLLECTION.Gcam_Version
-        console.log('gcam version structure is', data )
+
       default:
         break;
     }
@@ -72,11 +72,11 @@ const TakeInput =  ({State , SetName}) => {
       setResponseJson({message:'cant Post empty feild'})
       return;
     }
-    console.log('inserted again')
+
 
   
   const res = await InsertOperation(DbName,data , data).then( (result) =>{
-    console.log(result);
+
     return result
   })
   setResponseJson(res)
@@ -86,7 +86,7 @@ const TakeInput =  ({State , SetName}) => {
 
   return (
     <div>
-    {console.log(State)}
+ 
     <input type='text' value={name} className='w-72 h-12 rounded-lg text-lg text-black' onChange={changeName}/>
      <Button className='bg-emerald-600 hover:ring-1 active:bg-emerald-800 drop-shadow-2xl p-3 rounded-lg m-3' onClick={() => { changeList() , makeRequest()}}>Add</Button> {responseJson.message}
     </div>

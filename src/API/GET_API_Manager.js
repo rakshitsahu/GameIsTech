@@ -2,8 +2,10 @@ import GCAM_API_STATE from '@/API/API_States';
 import axios from "axios";
 import GCAM_DB_COLLECTION from "../Components/gcam/mongodb/DB_Name_State";
  export async function GCAM_GET_REQUEST(STATE ){
-    // const hostName = process.env.NODE_ENV === 'production' ? 'http://localhost:3000' : 'https://gameistech.com'
-    const hostName = 'https://www.gameistech.com'
+    // const hostName = process.env.NODE_ENV === 'production' ?  'https://gameistech.com' :'http://localhost:3000'
+    const hostName = "https://gameistech.com"
+    
+    // const hostName = `http://localhost:${process.env.PORT}`
     const FindUrl = hostName + '/api/gcam/mongo/find'
     const AuthenticationUrl = hostName + '/api/gcam/authentication'
     switch (STATE) {
@@ -12,7 +14,6 @@ import GCAM_DB_COLLECTION from "../Components/gcam/mongodb/DB_Name_State";
                     collection : GCAM_DB_COLLECTION.Developer_Names,
                     filter : {}
                 }).then(response => {
-                    console.log( 'the android version json is ', response.data)
                     return response.data
                     })
                   return developers;
@@ -23,7 +24,7 @@ import GCAM_DB_COLLECTION from "../Components/gcam/mongodb/DB_Name_State";
                     collection : GCAM_DB_COLLECTION.Gcam,
                     filter : {}
                 }).then(response => {
-                    // console.log( 'the android version json is ', response.data)
+        
                     return response.data
                     })
                     return gcams;
@@ -35,7 +36,7 @@ import GCAM_DB_COLLECTION from "../Components/gcam/mongodb/DB_Name_State";
                     collection : GCAM_DB_COLLECTION.Phone_Data,
                     filter : {}
                 }).then(response => {
-                    // console.log( 'the android version json is ', response.data)
+        
                     return response.data
                     })
                     return gcamPosts;
@@ -45,7 +46,7 @@ import GCAM_DB_COLLECTION from "../Components/gcam/mongodb/DB_Name_State";
                     collection : GCAM_DB_COLLECTION.Gcam_Version,
                     filter : {}
                 }).then(response => {
-                    // console.log( 'the android version json is ', response.data)
+        
                     return response.data
                     })
                     return gcamVersions
@@ -53,10 +54,10 @@ import GCAM_DB_COLLECTION from "../Components/gcam/mongodb/DB_Name_State";
 
             case GCAM_API_STATE.GcamVersionData:
                 const gcamData = await GCAM_GET_REQUEST(GCAM_API_STATE.Gcam)
-                // console.log(gcamData)
+                
                 const versionMap = new Map()
                 const GenericGcams = await GCAM_GET_REQUEST(GCAM_API_STATE.Generic)
-                // console.log(GenericGcams)
+                
                 GenericGcams.forEach(
                     (gcamList) =>{
                         gcamList.data.forEach(
@@ -70,14 +71,11 @@ import GCAM_DB_COLLECTION from "../Components/gcam/mongodb/DB_Name_State";
                         )
                     }
                 )
-                // console.log(versionMap)
 
                 gcamData.forEach(
                     (gcamJson)=>{
-                        // console.log(gcamJson)
                         gcamJson.data.forEach(
                             (gcam)=>{
-                                // console.log(gcam)
                                 gcam.developer = gcamJson.developerName
                                 if(versionMap.get(gcam.version)){
                                     versionMap.get(gcam.version).push(gcam);
@@ -89,7 +87,6 @@ import GCAM_DB_COLLECTION from "../Components/gcam/mongodb/DB_Name_State";
                         )
                     }
                 )
-                // console.log(versionMap)
                 return versionMap
             break;
 
@@ -98,7 +95,7 @@ import GCAM_DB_COLLECTION from "../Components/gcam/mongodb/DB_Name_State";
                     collection : GCAM_DB_COLLECTION.Gcam_Generic,
                     filter : {}
                 }).then(response => {
-                    // console.log( 'the android version json is ', response.data)
+        
                     return response.data
                     })
                     return genericGcams;

@@ -4,11 +4,11 @@ const nextConfig = {
   async headers() {
     return [
       {
-        // matching all API routes
+        
         source: "/api/:path*",
         headers: [
           { key: "Access-Control-Allow-Credentials", value: "true" },
-          { key: "Access-Control-Allow-Origin", value: "https://www.gameistech.com" }, // Replace with your actual origin
+          { key: "Access-Control-Allow-Origin", value: "gameistech.com" }, // Replace with your actual origin
           { key: "Access-Control-Allow-Methods", value: "GET, DELETE, PATCH, POST, PUT" },
           {
             key: "Access-Control-Allow-Headers",
@@ -24,6 +24,7 @@ const nextConfig = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
+  
 };
 
 module.exports = nextConfig;

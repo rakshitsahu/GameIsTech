@@ -17,7 +17,7 @@ export async function getAllPathsForPhoneDownloadPage(){
       (phone) =>{
         const phoneName = phone.phoneName
         const phoneBrand = phoneData.phoneBrand
-        // console.log(phoneName)
+        
         paths.push({
           params: {
             phone : [phoneBrand, phoneName],
@@ -29,19 +29,18 @@ export async function getAllPathsForPhoneDownloadPage(){
   })
   return [paths , possiblePaths]
 }
-export async function getStaticPaths(){
-  const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
-  const pathData = await getAllPathsForPhoneDownloadPage()
-  const paths = pathData[0]
+// export async function getStaticPaths(){
+//   const phoneData = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
+//   const pathData = await getAllPathsForPhoneDownloadPage()
+//   const paths = pathData[0]
 
-  // console.log('the paths are ' , pathData[1])
-    return {
-        paths : [],
-        fallback: 'blocking'
-    }
-}
+//     return {
+//         paths : [],
+//         fallback: 'blocking'
+//     }
+// }
 
-export async function getStaticProps(context){
+export async function getServerSideProps(context){
   const phone = context.params.phone
   const pathData = await getAllPathsForPhoneDownloadPage()
   const paths = pathData[1]
@@ -59,8 +58,8 @@ export async function getStaticProps(context){
       notFound: true,
     }
   }
-  // console.log("yes")
-  // console.log( , encodeURIComponent(phoneName) )
+  
+  
 
 
   const [developersData, phoneData, genericGcams, gcamVersionsData] = await Promise.all([
@@ -71,10 +70,10 @@ export async function getStaticProps(context){
   ])
     .then((results) => {
       return results
-    })
+    }).catch((e)=>console.log("Error has been encountered " + e))
 
     const gcamVersions = []
-  // console.log(gcamVersionsData)
+  
   Object.keys(gcamVersionsData[0]).map(
   (element)=>{
     gcamVersions.push(element)
@@ -92,14 +91,14 @@ export async function getStaticProps(context){
     });
 
     let currentPhoneData = []
-    // console.log(phone)
+    
     phoneBrandData.forEach( phone => {
       if( phone.phoneName === phoneName)
       {
         currentPhoneData = phone.source;
       }
     });
-    // console.log(currentPhoneData)
+    
 
 
     return {
@@ -112,11 +111,11 @@ export async function getStaticProps(context){
           gcamVersions,
           currentPhoneData
       },
-      revalidate: 20,
+      
     }
 }
 export default function GcamDownloadForPhone({phoneBrand, phoneName , developers , brands , genericGcams, gcamVersions , currentPhoneData}) {
-  // console.log('gcam json is', data)
+  
   const GcamDescription = `If you are looking for working Gcam for ${phoneName}. 
    You are at the best place. we have variety of Google Camera Ports.
    With excellent filters which will help you to find out the most compatible Google Camera for ${phoneName}
@@ -127,7 +126,7 @@ export default function GcamDownloadForPhone({phoneBrand, phoneName , developers
    const description = `Download Gcam for ${phoneName}. We also have generic Google Camera ports which could work in ${phoneName}.`
    const title = `Gcam for ${phoneName} | Google Camera Ports`
 
- console.log(phoneBrand)
+ 
   return (
     <>
     <Head>
@@ -140,7 +139,7 @@ export default function GcamDownloadForPhone({phoneBrand, phoneName , developers
 
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="canonical" href= {`https://www.gameistech.com/apps/gcam/phones/${encodeURIComponent(phoneBrand)}/${encodeURIComponent(phoneName)}`} />
+    <link rel="canonical" href= {`https://gameistech.com/apps/gcam/phones/${encodeURIComponent(phoneBrand)}/${encodeURIComponent(phoneName)}`} />
   </Head>
     <Navbar brands={brands} developers={developers}/>
     <article className='grid justify-items-center m-3'>
@@ -151,15 +150,15 @@ export default function GcamDownloadForPhone({phoneBrand, phoneName , developers
     <div className='mt-3'>
     {
       Object.keys(currentPhoneData).map((source)=>{
-        // console.log(source)
+        
         {
          return Object.keys(currentPhoneData[source]).map(
             (index)=>{
-              // console.log(index)
+              
               const anchorText = currentPhoneData[source][index].anchorText
               const downloadLink = currentPhoneData[source][index].downloadLink
-              // console.log(anchorText)
-              // console.log(downloadLink)
+              
+              
               return (
                 <div key = {source} className='m-1 p-3   rounded-full'>
                 { source === 'reddit' &&  <a href={downloadLink}><div className='flex items-center underline decoration-orange-400 underline-offset-2'><BsReddit className='text-orange-400' /><button >{anchorText}</button> </div> </a>  }

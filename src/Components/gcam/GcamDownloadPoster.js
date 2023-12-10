@@ -18,7 +18,7 @@ export default function GcamDownloadPoster({gcams, heading , prefix , download }
     <div className=' grid lg:grid-cols-2 overflow-clip xl:grid-cols-2 md:grid-cols-1 sm:grid-cols-1 justify-center w-full rounded-md p-5 shadow-2xl drop-shadow-2xl gap-14 '>
     {
         Object.keys(gcams).map(  (index) => {
-        //console.log ( 'the brand is ', brands.index)
+
           return (
             
             <div key={index} className='grid group/item bg-white rounded-3xl p-4'>

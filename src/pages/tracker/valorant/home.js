@@ -12,11 +12,11 @@ export default function Valorant() {
 
 
   useEffect( ()=>{
-    //getAgents()
+
     const agentsJson = getAgents()
     agentsJson.then( (json) => {
       setAgents(json)
-      // console.log(json)
+
     } )
     const weaponsJson = getWeapons()
     weaponsJson.then( (json) =>{

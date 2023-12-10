@@ -13,4 +13,4 @@ Allow: /robots.txt
 
 
 # Specify the location of your sitemap
-Sitemap: https://www.gameistech.com/sitemap.xml
+Sitemap: https://gameistech.com/sitemap.xml

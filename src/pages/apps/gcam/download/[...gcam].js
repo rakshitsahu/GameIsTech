@@ -9,7 +9,7 @@ import Head from 'next/head'
 export async function getAllPathsForGcamDownload(toFind = null){
   const gcamJson = await GCAM_GET_REQUEST(GCAM_API_STATE.Gcam)
   const stableGcamJson = await GCAM_GET_REQUEST(GCAM_API_STATE.Generic)
-  // console.log(stableGcamJson)
+  
   const paths = []
   const possiblePaths = []
   let result = null
@@ -20,7 +20,7 @@ export async function getAllPathsForGcamDownload(toFind = null){
         
         const gcamName = gcam.name
         const developer = gcam.developer
-        // console.log(gcamName , developer)
+        
         if(toFind && gcamName === toFind[1] && developer === toFind[0] ){
           result = gcam
         }
@@ -41,8 +41,8 @@ export async function getAllPathsForGcamDownload(toFind = null){
         
         const gcamName = gcam.name
         const developer = gcam.developer
-        // console.log(gcamName , developer)
-        // console.log(gcamName , developer)
+        
+        
         if(toFind && gcamName === toFind[1] && developer === toFind[0] ){
           result = gcam
         }
@@ -59,24 +59,21 @@ export async function getAllPathsForGcamDownload(toFind = null){
   return [paths, possiblePaths]
   return [paths, result]
 }
-export async function getStaticPaths(){
-  // console.log('static path started')
-  const pathArray = await getAllPathsForGcamDownload()
-  // console.log('get all path completed')
-  const paths = pathArray[0]
-  // console.log(pathArray[1])
-  return {
-    paths : [],
-    fallback: 'blocking'
-}
+// export async function getStaticPaths(){
 
-}
+//   const pathArray = await getAllPathsForGcamDownload()
+//   const paths = pathArray[0]
+//   return {
+//     paths : [],
+//     fallback: 'blocking'
+// }
 
-export async function getStaticProps(context){
+// }
+export async function getServerSideProps(context){
   let gcamParams = context.params.gcam
-  console.log('params found are' )
+
   gcamParams = [gcamParams[0] , gcamParams[1]]
-  console.log('after decrypthon params are' , gcamParams)
+  
   const [pathArray, developersData, phoneData] = await Promise.all([
     getAllPathsForGcamDownload(gcamParams),
     GCAM_GET_REQUEST(GCAM_API_STATE.Developers),
@@ -84,19 +81,19 @@ export async function getStaticProps(context){
   ])
     .then((results) => {
       return results
-    })
-    // console.log(pathArray , developersData , phoneData)
+    }).catch((e)=>console.log("Error has been encountered " + e))
+    
 
-  // console.log(pathArray[0])
+  
   const data = pathArray[1]
-  console.log('data is null ' , data)
+  
   if(data == null)
   {
     return {
       notFound: true,
     }
   }
-  // console.log(data)
+  
 
   const developers = developersData.map(({ developerName }) => ({ name : developerName }))
   const brands = phoneData.map(({ phoneBrand }) => ({ name : phoneBrand }))
@@ -108,7 +105,7 @@ export async function getStaticProps(context){
           developers,
           gcamParams
       },
-      // revalidate: 20,
+      
     }
 }
 export default function GcamDownload({data , brands, developers , gcamParams}) {
@@ -131,7 +128,7 @@ export default function GcamDownload({data , brands, developers , gcamParams}) {
 
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="canonical" href= {`https://www.gameistech.com/apps/gcam/download/${encodeURIComponent(developer)}/${apkName}`} />
+    <link rel="canonical" href= {`https://gameistech.com/apps/gcam/download/${encodeURIComponent(developer)}/${apkName}`} />
   </Head>
 <article>
 <Navbar brands={brands} developers = {developers}/>

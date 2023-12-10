@@ -14,7 +14,6 @@ export default async function leaderboard(req, res) {
     const response = await fetch(url , options)
     const result = await response.json()
     res.status(200).json(result)
-    //console.log(response) 573f53ac-41a5-3a7d-d9ce-d6a6298e5704
     } catch (error) {
         
     }

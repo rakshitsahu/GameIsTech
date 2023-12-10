@@ -10,7 +10,6 @@ const test = `flex justify-center bg-black text-5xl font-extrabold drop-shadow-2
     <div className='flex flex-wrap justify-center w-full rounded-md p-3 shadow-2xl drop-shadow-2xl gap-7 '>
     {
         Object.keys(gcamPosts).map(  (index) => {
-        //console.log ( 'the brand is ', brands.index)
           return (
             <div key={index} value={gcamPosts[index].name}  className='grid group/item bg-white rounded-3xl p-4'>
 

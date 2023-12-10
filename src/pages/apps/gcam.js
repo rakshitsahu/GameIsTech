@@ -1,14 +1,14 @@
 import GCAM_API_STATE from '@/API/API_States'
 import { GCAM_GET_REQUEST } from '@/API/GET_API_Manager'
-import Navbar from '@/Components/gcam/Navbar'
+// import Navbar from '@/Components/gcam/Navbar'
 import DeviceBrands from '@/Components/gcam/deviceBrands'
 import DisplayDevelopers from '@/Components/gcam/displayDevelopers'
 import DisplayGcamVersions from '@/Components/gcam/displayGcamVersions'
 import DisplayGenericGcams from '@/Components/gcam/displayGenericGcams'
 import Footer from '@/Components/gcam/footer'
 import Head from 'next/head'
-
-export async function  getStaticProps() {
+import Navbar from '@/Components/gcam/Navbar'
+export async function  getServerSideProps() {
 
   const [developersData, gcamVersionsData, phoneData, genericGcams] = await Promise.all([
     GCAM_GET_REQUEST(GCAM_API_STATE.Developers),
@@ -18,10 +18,10 @@ export async function  getStaticProps() {
   ])
     .then((results) => {
       return results
-    })
-    // console.log(ob)
+    }).catch((e)=>console.log("Error has been encountered " + e))
+
 const gcamVersions = []
-// console.log(gcamVersionsData)
+
 Object.keys(gcamVersionsData[0]).map(
   (element)=>{
     gcamVersions.push(element)
@@ -31,9 +31,7 @@ gcamVersions.splice(0 , 1)
 
 const developers = developersData.map(({ developerName }) => ({ name : developerName }))
 const brands = phoneData.map(({ phoneBrand }) => ({ name : phoneBrand }))
-// console.log('generic gcams are', genericGcams)
-// console.log('the map is ' , developers)
-// console.log(brands)
+
   return {
     props: {
       brands,
@@ -59,10 +57,10 @@ export default function home({ brands, developers, gcamVersions, genericGcams })
     />
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="canonical" href= {`https://www.gameistech.com/apps/gcam`} />
+    <link rel="canonical" href= {`https://gameistech.com/apps/gcam`} />
 
   </Head>
-      <Navbar brands={brands} developers = {developers}/>
+      <Navbar brands={brands} developers = {developers} className="w-full h-full"/>
       <article className='grid m-3 gap-5'>
 
       <center><h1 className='font-semibold text-5xl'>Download Gcam APK&apos;s For your device | Google Camera Ports</h1></center>

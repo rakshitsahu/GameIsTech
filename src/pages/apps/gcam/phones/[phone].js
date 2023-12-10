@@ -12,7 +12,7 @@ export async function getAllPathsForPhonePage(){
   const paths = []
   const possiblePaths = []
   const res  = await GCAM_GET_REQUEST(GCAM_API_STATE.PhoneData)
-  // console.log( 'gcam versions are', res)
+  
   res.map( (element)=>{
     paths.push({
       params:{
@@ -24,23 +24,18 @@ export async function getAllPathsForPhonePage(){
     })
   return [paths , possiblePaths]
 }
-export async function getStaticPaths(){
-  // console.log('working till heere')
-    const pathData = await getAllPathsForPhonePage()
-    const paths = pathData[0]
-      // console.log( 'paths are' , pathData[1] )
-      return {
-        paths : [] ,
-        fallback: 'blocking'
-      }
-}
+// export async function getStaticPaths(){
 
-export async function getStaticProps(context){
+//     const pathData = await getAllPathsForPhonePage()
+//     const paths = pathData[0]
 
-    // const data = {
-    //     name : 'hello'
-    // }
-    // console.log('working till heere')
+//       return {
+//         paths : [] ,
+//         fallback: false
+//       }
+// }
+export async function getServerSideProps(context){
+
     const phone = context.params.phone
     const pathData = await getAllPathsForPhonePage()
     const paths = pathData[1]
@@ -50,7 +45,7 @@ export async function getStaticProps(context){
         notFound: true,
       }
     }
-    // console.log(' data of static props is', phone)
+    
     const [data, developersData, phoneData] = await Promise.all([
       FindAllOperation (GCAM_DB_COLLECTION.Phone_Data , { phoneBrand : phone }).catch( err => {return {}} ),
       GCAM_GET_REQUEST(GCAM_API_STATE.Developers),
@@ -58,12 +53,12 @@ export async function getStaticProps(context){
     ])
       .then((results) => {
         return results
-      })
+      }).catch((e)=>console.log("Error has been encountered " + e))
 
 
       const developers = developersData.map(({ developerName }) => ({ name : developerName }))
       const brands = phoneData.map(({ phoneBrand }) => ({ name : phoneBrand }))
-      // console.log('the data is ',data)
+      
 
       return {
         props :{
@@ -72,12 +67,12 @@ export async function getStaticProps(context){
             brands,
             developers
         },
-        revalidate: 20,
+        
       }
 }
 export default function Phones({data, phone , brands, developers}) {
     const GcamJson = data;
-    // console.log( 'post data is' , GcamJson)
+    
     const description = `Download Gcam for ${phone} Devices. We have so many Google Camera ports for almost every ${phone} Device`
     const title = `Gcam for ${phone} Devices | Google Camera Ports`
     const H1 = 'font-semibold text-5xl'
@@ -93,7 +88,7 @@ export default function Phones({data, phone , brands, developers}) {
     />
     <meta name="robots" content="index, follow"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="canonical" href= {`https://www.gameistech.com/apps/gcam/phones/${encodeURIComponent(phone)}`} />
+    <link rel="canonical" href= {`https://gameistech.com/apps/gcam/phones/${encodeURIComponent(phone)}`} />
   </Head>
     <Navbar brands={brands} developers = {developers}/>
     <article>
@@ -108,7 +103,7 @@ export default function Phones({data, phone , brands, developers}) {
 
 
     </p>
-    <DisplayPhoneBrandGcams phoneData = {GcamJson} />
+    <DisplayPhoneBrandGcams phoneData = {GcamJson[0]} />
     </article>
     <Footer/>
     

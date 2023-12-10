@@ -10,7 +10,7 @@ const url = "https://gameistech.com";
 
 async function getGcamVersions() {
   const result = await getAllPathsForVersionPage()
-  // console.log(result[1])
+
   var urls = [];
   result[1].forEach((element) => {
     urls.push( url + "/apps/gcam/version/"+ `${element}`);
@@ -19,7 +19,7 @@ async function getGcamVersions() {
 }
 async function getGcamDeveloper() {
   const result = await getAllPathsForDeveloperPage()
-  // console.log(result[1])
+ 
   var urls = [];
   result[1].forEach((element) => {
     urls.push( url + "/apps/gcam/developer/"+ `${element}`);
@@ -28,7 +28,7 @@ async function getGcamDeveloper() {
 }
 async function getGcamPhoneBrands() {
   const result = await getAllPathsForPhonePage()
-  // console.log(result[1])
+
   var urls = [];
   result[1].forEach((element) => {
     urls.push( url + "/apps/gcam/phones/"+ `${element}`);
@@ -38,7 +38,7 @@ async function getGcamPhoneBrands() {
 
 async function getGcamPhone() {
   const result = await getAllPathsForPhoneDownloadPage()
-  // console.log(result[1])
+
   var urls = [];
   result[1].forEach((element) => {
     urls.push( url + "/apps/gcam/phones/"+ `${element[0]}/${element[1]}`);
@@ -48,7 +48,7 @@ async function getGcamPhone() {
 
 async function getGcamDownloadPage() {
   const result = await getAllPathsForGcamDownload()
-  // console.log(result[0])
+
   var urls = [];
   result[1].forEach((element) => {
     urls.push( url + "/apps/gcam/download/"+ `${element[0]}/${element[1]}`);
@@ -102,7 +102,6 @@ async function getDownlaodUrl(prefix, STATE) {
         const allUrls = [...GcamVersionPage, ...DeveloperPage, ...PhoneBrandsPage, ...GcamPage , ...GcamDownloadPage,
          ...home
          ]
-         console.log(allUrls.length)
       return allUrls;
       break;
     default:

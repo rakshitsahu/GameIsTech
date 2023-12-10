@@ -23,3 +23,8 @@
 ::-webkit-scrollbar-thumb:hover {
     background: #555;
 }
+/* used on homepage domain.com/ */
+.large-shadow {
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.8); /* You can adjust the shadow values as needed */
+  }
+  

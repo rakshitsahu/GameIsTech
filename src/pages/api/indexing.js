@@ -1,25 +1,36 @@
 
 // import GCAM_DB_STATE from "@/Components/gcam/mongodb/DB_Name_State";
 const { MongoClient, ServerApiVersion } = require('mongodb');
-import MongoFind from './gcam/mongo/find';
+import { connectToMongo } from "@/MongoDb/MongoDB";
 import GCAM_URL_STATE from '@/Components/gcam/URLs/GCAM_URL_STATE';
 import { GCAM_URLS } from '@/Components/gcam/URLs/GCAM_URL_MANAGER';
 import { MdMan4 } from 'react-icons/md';
 import axios from 'axios';
 var request = require("request");
 var { google } = require("googleapis");
-var key = require("./service_account.json");
+var apkHubKey = require("./apkhub.json");
+var GameIsTechKey = require("./gameistech.json");
+var androidApkKey = require("./androidapk.json");
+var key = {}
+let paths = []
+let domainName = ""
+const keyMap = {
+  "apkhub.mobi" : apkHubKey,
+  "gameistech.com" : GameIsTechKey,
+  "androidapkdownloads.info" : androidApkKey
+}
+var key = {}
 const DB_NAME = "Indexing-DB"
-
+let collection = "indexedPaths"
+const client = await connectToMongo(process.env.INDEXING_DB_NAME)
+const defaultDomainName = "gameistech.com"
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
 const QUOTA_LIMIT = 200
 function getUrls(indexed , urlList , limit = QUOTA_LIMIT){
     const urls = []
     const map = {}
-    // console.log(indexed)
-    // console.log(urlList)
+
     indexed.forEach(element => {
-      
         map[element] = true
     });
     let index = 0
@@ -36,174 +47,129 @@ function getUrls(indexed , urlList , limit = QUOTA_LIMIT){
 
 async function getUrlList(){
   const collection = "urlPaths"
-  const client = new MongoClient(uri, {
-      serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-      }
-    });
+
     try {
-      await client.connect().catch( async (err) => { 
-        // console.log('the error occurred is', err)
-        await client.close() 
-      }
-         )
-         const data = await client.db(DB_NAME).collection(collection).find({}).toArray();
-        //  console.log('list of collection is', data)
+
+         const data = await client.collection(collection).find({}).toArray();
+
         let resultPath = []
          if(data.length == 0){
           const urlList = await GCAM_URLS(GCAM_URL_STATE.All)
           resultPath = urlList
           
-          await client.db(DB_NAME).collection(collection).insertOne({paths : getUniques(urlList)}).catch((err)=>{
-            // console.log(err)
+          await client.collection(collection).insertOne({paths : getUniques(urlList)}).catch((err)=>{
+
           })
          }
          else
          resultPath = data[0].paths
-         await client.close()
-         // console.log(resultPath)
-         return  resultPath
+         const replacedDomain = []
+         resultPath.forEach((element)=>{
+          const updatedURL = element.replace(defaultDomainName , domainName)
+          replacedDomain.push(updatedURL)
+         })
+
+         return  replacedDomain
     } catch (error) {
-      await client.close()
     }
 }
 
 async function getIndexedPaths(indexedUrls){
-  const collection = "indexedPaths"
-  const client = new MongoClient(uri, {
-      serverApi: {
-        version: ServerApiVersion.v1,
-        strict: true,
-        deprecationErrors: true,
-      }
-    });
+
     try {
-      await client.connect().catch( async (err) => {
-        // console.log('the error occurred is', err)
-        await client.close()
-      }
-         )
-         const indexedList = await client.db(DB_NAME).collection(collection).find({}).toArray();
+
+         const indexedList = await client.collection(collection).find({}).toArray();
          let resultPaths = []
-         // console.log(indexedList.length)
          if(indexedList.length)
          resultPaths = indexedList[0].paths
-        //  console.log('list of collection is', data)
 
-         await client.close()
-        //  console.log(resultPaths)
          return  resultPaths
     } catch (error) {
-      await client.close()
     }
 }
 
 async function insertIndexedUrls(urlList){
-  const collection = "indexedPaths"
-  const client = new MongoClient(uri, {
-    serverApi: {
-      version: ServerApiVersion.v1,
-      strict: true,
-      deprecationErrors: true,
-    }
-  });
-  // console.log('function called')
+
+
   try {
-    await client.connect().catch( async (err) => {
-      // console.log('the error occurred is', err)
-      // await client.close()
-    }
-       )
+    
        const currentList = await getIndexedPaths()
-      //  console.log(urlList)
-      //  const indexedList = await client.db(DB_NAME).collection(collection).find({}).toArray();
-       // console.log('the currentList is', currentList)
+
        
        let resultPaths = []
-       if( currentList.length == 0 )
+       console.log(collection)
+       const documents = await client.collection(collection).find({}).toArray();
+       const isEmptyCollection = documents.length == 0
+
+       if( isEmptyCollection )
        {
-        client.db(DB_NAME).collection(collection).insertOne({paths : urlList})
+   
+        client.collection(collection).insertOne({paths : urlList})
        }
-       else if ( urlList.length == 0 ){
-        await client.db(DB_NAME).collection(collection).drop()
+       else if ( urlList.length + currentList.length >= paths.length ){
+       
+        await client.collection(collection).drop()
        }
        else
        {
+        
         const updateOperation = {
           $push: {
             paths: { $each: urlList }
           }
         };
-        const response = await axios.post('http://localhost:3000/api/gcam/mongo/updateone',{
+        const response = await axios.post(`https://${process.env.HOST}/api/gcam/mongo/updateone`,{
           collection : collection,
           filter : {},
           data : updateOperation
         })
+       
        }
 
-
        
-      //  if(currentList.length > 0)
-      //  {
-      //   resultPaths = currentList
-      //   await client.db(DB_NAME).collection(collection).drop()
-      //  }
-      //  if(urlList.length > 0)
-      //  {
-      //   await client.db(DB_NAME).collection(collection).insertOne({paths : getUniques([...resultPaths , ...urlList])});
-      //  }
-       
-      //  console.log(resultPaths)
        
   } catch (error) {
-    await client.close()
+
   }
 }
-let latestIndexedUrls = []
-async function IndexingApi(url){
-  const jwtClient = new google.auth.JWT(
-  key.client_email,
-  null,
-  key.private_key,
-  ["https://www.googleapis.com/auth/indexing"],
-  null
-);
-jwtClient.authorize(function(err, tokens) {
-  if (err) {
-    // console.log(err);
-    return;
-  }
-  let options = {
-    url: "https://indexing.googleapis.com/v3/urlNotifications:publish",
-    method: "POST",
-    // Your options, which must include the Content-Type and auth headers
-    headers: {
-      "Content-Type": "application/json"
-    },
-    auth: { "bearer": tokens.access_token },
-    // Define contents here. The structure of the content is described in the next step.
-    json: {
-      "url": url,
-      "type": "URL_UPDATED"
-    }
-  };
-  request(options, function (error, response, body) {
-    // Handle the response
-    if(error)
-    {
-      // console.log("error occured")
-    }
-    else if( response.statusCode === 200  )
-    {
-      // console.log("successfully executed")
-      latestIndexedUrls.push(url)
-    }
-  return response.statusCode
-  });
-});
 
+async function IndexingApi(url) {
+  return new Promise((resolve, reject) => {
+    const jwtClient = new google.auth.JWT(
+      key.client_email,
+      null,
+      key.private_key,
+      ["https://www.googleapis.com/auth/indexing"],
+      null
+    );
+
+    jwtClient.authorize(async function (err, tokens) {
+      if (err) {
+        reject(501);
+      }
+
+      let options = {
+        url: "https://indexing.googleapis.com/v3/urlNotifications:publish",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        auth: { "bearer": tokens.access_token },
+        json: {
+          "url": url,
+          "type": "URL_UPDATED"
+        }
+      };
+
+      try {
+        const response = await request(options);
+        console.log(url);
+        resolve(response.statusCode);
+      } catch (error) {
+        reject(error.statusCode);
+      }
+    });
+  });
 }
 function getUniques(array){
   const map = {}
@@ -214,35 +180,47 @@ function getUniques(array){
       unique.push(element)
     }
   }))
-  // console.log(Object.keys(map))
+  
   return Object.keys(map)
 }
 export async function handler(req , res){
 
-  const paths = await getUrlList()
+  collection = req.body.collection
+  domainName = req.body.domainName
+  key = keyMap[domainName]
+  paths = await getUrlList()
 
-  // console.log(getUniques(paths))
   const indexedList = await getIndexedPaths(paths)
-  // console.log(indexedList)
+  console.log(indexedList)
+  console.log(paths)
   const pathsToIndex = getUrls(indexedList , paths , Math.floor(QUOTA_LIMIT/ 24) )
-  // console.log(pathsToIndex)
-  const indexedPaths = []
-  pathsToIndex.forEach(async (element)=>{
-    const statusCode = await IndexingApi(element)
-    // console.log("status code found is" , statusCode)
-  })
-  setTimeout( async () => {
-    await insertIndexedUrls(latestIndexedUrls).then(()=>{
-      // console.log(paths)
-      latestIndexedUrls = []
-      res.json({message : 'urls inserted successfully'})
+  console.log(pathsToIndex)
+  const latestIndexedUrls = []
+  const promises = pathsToIndex.map(async (element) => {
+    try {
+      await IndexingApi(element).then((status)=>{
+        console.log(status);
+        console.log(element);
+        latestIndexedUrls.push(element);
+      });
       
-    }).catch( (err)=>{
-      latestIndexedUrls = []
-      res.json({message : 'Something went wrong'})
-      
-    })
-  }, 2000);
+    } catch (error) {
+      console.log("Problem occurred "+ error.message);
+    }
+  });
+  
+  // Use Promise.all to wait for all promises to resolve
+  await Promise.all(promises);
+  
+  // Handle the insertion of indexed URLs
+  try {
+    console.log(latestIndexedUrls)
+    await insertIndexedUrls(latestIndexedUrls);
+    res.json({ message: 'Urls inserted successfully' });
+  } catch (err) {
+    res.json({ message: 'Something went wrong' });
+  }
+ 
   
 
   

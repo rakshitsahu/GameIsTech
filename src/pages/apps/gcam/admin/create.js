@@ -11,7 +11,7 @@ import { setCookie , getCookie , hasCookie } from "cookies-next";
 import { UpdateOne , FindAllOperation , InsertOperation } from '@/API/POST_API_Manager'
 import { Authorization } from '@/API/POST_API_Manager'
 export const getServerSideProps = async ({ req , res }) =>{
-  // Fetch data from external API
+  
     const authentication = await Authorization(req , res)
    
   return { props: { authentication } }
@@ -83,7 +83,7 @@ function CreatePost({authentication}) {
         callback()
         return gcamData.downloadLink
       } ) .catch( err => { return null })
-      console.log('the data supposed to is', response)
+      
       if(response)
       setResponseMessage('gcam has been inserted successfully')
     }
@@ -106,12 +106,12 @@ if(downloadLink){
 } )
 }
 const resultJson = await FindAllOperation(GCAM_DB_COLLECTION.Gcam_Post , {downloadLink : gcamData.downloadLink}).catch( err => {return {}} )
-console.log( 'the result json is', resultJson)
+
 if( resultJson.length != 0 ){
   const response = await UpdateOne(GCAM_DB_COLLECTION.Gcam_Post , {gcams : gcamData.downloadLink} , {
     $addToSet : {gcams : gcamData.downloadLink}
   } )
-  console.log('the update function returns' , response)
+  
   if(response.matchedCount)
   setResponseMessage('post has been created successfully')
   else
@@ -120,9 +120,9 @@ if( resultJson.length != 0 ){
 }
 else
 {
-  console.log('insertion function called')
+  
  const response = await InsertOperation(GCAM_DB_COLLECTION.Gcam_Post , Post).catch( err => { 
-    console.log('error occured while creating the post')
+    
    })
    setResponseMessage(response.message)
 }
@@ -159,7 +159,7 @@ else
       post : Post,
       gcam : gcamData
     }
-    console.log(PostData)
+    
     await CreatePost(Post , gcamData)
 
   }
@@ -185,7 +185,7 @@ else
         setResponseMessage('field can not be empty')
         return
        }
-    console.log(gcamData)
+    
     await InsertGcam(gcamData , async () =>{
       await UpdateOne(GCAM_DB_COLLECTION.Developer_Names , {name : gcamData.developerName} , {
         $addToSet : { gcams : gcamData.downloadLink }
@@ -227,7 +227,7 @@ else
     <select name="cars" defaultValue='makeChoice' value={deviceBrand} onChange={(e) => setDeviceBrand(e.target.value.trim()) } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
     <option value=''></option>
     {Object.keys(brandsjson).map(  (index) => {
-      //console.log ( 'the brand is ', brandsjson.index)
+      
         return (
           <option key={index} value={brandsjson[index].name}>{brandsjson[index].name}</option>
 
@@ -247,7 +247,7 @@ else
   <select name="cars" defaultValue='makeChoice' value={processorName} onChange={(e) => setProcessorName(e.target.value.trim()) } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
   <option value=''></option>
   {Object.keys(processsorsJson).map(  (index) => {
-      //console.log ( 'the brand is ', processsorsJson.index)
+      
         return (
           <option key={index} value={processsorsJson[index].name}>{processsorsJson[index].name}</option>
 
@@ -262,7 +262,7 @@ else
     <select name="cars" defaultValue='makeChoice' value={gcamDeveloperName} onChange={(e)=> setGcamDeveloperName(e.target.value.trim())} className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
     <option value=''></option>
     {Object.keys(developersJson).map(  (index) => {
-      //console.log ( 'the brand is ', developersJson.index)
+      
         return (
           <option key={index} value={developersJson[index].name}>{developersJson[index].name}</option>
 
@@ -286,14 +286,14 @@ else
      
     <div id = 'test' className='grid grid-cols-2'>
     <font className='self-center text-2xl'>Gcam Version : </font>
-    {console.log('gcam version' , gcamVersions)}
+
     <select name="cars" defaultValue='makeChoice' value={gcamVersion} onChange={(e) => {
       setGcamVersion(e.target.value.trim())
-      console.log('gcam version is changed')
+      
     }  } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
     <option value=''></option>
     {Object.keys(gcamVersions).map(  (index) => {
-      //console.log ( 'the brand is ', gcamVersions.index)
+      
         return (
           <option key={index} value={gcamVersions[index].name}>{gcamVersions[index].name}</option>
 
@@ -307,7 +307,7 @@ else
      <select name="cars" defaultValue='makeChoice' value={gcamRequiredAndroid} onChange={(e) => {setgcamRequiredAndroid(e.target.value.trim())} } className='m-2 bg-blue-600 p-4 rounded-xl' id="cars">
      <option value=''></option>
      {Object.keys(androidVersionsJson).map(  (index) => {
-       //console.log ( 'the brand is ', gcamVersions.index)
+       
          return (
            <option key={index} value={androidVersionsJson[index].name}>{androidVersionsJson[index].name}</option>
  

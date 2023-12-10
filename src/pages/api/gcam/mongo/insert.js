@@ -1,7 +1,7 @@
 
 // import GCAM_DB_STATE from "@/Components/gcam/mongodb/DB_Name_State";
 
-import connectMongo from "../../../../../middleware/ConnectMongo";
+
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
@@ -23,7 +23,6 @@ export async function handler(req , res){
           await client.db('Gcam').collection(Collection).insertOne(data).then( (result) =>{
             res.send({message :"data has been inserted"})
           } ).catch((err)=> {
-            // console.log(err)
             res.send({message :"Error occured while inserting the data"})
            })
           

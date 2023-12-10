@@ -4,7 +4,7 @@ import {TbMapSearch} from 'react-icons/tb'
 import Link from 'next/link'
 import {IoSparklesSharp} from 'react-icons/io5'
 function AdminNavbar() {
-  console.log(process.env.local)
+
   return (
 <>
 <nav className="sticky top-0 z-10 bg-white  backdrop-filter backdrop-blur-sm bg-opacity-30 border-b border-gray-200">

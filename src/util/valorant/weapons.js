@@ -4,7 +4,7 @@ const getWeapons = async () =>{
       const res = await axios.get('https://valorant-api.com/v1/weapons ');
       return res.data.data;
     } catch (error) {
-      console.log(error)
+     
     } 
   }
   export {getWeapons}

@@ -13,7 +13,7 @@ let color = Math.floor(Math.random() * colors.length)
     <div className='flex flex-wrap justify-center w-full rounded-md p-5 shadow-2xl drop-shadow-2xl gap-2 '>
     {
         Object.keys(developers).map(  (index) => {
-        //console.log ( 'the brand is ', brands.index)
+
           return (
             <Link key={index} value={developers[index].name} href ={`/apps/gcam/developer/${encodeURIComponent(developers[index].name)}`}>
             <Tooltip className='bg-blue-600 rounded-full text-white' content= {`Gcam APK's by ${developers[index].name}`}>

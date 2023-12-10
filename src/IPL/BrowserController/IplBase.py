@@ -184,16 +184,15 @@ def ToPascalCase(s):
     
 class IplBase(BrowserBase):
     browserTabObjects = []
-    def UpdateToDatabase(self ,playerData , collection):
+    def UpdateToDatabase(self ,data , collection):
         try:
             global IplDataBase
             global client
-            print("UpdatePlayerDataOfGivenId has been called" , len(playerData.keys()))
             database = client[IplDataBase]
             Collection = database[collection]
             # Specify the key and the new value you want to set
             # Update the first document that contains the specified key
-            result = Collection.insert_one(playerData)
+            result = Collection.insert_one(data)
             # result = collection.update_one({}, {"$set": playerData})
             print("Result found is " , result.acknowledged)
         except Exception as ex:
@@ -219,7 +218,7 @@ class IplBase(BrowserBase):
             if teamNameJson["ShortName"].strip().lower() == teamName.strip().lower() or teamNameJson["FullName"].strip().lower() == teamName.strip().lower():
                 return teamNameJson
         raise ValueError("++++++++++++++++++THE TEAM NAME IS NOT FOUND IN JSON+++++++++++++++++++")
-    def GetTeamPlayers(self,URL, teamPlayersJson , playerDataJson):
+    def GetTeamPlayers(self,URL, shortName, teamPlayersJson , playerDataJson):
         def isCaptain(imgTags):
             for imgTag in imgTags:
                 if imgTag.get('src') == CAPTAIN_ICON:
@@ -284,15 +283,17 @@ class IplBase(BrowserBase):
                 continue
             playPageUrl = card.find('a').get('href')
             playerJson.update(PlayerDetailFromPlayerPage(playPageUrl))
-            if teamPlayersJson.get(playerJson["Role"]) == None:
-                teamPlayersJson[playerJson["Role"]] = []
-            teamPlayersJson[playerJson["Role"]].append(playerJson)
+            teamDataJson = {}
+            if teamDataJson.get(playerJson["Role"]) == None:
+                teamDataJson[playerJson["Role"]] = []
+            teamDataJson[playerJson["Role"]].append(playerJson)
             if playerJson.get("Captain") == True:
-                teamPlayersJson['Captain'] = playerJson
+                teamDataJson['Captain'] = playerJson
+            teamPlayersJson[shortName] = teamDataJson
             if(playerDataJson.get(playerJson["Id"]) == None):
                 playerDataJson[playerJson["Id"]] = playerJson
             playerPageMap[playerJson["Id"]] = playerJson
-            print(teamPlayersJson)
+            # print(teamPlayersJson)
         print("Total found is " , len(playerDataJson.keys()))
         
     
@@ -303,12 +304,12 @@ class IplBase(BrowserBase):
         result = soup.find(pageNotFoundMessage) == -1
 
         return result
-    def GetTeamAllSeasonData(self, baseUrl , shared_dict1, shared_dict2):
+    def GetTeamAllSeasonData(self, urlList , shared_dict1, shared_dict2):
         for season in range(IplFirstSeason , IplLastSeason + 1):
-            seasonUrl = baseUrl + str(season)
+            seasonUrl = urlList["url"] + str(season)
             if self.PageExists(seasonUrl):
                 print("data found for season "+str(season))
-                self.GetTeamPlayers(seasonUrl , shared_dict1, shared_dict2)
+                self.GetTeamPlayers(seasonUrl , urlList["shortName"] , shared_dict1, shared_dict2)
             else:
                 print("data not found for season "+str(season))
     def GetMatchData(self , URL):
@@ -643,10 +644,9 @@ class WagonWheelManager():
 
 
 
-def MapUrl(url, shared_dict1, shared_dict2):
+def MapUrl(urlList, shared_dict1, shared_dict2):
     iplObject = IplBase()
-    
-    result = iplObject.GetTeamAllSeasonData(url , shared_dict1, shared_dict2)
+    result = iplObject.GetTeamAllSeasonData(urlList , shared_dict1, shared_dict2)
     iplObject.CloseWindow()
     return result
 def GetAllTeamData():
@@ -663,11 +663,14 @@ def GetAllTeamData():
     for team in allTeamsLiList:
         teamShortName = team.get("class")[0].split("_")[-1]
         teamPageUrl = team.find("a").get("href")
-        urlList.append(teamPageUrl+"/squad/")
+        urlList.append({
+           "url": teamPageUrl+"/squad/",
+           "shortName" : teamShortName
+        })
         # iplObject.GetTeamAllSeasonData(teamPageUrl+"/squad/")
     iplObject.CloseWindow()
     with Pool(processes=4) as pool:
-        partial_MapUrl = functools.partial(MapUrl, shared_dict1=shared_dict1, shared_dict2=shared_dict2)
+        partial_MapUrl = functools.partial(MapUrl, shared_dict1=shared_dict1, shared_dict2=shared_dict2 , )
         pool.map(partial_MapUrl, urlList)
     iplObject.UpdateToDatabase(dict(shared_dict2) , PlayerDataCollection)
     iplObject.UpdateToDatabase(dict(shared_dict1) ,TeamDataCollection)

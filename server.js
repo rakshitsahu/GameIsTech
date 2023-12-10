@@ -17,10 +17,17 @@ app.prepare().then(() => {
       const parsedUrl = parse(req.url, true);
       const { pathname, query } = parsedUrl;
       const hostName = req.headers.host;
-
-      if (req.headers.host !== process.env.HOST) {
-        res.writeHead(301, { Location: `https://${process.env.HOST}${req.url}`});
+      if( req.headers.host === 'androidapkdownloads.info' ){
+        res.writeHead(301, { Location: `https://apkhub.mobi${req.url}`});
         res.end();
+      }
+      else if(req.headers.host === 'gameistech.com' && req.url.startsWith('/apps')){
+        url = req.url.replace('/apps','')
+        res.writeHead(301, { Location: `https://apkhub.mobi${url}`});
+        res.end();
+      }
+      else if(req.headers.host === 'apkhub.mobi'){
+        await app.render(req, res, '/apps', parsedUrl.query);
       } else {
         await handle(req, res, parsedUrl);
       }

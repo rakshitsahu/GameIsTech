@@ -27,7 +27,7 @@ app.prepare().then(() => {
         res.end();
       }
       else if(req.headers.host === 'apkhub.mobi'){
-        await app.render(req, res, '/apps', parsedUrl.query);
+        await app.render(req, res, '/apps'+req.url, parsedUrl.query);
       } else {
         await handle(req, res, parsedUrl);
       }

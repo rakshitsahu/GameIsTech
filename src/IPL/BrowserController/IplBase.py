@@ -218,7 +218,9 @@ class IplBase(BrowserBase):
             if teamNameJson["ShortName"].strip().lower() == teamName.strip().lower() or teamNameJson["FullName"].strip().lower() == teamName.strip().lower():
                 return teamNameJson
         raise ValueError("++++++++++++++++++THE TEAM NAME IS NOT FOUND IN JSON+++++++++++++++++++")
-    def GetTeamPlayers(self,URL, shortName, teamPlayersJson , playerDataJson):
+    def GetTeamPlayers(self,URL,season , playerDataLocalJson):
+        playerDataLocalJson = {}
+        teamPlayersLocalJson = {}
         def isCaptain(imgTags):
             for imgTag in imgTags:
                 if imgTag.get('src') == CAPTAIN_ICON:
@@ -277,23 +279,29 @@ class IplBase(BrowserBase):
         self.OpenInTabNo(1,URL)
         soup = self.GetHTMLByPageSource()
         playerCards = soup.find_all('li',{"class": "dys-box-color"})
+        if teamPlayersLocalJson.get(season) == None:
+            teamPlayersLocalJson[season] = {}
+        roleDict = {}
         for card in playerCards:
             playerJson = PlayerDetailFromPlayerCard(card)
-            if playerDataJson.get(playerJson["Id"]) != None:
+            if roleDict.get(playerJson["Role"]) is None:
+                roleDict[playerJson["Role"]] = []
+            try:
+                roleDict[ playerJson["Role"] ].append(playerJson["Id"])
+            except Exception  as e:
+                print(e)
+            if playerJson.get("Captain") == True:
+                roleDict['Captain'] = playerJson["Id"]
+            teamPlayersLocalJson[season] = roleDict
+            if playerDataLocalJson.get(playerJson["Id"]) != None:
                 continue
             playPageUrl = card.find('a').get('href')
             playerJson.update(PlayerDetailFromPlayerPage(playPageUrl))
-            teamDataJson = {}
-            if teamDataJson.get(playerJson["Role"]) == None:
-                teamDataJson[playerJson["Role"]] = []
-            teamDataJson[playerJson["Role"]].append(playerJson)
-            if playerJson.get("Captain") == True:
-                teamDataJson['Captain'] = playerJson
-            teamPlayersJson[shortName] = teamDataJson
-            if(playerDataJson.get(playerJson["Id"]) == None):
-                playerDataJson[playerJson["Id"]] = playerJson
-            playerPageMap[playerJson["Id"]] = playerJson
-            # print(teamPlayersJson)
+            if(playerDataLocalJson.get(playerJson["Id"]) == None):
+                playerDataLocalJson[playerJson["Id"]] = playerJson
+            # playerPageMap[playerJson["Id"]] = playerJson
+        teamPlayersLocalJson[season] = roleDict
+        return teamPlayersLocalJson , playerDataLocalJson
         print("Total found is " , len(playerDataJson.keys()))
         
     
@@ -304,14 +312,21 @@ class IplBase(BrowserBase):
         result = soup.find(pageNotFoundMessage) == -1
 
         return result
-    def GetTeamAllSeasonData(self, urlList , shared_dict1, shared_dict2):
+    def GetTeamAllSeasonData(self, urlList , teamDataJson, playerdataJson):
+        teamPlayerLocalJson = {}
         for season in range(IplFirstSeason , IplLastSeason + 1):
             seasonUrl = urlList["url"] + str(season)
+            result = {}
             if self.PageExists(seasonUrl):
                 print("data found for season "+str(season))
-                self.GetTeamPlayers(seasonUrl , urlList["shortName"] , shared_dict1, shared_dict2)
+                result = self.GetTeamPlayers(seasonUrl ,season , playerdataJson )[0]
+                # print("the result found is ", result)
+                teamPlayerLocalJson.update(result)
+                print(teamPlayerLocalJson)
             else:
-                print("data not found for season "+str(season))
+                print("data not found for season "+str(season) , urlList["shortName"])
+        teamDataJson["shortName"] = teamPlayerLocalJson
+        # print(shared_dict1)
     def GetMatchData(self , URL):
         self.OpenInNewTab(URL)
         MatchResultsListXpath = "//div[@class='vn-sheduleList vn-resultsList posRel vn-fullArchiveList col-100 floatLft menT mb-4']"

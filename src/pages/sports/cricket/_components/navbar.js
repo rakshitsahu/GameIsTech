@@ -19,14 +19,15 @@ function Navbar() {
       }}><RiMenuUnfoldLine className='text-white text-2xl'/></button>
       </div>
       <div className={`md:not-sr-only lg:not-sr-only xl:not-sr-only ${hideNavbar ? 'sr-only' : ''}`}>
-      <nav  className='flex flex-col   
+      <nav  className='flex flex-col 
+        overflow-clip  
        md:h-auto md:w-screen 
       lg:h-auto lg:w-screen
       xl:w-screen xl:h-auto 
        h-screen w-1/2 text-xl 
        bg-blue-600  py-5 relative '  
        style={{ fontFamily: 'Teko, sans-serif' }}>
-       <button  className='self-end mr-3 justify-self-end not-sr-only lg:sr-only xl:sr-only md:sr-only' 
+       <button  className=' self-end mr-3 justify-self-end not-sr-only lg:sr-only xl:sr-only md:sr-only' 
        onClick={()=>{
         setHideNavbar(true)
        }}
@@ -36,6 +37,7 @@ function Navbar() {
        lg:flex-row 
        xl:flex-row  
        justify-center gap-4 items-center
+       text-white
        '>
        <span> IPL</span>
        <span> Teams</span>

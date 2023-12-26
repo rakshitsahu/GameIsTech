@@ -1,4 +1,5 @@
 import React from 'react'
+import { useState } from 'react';
 export default function Carousel ({children : slides}) {
   const images = [
     '/sports/cricket/ipl/rr.png',
@@ -8,13 +9,20 @@ export default function Carousel ({children : slides}) {
     '/sports/cricket/ipl/csk.png',
     // Add more image URLs as needed
   ];
+  const [currIndex , setCurrentIndex] = useState(0)
+  const goBackward = ()=> setCurrentIndex( ( currIndex + slides.length - 1 ) % slides.length )
+  const goForward = ()=> setCurrentIndex( ( currIndex + slides.length + 1 ) % slides.length )
   return (
-    <div className=' max-w-[1400px] justify-center h-[780px] w-full m-auto relative bg-red-500' >
-    {images.map((src, index) => (
-      <span key={index} className=' flex justify-center bg-green-400 w-full h-full my-1'>
-      <img className='' src={src}/>
-      </span>
-    ))}
+    <div className='relative overflow-hidden' >
+    <div className={`flex transition-transform ease-out duration-500`} style={{transform: `translateX(-${currIndex * 100}%)`}} > {slides} </div>
+    <div className='absolute inset-0 flex items-center justify-between'>
+    <button onClick={()=> goBackward()}>
+    L
+    </button>
+    <button onClick={()=> goForward()}>
+    R
+    </button>
+    </div>
     </div>
   )
 }

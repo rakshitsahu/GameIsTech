@@ -1,6 +1,8 @@
 import React from 'react'
 import { useState } from 'react';
-export default function Carousel ({children : slides}) {
+export default function HorizontalCarousel ({children : slides}) {
+  // console.log(slides)
+  
   const images = [
     '/sports/cricket/ipl/rr.png',
     '/sports/cricket/ipl/mi.png',

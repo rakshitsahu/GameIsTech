@@ -8,10 +8,7 @@ function Navbar() {
   return (
     <>
       <Head>
-        <link
-          href="https://fonts.googleapis.com/css?family=Teko"
-          rel="stylesheet"
-        />
+
       </Head>
       <div className='bg-blue-600 p-4 lg:sr-only md:sr-only xl:sr-only not-sr-only absolute w-screen top-0 left-0'>
       <button onClick={()=>{

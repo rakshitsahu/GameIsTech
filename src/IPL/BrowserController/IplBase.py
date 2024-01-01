@@ -382,6 +382,23 @@ class IplBase(BrowserBase):
         Result = Match.find('div', {'class':'live-score'})
     def GetScorecardData(self , url ):
         playerDetailsApiJson = GetAPI(IplDataBase , PlayerDataCollection)
+        def GetBowlerByString(string):
+            if 'not out' in string:
+                return None
+            stringList = string.split(' ')
+            startIndex = -1
+            for i in range( len(stringList) -1 , -1 , -1 ):
+                if stringList[i].islower(): 
+                    startIndex = i + 1
+                    break
+            bowlerName = ''
+            while startIndex < len(stringList):
+                bowlerName = bowlerName + ' ' + stringList[startIndex]
+                startIndex = startIndex + 1
+                
+            bowlerName = bowlerName.strip()
+            return GetPlayerIdByName(bowlerName)
+
         def GetPlayerIdByName(name):
             for key in playerDetailsApiJson.keys():
                 if playerDetailsApiJson[key]['Name'].lower().strip() == name.lower().strip():
@@ -410,6 +427,7 @@ class IplBase(BrowserBase):
                 playerStatsJson = {}
                 # print(cols[0])
                 statsCols = cols[2:7]
+                    # print(cols[0].text.strip())
                 for i in range(len(statsCols)):
                     playerName = cols[0].find('span').text.strip()
                     if '(' in playerName:
@@ -419,9 +437,13 @@ class IplBase(BrowserBase):
                     if index == 1:
                         playerIdMapToStatsJson[playerId] = playerStatsJson
                     else:
+                        bowlerId = GetBowlerByString(cols[0].text.strip())
+                        if bowlerId != None:
+                            playerStatsJson['OutBy'] = bowlerId
                         playerIdMapToStatsJson[playerId] = playerStatsJson
                     # print("Id for player "+ playerName  , playerId)
                     playerStatsJson[HeadingList[index][i]] = statsCols[i].text.strip()
+            print(playerIdMapToStatsJson)
             return playerIdMapToStatsJson
         def GetInningsScoreBoard():
 
@@ -544,8 +566,8 @@ class IplBase(BrowserBase):
             matchID = int(match.group())
             childElement = liTag.find_all('div' , { 'class' : 'vn-teamTitle' })
             # Extract the last word
-            last_word_match = re.search(r'\b\w+\b$', teamWonDetailsString)
-            wonBy = last_word_match.group() if last_word_match else None
+            # last_word_match = re.search(r'\b\w+\b$', teamWonDetailsString)
+            wonBy = 'Runs' if 'Runs'in teamWonDetailsString or 'RUNS' in teamWonDetailsString else 'Wickets'
 
             # Extract the number
             number_match = re.search(r'\b\d+\b', teamWonDetailsString)
@@ -570,10 +592,10 @@ class IplBase(BrowserBase):
                 teamMatchesJson[team2DetailJson['vs']] = []
             teamMatchesJson[team1DetailJson['vs']].append(matchID)
             teamMatchesJson[team2DetailJson['vs']].append(matchID)
-            matchResultsJson = { 'won' : teamShortName , 'wonBy' : wonBy , 'wonByMargin' : wonByMargin , 'matchNo' : matchNumber , 'season' : season }
+            matchResultsJson = { 'Won' : teamShortName , 'WonBy' : wonBy , 'WonByMargin' : wonByMargin , 'MatchNo' : matchNumber , 'Season' : season }
             team1DetailJson['vs'] , team2DetailJson['vs']  = team2DetailJson['vs'] , team1DetailJson['vs']
             resultJson = { matchID : { team2DetailJson['vs'] : team1DetailJson ,  team1DetailJson['vs'] : team2DetailJson , 'result' : matchResultsJson } }
-            # print(resultJson)
+            print(resultJson)
             # teamsCodeElement = childElement[0].findAll('div', {'class' : 'vn-teamCode'})
             # teamsScoreElement = childElement[1].findAll('p')
             # # print(teamsCodeElement)
@@ -897,9 +919,9 @@ if __name__ == "__main__":
     # ipl.GetMatchData("https://www.iplt20.com/matches/results/2023")
     # ipl.MatchCentrePageData("https://www.iplt20.com/match/2023/1046")
     # ipl.GetScorecardData("https://www.iplt20.com/match/2023/1046")
-    ipl.GetScorecardData("https://www.iplt20.com/match/2023/925")
+    # ipl.GetScorecardData("https://www.iplt20.com/match/2023/925")
     
-    # ipl.GetMathesList("https://www.iplt20.com/matches/results/2023")
+    ipl.GetMathesList("https://www.iplt20.com/matches/results/2023")
     # ipl.GetTeamLeaderboard("https://www.iplt20.com/points-table/men/2023")
     # GetAllTeamData()
 # ipl.GenericTeam("https://www.iplt20.com/teams/chennai-super-kings/squad/")

@@ -34,7 +34,7 @@ function RankBoard({headings , playersJson}) {
               >
               <div className='h-14 w-14 rounded-full bg-yellow-200 flex'>
               <img src={`${playersJson[index].Image}`}/>
-              <font className={`flex self-center ml-2 text-yellow-500 `} >
+              <font className={`flex self-center ml-2 ${index == 0? 'text-yellow-500' : ''}`} >
               {playersJson[index].Name.length > 8
                 ? `${playersJson[index].Name.slice(0, 8)}...`
                 : playersJson[index].Name

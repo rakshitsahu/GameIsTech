@@ -27,8 +27,11 @@ uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true
 client = MongoClient(uri, server_api=ServerApi('1'))
 playerCounterDebug = 0
 PlayerDataCollection = "PlayerData"
+MatcheDataCollection = "MatchesData"
 TeamDataCollection = "TeamData"
 IplDataBase = "Ipl-DataBase" 
+IplMatchDatabse = 'Ipl-Matches'
+IplMatchInfoDataBase = 'Ipl-Matches-Info'
 SEASON = "seasons"
 MEN = "men"
 WOMEN = "women"
@@ -64,7 +67,10 @@ TeamNamesJson = [
     "FullName" : "Punjab Kings",
     "ShortName" : "PK"
 },
-
+{
+    "FullName" : "Punjab Kings",
+    "ShortName" : "PBKS"
+},
 {
     "FullName" : "Rajasthan Royals",
     "ShortName" : "RR"
@@ -112,6 +118,7 @@ teamDictonary = {
 IplFirstSeason = 2008
 IplLastSeason = 2023
 pageNotFoundMessage = "oop's something went wrong" 
+
 TEAMS_PAGE = "https://www.iplt20.com/teams"
 def GetStringsMatchScore(dp , string1 , string2 , i , j):
     if i == len(string1) or j == len(string2):
@@ -148,8 +155,25 @@ def GetAPI(database , collection ):
     #     # print(resultJson[key]['Name'])
     #     if resultJson[key]['Name'].lower().strip() == name.lower().strip():
     #         return key
-    del resultJson[0]['_id']
-    return resultJson[0]
+    return resultJson
+resultJson = GetAPI(IplDataBase , PlayerDataCollection)
+del resultJson[0]['_id']
+playerDetailsApiJson = resultJson[0]
+def GetPlayerIdByName(name):
+    for key in playerDetailsApiJson.keys():
+        if playerDetailsApiJson[key]['Name'].lower().strip() == name.lower().strip():
+            return key
+    # raise ValueError("Player not found ",name)
+    score = 0
+    _playerId = None
+    for key in playerDetailsApiJson.keys():
+        playerName = playerDetailsApiJson[key]['Name']
+        maxLen = max([len(name) , len(playerName)])
+        result = GetStringsMatchScore([[-1] * maxLen for _ in range(maxLen)] ,name.lower() , playerName.lower() , 0, 0)
+        if result > score:
+            score = result
+            _playerId = key
+    return _playerId
 class BrowserBase:
     acceptCookiesXpath = "(//button[normalize-space()='Accept cookies'])[1]"
     def __init__(self):
@@ -229,11 +253,12 @@ def ToPascalCase(s):
     
 class IplBase(BrowserBase):
     browserTabObjects = []
-    def UpdateToDatabase(self ,data , collection):
+    
+    def UpdateToDatabase(self ,data , Database, collection):
         try:
-            global IplDataBase
+            # global IplDataBase
             global client
-            database = client[IplDataBase]
+            database = client[Database]
             Collection = database[collection]
             # Specify the key and the new value you want to set
             # Update the first document that contains the specified key
@@ -262,7 +287,9 @@ class IplBase(BrowserBase):
         for teamNameJson in TeamNamesJson:
             if teamNameJson["ShortName"].strip().lower() == teamName.strip().lower() or teamNameJson["FullName"].strip().lower() == teamName.strip().lower():
                 return teamNameJson
-        raise ValueError("++++++++++++++++++THE TEAM NAME IS NOT FOUND IN JSON+++++++++++++++++++")
+        print("Team Name Not found is " + str(teamName))
+        return None
+        # raise ValueError("++++++++++++++++++THE TEAM NAME IS NOT FOUND IN JSON+++++++++++++++++++")
     def GetTeamPlayers(self,URL,season , playerDataLocalJson):
         
         teamPlayersLocalJson = {}
@@ -381,7 +408,7 @@ class IplBase(BrowserBase):
         Match = MatchesList[0]
         Result = Match.find('div', {'class':'live-score'})
     def GetScorecardData(self , url ):
-        playerDetailsApiJson = GetAPI(IplDataBase , PlayerDataCollection)
+        
         def GetBowlerByString(string):
             if 'not out' in string:
                 return None
@@ -399,21 +426,7 @@ class IplBase(BrowserBase):
             bowlerName = bowlerName.strip()
             return GetPlayerIdByName(bowlerName)
 
-        def GetPlayerIdByName(name):
-            for key in playerDetailsApiJson.keys():
-                if playerDetailsApiJson[key]['Name'].lower().strip() == name.lower().strip():
-                    return key
-            # raise ValueError("Player not found ",name)
-            score = 0
-            _playerId = None
-            for key in playerDetailsApiJson.keys():
-                playerName = playerDetailsApiJson[key]['Name']
-                maxLen = max([len(name) , len(playerName)])
-                result = GetStringsMatchScore([[-1] * maxLen for _ in range(maxLen)] ,name.lower() , playerName.lower() , 0, 0)
-                if result > score:
-                    score = result
-                    _playerId = key
-            return _playerId
+
 
         matchDataJson = {}
         def ExtractTableData(index, tableRows):
@@ -443,7 +456,7 @@ class IplBase(BrowserBase):
                         playerIdMapToStatsJson[playerId] = playerStatsJson
                     # print("Id for player "+ playerName  , playerId)
                     playerStatsJson[HeadingList[index][i]] = statsCols[i].text.strip()
-            print(playerIdMapToStatsJson)
+            # print(playerIdMapToStatsJson)
             return playerIdMapToStatsJson
         def GetInningsScoreBoard():
 
@@ -463,27 +476,38 @@ class IplBase(BrowserBase):
         def ExtractWagonWheelData():
             wagonWheelManager = WagonWheelManager(self)
             wagonWheelButtonXpath = "(//a[normalize-space()='Wagon Wheel'])[1]"
-            inningsXpath = "//select[@class='mcSelectDefault inningsList innsFilter ng-pristine ng-untouched ng-valid']"
-            inningsXpathList = wagonWheelManager.GetAllInningsNameAndXpath()
-
-            inningsOpetion1Xpath =inningsXpathList[0]['Xpath']
-            inningsOpetion2Xpath = inningsXpathList[1]['Xpath']
-            inningsXpathClicked =  "(//select[@class='mcSelectDefault inningsList innsFilter ng-valid ng-dirty ng-valid-parse ng-touched'])[1]"
             self.ClickElement(By.XPATH ,wagonWheelButtonXpath)
-            BowlerNameAndXpath = wagonWheelManager.GetAllBowlersNameAndXpath()
-            batsmanNameAndXpath = wagonWheelManager.GetAllBatsmansNameAndXpath()
-            allStats = wagonWheelManager.GetAllStats()
-            allRuns = wagonWheelManager.GetRuns()
+            return wagonWheelManager.GetAllStats()
+            # allRuns = wagonWheelManager.GetRuns()
+            # print("all stats are ")
+            
+            # print("All Stats ")
+            # print(allStats)
+            # print("all runs")
+            # print(allRuns)
             # print(allStats , allRuns)
         def GetTeamNameFromPage():
             sourceCode = self.GetHTMLByPageSource()
             teamName = sourceCode.find('span' , {'class' : 'sh_teamdet'}).text.strip()
             teamShortName = teamName.split(' ')[-1].strip()
             return teamShortName
-        self.OpenWindow(url)
-        self.WaitForLoaderToDisappear()
-        self.AcceptCookies()
-
+        # self.OpenWindow(url)
+        # self.WaitForLoaderToDisappear()
+        # self.AcceptCookies()
+        def GetFallOfWickets():
+            sourceCode = self.GetHTMLByPageSource()
+            fowElements = sourceCode.find_all('span', {'class': 'fw-iWrap'})
+            fowList = []
+            for fowElement in fowElements:
+                wicketScore = fowElement.find('span' ,{'class' :'fw-score'}).text.strip().split('-')
+                wickets = wicketScore[0]
+                score = wicketScore[1]
+                playerName = fowElement.find('span' ,{'class' :'fw-pname'}).text.strip()
+                overs = fowElement.find('span', {'class' :'fw-over'}).text.split(' ')[-1]
+                playerId = GetPlayerIdByName(playerName)
+                jsonData = {'runs':score , 'wickets':wickets , 'playerId': playerId , 'overs':overs}
+                fowList.append(jsonData)
+            return fowList
         comentryTeam1Xpath = "(//span[contains(text(),'Innings')])[1]"
         comentryTeam2Xpath = "(//span[contains(text(),'Innings')])[2]"
         commentryButton = "//a[normalize-space()='Commentary']"
@@ -492,22 +516,26 @@ class IplBase(BrowserBase):
         # print("button clicked")
         team1StatsJson = {}
         team2StatsJson = {}
-        time.sleep(5)
+        time.sleep(1)
         ScorecardXpath = "(//a[normalize-space()='Scorecard'])[1]"
         self.ClickElement(By.XPATH, ScorecardXpath)
         team1ShortName = GetTeamNameFromPage()
         # print('team1FullName ', team1ShortName)
         print( 'shortname is ', team1ShortName)
-        time.sleep(5)
+        time.sleep(1)
         result = GetInningsScoreBoard()
+        fowJson = GetFallOfWickets()
+        print(fowJson)
         team1StatsJson['Batting'] = result['Batting']
+        team1StatsJson['fow'] = fowJson
         team2StatsJson['Bowling'] = result['Bowling']
-        time.sleep(5)
+        
+        time.sleep(1)
         self.ClickElement(By.XPATH , commentryButton)
-        time.sleep(5)
+        time.sleep(1)
         self.ClickElement(By.XPATH , comentryTeam2Xpath)
         # self.ClickElement(By.XPATH , comentryTeam2Xpath)
-        time.sleep(5)
+        time.sleep(1)
         # button =  self.WaitForElement(By. , team1TabXpath)
         # button.click()
         # time.sleep(5)
@@ -517,14 +545,21 @@ class IplBase(BrowserBase):
         self.ClickElement(By.XPATH, ScorecardXpath)
         team2ShortName = GetTeamNameFromPage()
         result = GetInningsScoreBoard()
+        fowJson = GetFallOfWickets()
+        print(fowJson)
         team2StatsJson['Batting'] = result['Batting']
+        team2StatsJson['fow'] = fowJson
         team1StatsJson['Bowling'] = result['Bowling']
         print('team1Short name ', team1ShortName)
         print('team2Short name ', team2ShortName)
         # print("team2Stats are " , team2StatsJson)
         # print("team1Stats are " , team1StatsJson)
         allStatsJson = {team1ShortName :team1StatsJson , team2ShortName : team2StatsJson}
-        ExtractWagonWheelData()
+
+        wagonWheelResultJSon = ExtractWagonWheelData()
+        allStatsJson.update(wagonWheelResultJSon)
+        # self.CloseWindow()
+        return allStatsJson
         # sourceCode = self.GetHTMLByPageSource()
         # scoreBoardTables = sourceCode.find_all('table',{'class':'ap-scroreboard-table'})
         # TableRows = scoreBoardTables[0].find('tbody' , {'class' : 'team1'}).find_all('tr')
@@ -536,15 +571,20 @@ class IplBase(BrowserBase):
         # self.ClickElement(By.XPATH, ScorecardXpath)
         
         # resultElement = self.WaitForElement(By.XPATH , SwitchTeamButtonXpath)
+
+        
     
     def GetMathesList(self,url):
         teamMatchesJson = {}
+        teamMatchesResultsJson = {}
+        teamMatchesId = {}
         match = re.search(r'\d+$', url)
         season = int(match.group())
         Xpath = "(//ul[@id='team_archive'])[1]"
         self.OpenWindow(url)
         self.WaitForLoaderToDisappear()
         self.WaitForElement(By.XPATH , Xpath )
+        time.sleep(3)
         sourceCode = self.GetHTMLByPageSource()
         mathesListLiTags = sourceCode.find('ul' , {'id' : 'team_archive'}).findAll('li')
         urlList = []
@@ -558,7 +598,7 @@ class IplBase(BrowserBase):
             return { 'vs' : shortName, 'score' : teamScore, 'overs' : teamOvers}
         for liTag in mathesListLiTags:
             teamWonDetailsString = liTag.find('div' , {'class' : 'w20 tl pr50'} ).text.strip()
-            if teamWonDetailsString.strip().upper() == 'NO RESULT':
+            if teamWonDetailsString.strip().upper() == 'NO RESULT' or 'tied' in teamWonDetailsString.lower() or 'abandoned' in teamWonDetailsString.lower():
                 continue
             lastAnchorTag = liTag.findAll('a')[-1]
             matchUrl = lastAnchorTag.get('href')
@@ -574,9 +614,15 @@ class IplBase(BrowserBase):
             wonByMargin = int(number_match.group()) if number_match else None
 
             # Extract all text before "Won" word
-            before_won_match = re.search(r'^(.*?)(?=\bWon\b)', teamWonDetailsString)
+            pattern = re.compile(r'^(.*?)(?=\bWon\b)', re.IGNORECASE)
+            before_won_match = pattern.search(teamWonDetailsString)
             teamFullName = before_won_match.group(1).strip() if before_won_match else None
-            teamShortName = self.GetTeamName(teamFullName)["ShortName"]
+            # print( teamWonDetailsString )
+            # print(wonBy)
+            teamNames = self.GetTeamName(teamFullName)
+            if teamNames == None:
+                continue
+            teamShortName = teamNames["ShortName"]
             matchNumber = liTag.find('span' , {'class', 'vn-matchOrder'}).text.strip()
             # print("Short Form:", teamShortName)
             # # Print the results
@@ -586,6 +632,14 @@ class IplBase(BrowserBase):
             # print(teamWonDetailsString)
             team1DetailJson = ExtractDetailsFromTeamSection(childElement[0])
             team2DetailJson = ExtractDetailsFromTeamSection(childElement[1])
+            if teamMatchesId.get(team1DetailJson["vs"])  == None:
+                teamMatchesId[team1DetailJson["vs"]] = []
+            if teamMatchesId.get(team2DetailJson["vs"])  == None:
+                teamMatchesId[team2DetailJson["vs"]] = []
+
+            teamMatchesId[team1DetailJson["vs"]].append(matchID)
+            teamMatchesId[team2DetailJson["vs"]].append(matchID)
+
             if teamMatchesJson.get(team1DetailJson['vs']) == None:
                 teamMatchesJson[team1DetailJson['vs']] = []
             if teamMatchesJson.get(team2DetailJson['vs']) == None:
@@ -594,18 +648,25 @@ class IplBase(BrowserBase):
             teamMatchesJson[team2DetailJson['vs']].append(matchID)
             matchResultsJson = { 'Won' : teamShortName , 'WonBy' : wonBy , 'WonByMargin' : wonByMargin , 'MatchNo' : matchNumber , 'Season' : season }
             team1DetailJson['vs'] , team2DetailJson['vs']  = team2DetailJson['vs'] , team1DetailJson['vs']
-            resultJson = { matchID : { team2DetailJson['vs'] : team1DetailJson ,  team1DetailJson['vs'] : team2DetailJson , 'result' : matchResultsJson } }
-            print(resultJson)
+            matchDetails = { team2DetailJson['vs'] : team1DetailJson ,  team1DetailJson['vs'] : team2DetailJson , 'result' : matchResultsJson }
+            resultJson = { str(matchID) : matchDetails }
+            # print(resultJson)
+            teamMatchesResultsJson[str(matchID)] = matchDetails
+            # print(resultJson)
             # teamsCodeElement = childElement[0].findAll('div', {'class' : 'vn-teamCode'})
             # teamsScoreElement = childElement[1].findAll('p')
             # # print(teamsCodeElement)
             # team1ShortName = childElement[0].find('div', {'class' : 'vn-teamCode'}).text.strip()
             # team2ShortName = childElement[1].find('div', {'class' : 'vn-teamCode'}).text.strip()
             # print(team1ShortName , team2ShortName)
-            urlList.append(url)
+            urlList.append(matchUrl.strip())
         # print(urlList)
-        print(teamMatchesJson)
-        return urlList
+        # print(teamMatchesJson)
+        # print(teamMatchesId)
+        data = {"urls" : urlList , "results" : teamMatchesResultsJson , "teamMatches" : teamMatchesJson }
+        # print(teamMatchesResultsJson)
+        # self.CloseWindow()
+        return data
     def GetTeamLeaderboard(self , url):
         self.OpenInTabNo(1,url)
         self.WaitForLoaderToDisappear()
@@ -652,6 +713,7 @@ class IplBase(BrowserBase):
         self.AcceptCookies()
         LestElementXpath = "(//div[@id='ball-by-ball'])[1]"
         self.WaitForElement( By.XPATH, LestElementXpath)
+        time.sleep(3)
         sourceCode = self.GetHTMLByPageSource()
         outerContainer = sourceCode.find('div',{'id':'cmdBlockSmipl'})
         ListOfPTages = outerContainer.find_all('p')[:7]
@@ -675,13 +737,22 @@ class IplBase(BrowserBase):
             team1CommentryDetails[headings[index]].append(team1Result) 
             team2CommentryDetails[headings[index]].append(team2Result) 
             index += 1
-            # print(team1Result)
+   
         # tempJson = {team1Result['ShortName'] : team1CommentryDetails , team2Result['ShortName'] : team2CommentryDetails }
-        teamCommentaryJson = { team1Result['ShortName'] : {team2Result['ShortName'] : team1CommentryDetails} , team2Result['ShortName'] : {team1Result['ShortName'] : team2CommentryDetails} }
-        print(teamCommentaryJson)
-        return teamCommentaryJson
+        teamCommentaryJson = {'commentry' : { team1Result['ShortName'] : team1CommentryDetails , team2Result['ShortName'] : team2CommentryDetails }}
+        resultJson = self.GetScorecardData(url)
+        print('scorecard data is')
+        print(resultJson)
+        resultJson.update(teamCommentaryJson)
+        print(resultJson)
+        return resultJson
 
-        
+    def getAllIplData(self):
+        for i in range(2008 , 2024):
+            resultJson = self.GetMathesList("https://www.iplt20.com/matches/results/" + str(i))
+            # time.sleep(10)
+            print("data for year ******** " + str(len(resultJson["results"].keys()))+ " "+ str(i))
+            
     # def GetAllTeamData(self):
     #     self.OpenInNewTab(TEAMS_PAGE)
     #     sourceCode = self.GetHTMLByPageSource()
@@ -717,7 +788,7 @@ class WagonWheelManager():
 
             self.ipl.ClickElement(By.XPATH , self.batsmanClickedXpath)
         self.ipl.ClickElement(By.XPATH , optionXpath)
-        time.sleep(0.3)
+        time.sleep(0.7)
 
     def GetRuns(self ):
         sourceCode = self.ipl.GetSourceCodeByXpath(self.runsSectionXpath)
@@ -746,11 +817,15 @@ class WagonWheelManager():
         TeamStatsJson = {}
          # make sure you maintain the orded of arguments
         def GetPlayerVsData(T :{} , V :{} , S : str , data):
-            if PlayerStatsJson.get(T['Name']) == None:
-                PlayerStatsJson[T['Name']] = templateJson
-            if PlayerStatsJson[T['Name']][S].get(V['Name']) == None:
-                PlayerStatsJson[T['Name']][S][V['Name']] = []
-            PlayerStatsJson[T['Name']][S][V['Name']].append(data)
+            # TNameId = GetPlayerIdByName(T['Name'])
+            # VNameId = GetPlayerIdByName(V['Name'])
+            TNameId = T['Name']
+            VNameId = V['Name']
+            if PlayerStatsJson.get(TNameId) == None:
+                PlayerStatsJson[TNameId] = templateJson
+            if PlayerStatsJson[TNameId][S].get(VNameId) == None:
+                PlayerStatsJson[TNameId][S][VNameId] = []
+            PlayerStatsJson[TNameId][S][VNameId].append(data)
             return PlayerStatsJson
         def GetTeamVsData( team1 , team2 , S: str , data):
             if TeamStatsJson[team1] == None:
@@ -770,6 +845,8 @@ class WagonWheelManager():
         word = text.split()[0].strip()
         
         team2NameJson = ipl.GetTeamName(word)
+        print(team1NameJson)
+        print(team2NameJson)
         teamsNameJsonList = [team1NameJson , team2NameJson]
 
         # for i in range(0 , len(batsmanXpathList)):
@@ -777,6 +854,8 @@ class WagonWheelManager():
         # for i in range(0 , len(bowlersXpathList)):
         #     self.SwitchBowlerOption(bowlersXpathList[i]['Xpath'])
         # self.SwitchBowlerOption(bowlersXpathList[0]['Xpath'])
+        wagonWheelDataJson = []
+        teamPlayersJson = {}
         for inningsIndex in range(0 , len(inningsXpathList)):
             self.SwitchInningsOption(inningsXpathList[inningsIndex]['Xpath'])
             batsmanXpathList = self.GetAllBatsmansNameAndXpath()
@@ -791,11 +870,39 @@ class WagonWheelManager():
                     currentTeam = teamsNameJsonList[inningsIndex]
                     opponentTeam = teamsNameJsonList[(inningsIndex + 1) % 2]
                     # batsman vs bowler part
-                    GetPlayerVsData(batsman , bowler , "Bowling" , runsJson) 
-                    # Bowler vs Batsman part
-                    GetPlayerVsData(bowler , batsman , "Batting" , runsJson)
+                    print(currentTeam)
+                    # x = GetPlayerVsData(batsman , bowler , "Bowling" , runsJson) 
+                    # # Bowler vs Batsman part
+                    # y = GetPlayerVsData(bowler , batsman , "Batting" , runsJson)
                     # firstTeam vs Second team
+                    bowlerId = GetPlayerIdByName(bowler["Name"])
+                    batsmanId = GetPlayerIdByName(batsman["Name"])
+                    if teamPlayersJson.get(currentTeam["ShortName"]) is None:
+                        teamPlayersJson[currentTeam["ShortName"]] = []
+
+                    if teamPlayersJson.get(opponentTeam["ShortName"]) is None:
+                        teamPlayersJson[opponentTeam["ShortName"]] = []
+                    if batsmanId not in teamPlayersJson[currentTeam["ShortName"]]:
+                        teamPlayersJson[currentTeam["ShortName"]].append(batsmanId)
+                    if bowlerId not in teamPlayersJson[opponentTeam["ShortName"]]:
+                        teamPlayersJson[opponentTeam["ShortName"]].append(bowlerId)
+
+                    stats =  { 
+                        "bowlerId" : bowlerId,
+                        "batsmanId" : batsmanId,
+                        "runs" : runsJson
+                    }
+                    # print(stats)
+                    wagonWheelDataJson.append(stats)
+                    # print("The value of x is ")
+                    # print(x)
+                    # print("the value of uy is ")
+                    # print(y)
                     # TeamStatsJson[currentTeam]["Team"][opponentTeam] = GetTeamVsData(currentTeam , opponentTeam , "Team")
+                    
+        resultJson = { 'teams' : teamPlayersJson , 'runs' : wagonWheelDataJson }
+        # print(resultJson)
+        return  resultJson
                     
     def GetAllBatsmansNameAndXpath(self):
         if self.BatsmansNamesAndXPaths != None:
@@ -852,7 +959,7 @@ class WagonWheelManager():
         else:
             self.ipl.ClickElement(By.XPATH , self.bowlerClickedXpath)
         self.ipl.ClickElement(By.XPATH , optionXpath)
-        time.sleep(0.3)
+        time.sleep(0.7)
 
     def SwitchInningsOption(self , optionXpath):
         self.BowlersNamesAndXPaths = None
@@ -864,18 +971,60 @@ class WagonWheelManager():
             self.ipl.ClickElement(By.XPATH , self.inningsXpathClickedXpath)
         self.ipl.ClickElement(By.XPATH , optionXpath)
         sourceCode = self.ipl.GetSourceCodeByXpath(optionXpath)
-        time.sleep(1)
+        time.sleep(0.3)
         # self.ipl.WaitForElement(By.XPATH , self.batsmanXpath)
         # self.ipl.WaitForElement(By.XPATH , self.bowlerXpath)
         return sourceCode.text.strip()
 
+
+
         
+
     def __init__(self, Ipl : IplBase ):
         super().__init__()
         self.ipl = Ipl
     # def CloseTempEvents(self):
+        
+
+def GetMatchdata(matchUrl , iplObject):
+    # resultJson = iplObject.GetScorecardData(matchUrl)
+    resultJson = iplObject.MatchCentrePageData(matchUrl)
+    print(resultJson)
+    return resultJson
+    # iplObject.CloseWindow()
+    
+
+def GetAllMatchesYearData(ipl):
+    global IplMatchDatabse
+    global IplMatchInfoDataBase
+    
+    def containsMatchId(matchesList , matchId):
+        
+        for match in matchesList:
+            print(match.get('matchId'))
+            if match.get('matchId') == matchId:
+                return True
+        return False
 
 
+    for year in range(2023 , 2024):
+        iplMatchesJson = GetAPI(IplMatchDatabse, str(year))
+        iplMatchesInfoJson = GetAPI(IplMatchInfoDataBase, str(year))
+        results = iplMatchesInfoJson[0][str(year)] if len(iplMatchesInfoJson) == 1 else []
+        if len(iplMatchesInfoJson) == 0:
+            results = ipl.GetMathesList("https://www.iplt20.com/matches/results/"+ str(year))
+            ipl.UpdateToDatabase({str(year): results},IplMatchInfoDataBase , str(year))
+        index = 0
+        for url in results['urls']:
+            print(url)
+            match = re.search(r'\d+$', url)
+            matchID = str(match.group())
+            if containsMatchId(iplMatchesJson, matchID):
+                continue
+            resultJson = GetMatchdata(url , ipl)
+            ipl.UpdateToDatabase({'matchId' : matchID , 'details' : resultJson }, IplMatchDatabse , str(year))
+            
+            index += 1
 
 
 def MapUrl(urlList, shared_dict1, shared_dict2):
@@ -906,22 +1055,33 @@ def GetAllTeamData():
     with Pool(processes=4) as pool:
         partial_MapUrl = functools.partial(MapUrl, shared_dict1=shared_dict1, shared_dict2=shared_dict2 , )
         pool.map(partial_MapUrl, urlList)
-    iplObject.UpdateToDatabase(dict(shared_dict2) , PlayerDataCollection)
-    iplObject.UpdateToDatabase(dict(shared_dict1) ,TeamDataCollection)
-    print(len(shared_dict2.keys()))
+    global IplDataBase
+    iplObject.UpdateToDatabase(dict(shared_dict2) ,IplDataBase, PlayerDataCollection)
+    iplObject.UpdateToDatabase(dict(shared_dict1) ,IplDataBase ,TeamDataCollection)
+   
 
 if __name__ == "__main__":
     ipl = IplBase()
-    # GetAPI()
 
+    # ipl.getAllIplData()
+    # GetAPI()
+        
+    #below one gets all the mathes of the year
+
+    GetAllMatchesYearData(ipl)
+    # GetMatchdata('https://www.iplt20.com/match/2023/859', ipl)
     # ipl.OpenInNewTab("https://www.iplt20.com/teams/chennai-super-kings/squad/")
     # ipl.GetTeamPlayers("https://www.iplt20.com/teams/chennai-super-kings/squad/")
     # ipl.GetMatchData("https://www.iplt20.com/matches/results/2023")
     # ipl.MatchCentrePageData("https://www.iplt20.com/match/2023/1046")
+
+    #below one gets the score scard with wahon wheel data
     # ipl.GetScorecardData("https://www.iplt20.com/match/2023/1046")
+
     # ipl.GetScorecardData("https://www.iplt20.com/match/2023/925")
-    
-    ipl.GetMathesList("https://www.iplt20.com/matches/results/2023")
+
+    # print(matchesList)
+
     # ipl.GetTeamLeaderboard("https://www.iplt20.com/points-table/men/2023")
     # GetAllTeamData()
 # ipl.GenericTeam("https://www.iplt20.com/teams/chennai-super-kings/squad/")

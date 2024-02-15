@@ -14,19 +14,8 @@ how to use ?
 
 
 
-export default function OptimizedVerticalCarousel ({children : slides , itemHeight, itemWidth}) {
+export default function OptimizedVerticalCarousel ({children : slides }) {
   // console.log(slides)
-  function parseResponsiveString(responsiveString) {
-    const responsiveValues = {};
-    const pairs = responsiveString.split(' ');
-  
-    pairs.forEach(pair => {
-      const [size, value] = pair.split(':');
-      responsiveValues[size] = value;
-    });
-  
-    return responsiveValues;
-  }
   
   const [currIndex , setCurrentIndex] = useState(0)
   const [sliding , setSliding] = useState(false)
@@ -37,7 +26,7 @@ export default function OptimizedVerticalCarousel ({children : slides , itemHeig
     if(sliding)
     return ;
     setSliding(true)
-    let indexToRemove = direction == -1 ? 0 : 1
+    
     let nextElementIndex = direction == -1 ? 0 : children.length - 1
     let nextElement  = children[nextElementIndex]
     if( direction == -1 ){
@@ -86,9 +75,9 @@ export default function OptimizedVerticalCarousel ({children : slides , itemHeig
     }
   }
   return (
-    <div className='relative overflow-hidden' >
-    <div ref={slidingRef} className={`flex `} style={{transform: `translateX(-${currIndex * itemWidth}%)`}} > {screenChildren} </div>
-    <div className='absolute inset-0 flex items-center justify-between text-red-500'>
+    <div className='relative overflow-hidden flex-none' >
+    <div ref={slidingRef} className={`flex `} style={{transform: `translateX(-${currIndex * 100}%)`}} > {screenChildren} </div>
+    <div className='absolute inset-0 flex items-center justify-between text-red-500 md:text-black lg:text-emerald-600 xl:text-cyan-600'>
     <button onClick={()=> goBackward()}>
     L
     </button>

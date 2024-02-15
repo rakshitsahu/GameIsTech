@@ -1,0 +1,45 @@
+.outerContainer{
+    @apply w-32 h-32 p-1
+}
+
+.outer {
+    @apply h-full w-full border-solid border-red-600 bg-white rounded-full p-4 ;
+    background: conic-gradient(
+      from 0deg,
+      #ff0000 0%,
+      #ff0000 25%,
+      transparent 25%,
+      transparent 50%,
+      #ff0000 50%,
+      #ff0000 75%,
+      transparent 75%,
+      transparent 100%
+    );
+    transform: rotate(90deg);
+    border-width: 0 50% 0 0; /* Set your desired percentage-based width */
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.45) ;
+}
+.inner {
+    @apply h-full w-full border-solid border-red-600 bg-white rounded-full p-4;
+    border-width: 0 50% 0 0; /* Set your desired percentage-based width */
+    box-shadow: 0 0 10px 0 rgba(0,0,0,0.45) inset;
+}
+.circleBg{
+    fill: none;
+    stroke: #ddd;
+}
+@keyframes fillAnimation {
+    from {
+      stroke-dashoffset: 1000; /* Adjust the value based on your circle size */
+    }
+    
+  }
+
+
+.circleProgress{
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    animation: fillAnimation 1s ease-in-out; /* Adjust the duration as needed */
+
+}

@@ -133,6 +133,9 @@ def GetStringsMatchScore(dp , string1 , string2 , i , j):
     return dp[i][j]
 
 
+class CommentryError(Exception):
+    def __init__(self, message):
+        self.message = message
 
 def GetAPI(database , collection ):
     global client
@@ -693,22 +696,29 @@ class IplBase(BrowserBase):
 
     def MatchCentrePageData(self,url):
         def ExtractTextData(Text):
+
+            print(Text)
             char_index = Text.find('-')
             TeamName = Text[:char_index].strip()
             scorePattern = r'\b\d+/\d+\b'
-            rpoPattern = r'\((\d+\.\d+)\s+rpo'
-            foursPattern = r'\b(\d+)x4\b'
-            sixesPattern = r'\b(\d+)x6\b'
+            rpoPattern = r'\(\s*(\d+(\.\d+)?)\s*rpo'
+            foursPattern = r'\b\s*(\d+)\s*x\s*4\s*\b'
+            sixesPattern = r'\b\s*(\d+)\s*x\s*6\s*\b'
             match = re.search(scorePattern, Text)
             Score = match.group().strip()
-            match = re.search(rpoPattern, Text)
-            RPO = match.group(1).strip()
-            match = re.search(foursPattern, Text)
-            Fours = match.group(1).strip() if match else "0"
-            match = re.search(sixesPattern, Text)
-            Sixes = match.group(1).strip() if match else "0"
-            dataJson = { 'ShortName' : TeamName ,'Score' :Score , 'Rpo' :RPO , 'Fours' :Fours , 'Sixes' :Sixes}
-            return dataJson
+            print(Score)
+            print(Text)
+            try:
+                match = re.search(rpoPattern, Text)
+                RPO = match.group(1).strip()
+                match = re.search(foursPattern, Text)
+                Fours = match.group(1).strip() if match else "0"
+                match = re.search(sixesPattern, Text)
+                Sixes = match.group(1).strip() if match else "0"
+                dataJson = { 'ShortName' : TeamName ,'Score' :Score , 'Rpo' :RPO , 'Fours' :Fours , 'Sixes' :Sixes}
+                return dataJson
+            except AttributeError:
+                raise CommentryError("Error on commentry page")
         self.OpenWindow(url)
         self.AcceptCookies()
         LestElementXpath = "(//div[@id='ball-by-ball'])[1]"
@@ -727,9 +737,11 @@ class IplBase(BrowserBase):
         team1Result = {}
         team2Result = {}
         for i in useFullPTags:
+            if i.text.find('||') == -1:
+                continue
             ComparisonResult = i.text.split('||')
-            team1Result = ExtractTextData(ComparisonResult[0].strip())
-            team2Result = ExtractTextData(ComparisonResult[1].strip())
+            team1Result = ExtractTextData(ComparisonResult[0].strip()) if len(ComparisonResult) >= 1 else {'ShortName' : team1Result['ShortName'] } 
+            team2Result = ExtractTextData(ComparisonResult[1].strip()) if len(ComparisonResult) >= 2 else {'ShortName' : team2Result['ShortName'] } 
             if team1CommentryDetails.get(headings[index]) == None:
                 team1CommentryDetails[headings[index]] = []
             if team2CommentryDetails.get(headings[index]) == None:
@@ -737,12 +749,10 @@ class IplBase(BrowserBase):
             team1CommentryDetails[headings[index]].append(team1Result) 
             team2CommentryDetails[headings[index]].append(team2Result) 
             index += 1
-   
-        # tempJson = {team1Result['ShortName'] : team1CommentryDetails , team2Result['ShortName'] : team2CommentryDetails }
         teamCommentaryJson = {'commentry' : { team1Result['ShortName'] : team1CommentryDetails , team2Result['ShortName'] : team2CommentryDetails }}
         resultJson = self.GetScorecardData(url)
-        print('scorecard data is')
-        print(resultJson)
+        print('teamCommentaryJson is')
+        print(teamCommentaryJson)
         resultJson.update(teamCommentaryJson)
         print(resultJson)
         return resultJson
@@ -1007,11 +1017,13 @@ def GetAllMatchesYearData(ipl):
         return False
 
 
-    for year in range(2023 , 2024):
+    for year in range(2022 , 2024):
         iplMatchesJson = GetAPI(IplMatchDatabse, str(year))
         iplMatchesInfoJson = GetAPI(IplMatchInfoDataBase, str(year))
-        results = iplMatchesInfoJson[0][str(year)] if len(iplMatchesInfoJson) == 1 else []
+        # results = iplMatchesInfoJson[0][str(year)] if len(iplMatchesInfoJson) == 1 else []
+        results = ipl.GetMathesList("https://www.iplt20.com/matches/results/"+ str(year))
         if len(iplMatchesInfoJson) == 0:
+            print("came here")
             results = ipl.GetMathesList("https://www.iplt20.com/matches/results/"+ str(year))
             ipl.UpdateToDatabase({str(year): results},IplMatchInfoDataBase , str(year))
         index = 0
@@ -1019,12 +1031,17 @@ def GetAllMatchesYearData(ipl):
             print(url)
             match = re.search(r'\d+$', url)
             matchID = str(match.group())
-            if containsMatchId(iplMatchesJson, matchID):
+            try:
+                if containsMatchId(iplMatchesJson, matchID):
+                    continue
+                resultJson = GetMatchdata(url , ipl)
+                ipl.UpdateToDatabase({'matchId' : matchID , 'details' : resultJson }, IplMatchDatabse , str(year))
+                
+                index += 1
+            except CommentryError:
+                print("Attribute error on matchid ")
+                print(matchID)
                 continue
-            resultJson = GetMatchdata(url , ipl)
-            ipl.UpdateToDatabase({'matchId' : matchID , 'details' : resultJson }, IplMatchDatabse , str(year))
-            
-            index += 1
 
 
 def MapUrl(urlList, shared_dict1, shared_dict2):

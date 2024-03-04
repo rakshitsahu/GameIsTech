@@ -1,6 +1,8 @@
 import React from 'react'
 import RadarChartComp from '../../_components/charts/radar'
 import RadicalProgressComp from '../../_components/charts/radical';
+import AvatarComp from '../../_components/daisyUI/avatar';
+import PieComp from '../../_components/charts/pie';
 function statsSummary(){
 
   const data = [
@@ -251,7 +253,30 @@ function bowlingStats(){
     </div>
   )
 }
-
+function playerLastMatches(){
+  const data = [
+    { name: 'CSK', value: 400 },
+    { name: 'RCB', value: 300 },
+    { name: 'PBKS', value: 300 },
+    { name: 'LSG', value: 200 },
+    { name: 'KKR', value: 300 },
+    { name: 'SRH', value: 300 },
+    { name: 'DC', value: 200 },
+  ];
+  return (
+    <div>
+<center>
+<h3 className='underline'>Hard Time With Bowlers</h3>
+<div className='w-72 h-72 '>
+<PieComp type ='twoLevel' />
+</div>
+<div className='w-full h-72'>
+<PieComp type ='custom' data={data} />
+</div>
+</center>
+</div>
+  )
+}
 function comapreToPlayers(){
   return (
 <div>
@@ -263,11 +288,54 @@ function comapreToPlayers(){
 }
 
 function compareToTeams(){
+  const data = [
+    { name: 'CSK', value: 400 },
+    { name: 'RCB', value: 300 },
+    { name: 'PBKS', value: 300 },
+    { name: 'LSG', value: 200 },
+    { name: 'KKR', value: 300 },
+    { name: 'SRH', value: 300 },
+    { name: 'DC', value: 200 },
+  ];
+  const playerVsteams = {
+    "best" : [ "CSK" , "MI" , "LSG"],
+    "worst" : [ "RR" , "PBKS" , "SRH"]
+  }
   return (
     <div>
     <center>
-    <h3 className='underline'>Hard Time Playing Against</h3>
+    <h3 className='underline mt-5'>Below Average Performance Against Teams</h3>
+    <div className='w-full h-72'>
+<PieComp type ='custom' data={data} />
+</div>
     </center>
+    <div className='flex gap-3 flex-wrap'>
+    {
+      playerVsteams.worst.map((team, index)=>{
+        return <div key ={team} className='text-center'>
+        <AvatarComp/>
+        <div>
+        Ms Dhoni vs {team} Stats
+        </div>
+        </div>
+      })
+    }
+    </div>
+    <center>
+    <h3 className='underline mt-5'>Above Average Performance Against Teams</h3>
+    </center>
+    <div className='flex gap-3 flex-wrap'>
+    {
+      playerVsteams.worst.map((team, index)=>{
+        return <div key ={team} className='text-center'>
+        <AvatarComp/>
+        <div>
+        Ms Dhoni vs {team} Stats
+        </div>
+        </div>
+      })
+    }
+    </div>
     </div>
   )
 }
@@ -301,6 +369,16 @@ function Accordion({playerName}) {
   <div className="collapse-content"> 
     {bowlingStats()}
   </div>
+</div>
+
+<div className="collapse collapse-arrow join-item border border-base-300">
+<input type="radio" name="my-accordion-4" /> 
+<div className="collapse-title text-xl font-medium">
+    MS. Dhoni Last Matches
+</div>
+<div className="collapse-content"> 
+  {playerLastMatches()}
+</div>
 </div>
 
 <div className="collapse collapse-arrow join-item border border-base-300">

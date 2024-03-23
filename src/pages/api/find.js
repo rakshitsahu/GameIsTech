@@ -7,21 +7,24 @@ async function MongoFind(req , res , client = null){
   // res.send({"hello" : " success"})
   const body = req.body
     const collection = req.body.collection
-    console.log(collection)
+
     const filter = req.body.filter
+    console.log(filter)
       try {
         
         const data = await client.collection(collection).find(filter).toArray();
         return data
       } catch (error) {
+        console.log(db , collection)
         console.log("Error occured "+ error)
+        res.send({"error":error.message})
       }
 
 }
 async function ConnectDb(req , res , client = null){
-  console.log("came in api pafge")
+
   const result = await connectDb(req , res , MongoFind)
-  console.log(result)
+
   res.send(result) 
 }
 export default ConnectDb

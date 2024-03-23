@@ -5,6 +5,10 @@ function scaleData(data , config){
   config.forEach(configElement => {
     data.forEach(
       dataElement =>{
+        if(dataElement.fullMark === 0){
+          dataElement[configElement.dataKey] = 0
+        }
+        else
         dataElement[configElement.dataKey] = (dataElement[configElement.dataKey] / dataElement.fullMark) * 100
       }
     )

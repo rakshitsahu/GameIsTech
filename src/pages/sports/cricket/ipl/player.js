@@ -3,7 +3,7 @@ import Navbar from '../_components/navbar'
 import Accordion from './_components/PlayerAccordion'
 import GetPlayersInfo from '@/API/GetPlayersInfo';
 import GetAveragePlayerStats from '@/API/GetAveragePlayerStats';
-
+import { GetPlayerMatchesHistory } from '@/API/GetPlayerHistory';
 export async function getStaticProps() {
   try {
     // console.log("getStaticProps called")
@@ -11,6 +11,8 @@ export async function getStaticProps() {
     console.log(playersStats)
     const averageStats = await GetAveragePlayerStats()
     console.log(averageStats)
+    const playerMatchesHistory = await GetPlayerMatchesHistory('177' , '2023')
+    console.log(playerMatchesHistory)
     const playerStats = playersStats
     // console.log(playerStats)
     return {

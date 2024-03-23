@@ -12,6 +12,8 @@ const CRICKET_API_STATE = {
     teamDetails : 1,
     playerStats : 2,
     teamStats : 3,
+    playerTeamHistory : 4,
+    matchesInfo :  5
 }
 const MONGO = {
     findOne : process.env.HOST + '/api/find',

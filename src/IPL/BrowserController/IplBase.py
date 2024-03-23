@@ -323,6 +323,7 @@ class IplBase(BrowserBase):
             playerStatsTableXpath = "//div[@class='SMplayerStatsWidget ng-scope']"
             self.OpenInLastTabAfterLimit(2,URL,playerStatsTableXpath)
             self.WaitForElement(By.XPATH,playerStatsTableXpath)
+            time.sleep(2)
             SourceCode = self.GetHTMLByPageSource()
             playerNationality = SourceCode.find('div', {"class":"plyr-name-nationality"}).find('span').text
             playerDetailGridArray = SourceCode.find('div', {"class":"player-overview-detail"}).find_all('div' , {"class": "grid-items"})
@@ -331,7 +332,9 @@ class IplBase(BrowserBase):
             playerDob = playerDetailGridArray[2].find('p').text
             statsTable = SourceCode.findAll('table', 'sm-pp-table')
             BattingAndFieldingStats = ExtractTableDetails(statsTable[0])
-            BowlingStats = ExtractTableDetails(statsTable[0])
+            print("Table Length isn ")
+            print(len(statsTable))
+            BowlingStats = ExtractTableDetails(statsTable[1])
             playerJson = {"Nationality": playerNationality.strip(), "MatchesPlayed": playerMatchesPlayed.strip() , "IplDebut": playerIplDebut.strip() , "Dob":playerDob.strip() , "BattingAndFielding" :BattingAndFieldingStats , "BowlingStats" :BowlingStats }
             return playerJson
         def PlayerDetailFromPlayerCard (playerCard):
@@ -352,6 +355,7 @@ class IplBase(BrowserBase):
                 playerJson['Captain'] = True
             return playerJson
         self.OpenInTabNo(1,URL)
+        time.sleep(2)
         soup = self.GetHTMLByPageSource()
         playerCards = soup.find_all('li',{"class": "dys-box-color"})
         if teamPlayersLocalJson.get(season) == None:
@@ -537,14 +541,8 @@ class IplBase(BrowserBase):
         self.ClickElement(By.XPATH , commentryButton)
         time.sleep(1)
         self.ClickElement(By.XPATH , comentryTeam2Xpath)
-        # self.ClickElement(By.XPATH , comentryTeam2Xpath)
         time.sleep(1)
-        # button =  self.WaitForElement(By. , team1TabXpath)
-        # button.click()
-        # time.sleep(5)
-        # team1Name = self.GetSourceCodeByXpath(team2NameXpath).text.strip()
-        # print("Team Name is ", team1Name)
-        # print("Execution came till here")
+
         self.ClickElement(By.XPATH, ScorecardXpath)
         team2ShortName = GetTeamNameFromPage()
         result = GetInningsScoreBoard()
@@ -559,21 +557,11 @@ class IplBase(BrowserBase):
         # print("team1Stats are " , team1StatsJson)
         allStatsJson = {team1ShortName :team1StatsJson , team2ShortName : team2StatsJson}
 
+        #below two lines are to extract the data of wagon wheel
         wagonWheelResultJSon = ExtractWagonWheelData()
         allStatsJson.update(wagonWheelResultJSon)
-        # self.CloseWindow()
-        return allStatsJson
-        # sourceCode = self.GetHTMLByPageSource()
-        # scoreBoardTables = sourceCode.find_all('table',{'class':'ap-scroreboard-table'})
-        # TableRows = scoreBoardTables[0].find('tbody' , {'class' : 'team1'}).find_all('tr')
-        # ExtractTableData(0,TableRows[:len(TableRows) - 1])
-
-        # TableRows = scoreBoardTables[1].find('tbody' , {'class' : 'team1'}).find_all('tr')
-        # ExtractTableData(1,TableRows)
-        # self.WaitForElement(By.XPATH, ScorecardXpath)
-        # self.ClickElement(By.XPATH, ScorecardXpath)
         
-        # resultElement = self.WaitForElement(By.XPATH , SwitchTeamButtonXpath)
+        return allStatsJson
 
         
     
@@ -708,17 +696,15 @@ class IplBase(BrowserBase):
             Score = match.group().strip()
             print(Score)
             print(Text)
-            try:
-                match = re.search(rpoPattern, Text)
-                RPO = match.group(1).strip()
-                match = re.search(foursPattern, Text)
-                Fours = match.group(1).strip() if match else "0"
-                match = re.search(sixesPattern, Text)
-                Sixes = match.group(1).strip() if match else "0"
-                dataJson = { 'ShortName' : TeamName ,'Score' :Score , 'Rpo' :RPO , 'Fours' :Fours , 'Sixes' :Sixes}
-                return dataJson
-            except AttributeError:
-                raise CommentryError("Error on commentry page")
+            match = re.search(rpoPattern, Text)
+            RPO = match.group(1).strip() if match else re.search(r'\((\d+\.\d+|\d+)', Text).group(1)
+            match = re.search(foursPattern, Text)
+            Fours = match.group(1).strip() if match else "0"
+            match = re.search(sixesPattern, Text)
+            Sixes = match.group(1).strip() if match else "0"
+            dataJson = { 'ShortName' : TeamName ,'Score' :Score , 'Rpo' :RPO , 'Fours' :Fours , 'Sixes' :Sixes}
+            return dataJson
+
         self.OpenWindow(url)
         self.AcceptCookies()
         LestElementXpath = "(//div[@id='ball-by-ball'])[1]"
@@ -734,7 +720,7 @@ class IplBase(BrowserBase):
         index = 0
         team1CommentryDetails = {}
         team2CommentryDetails = {}
-        team1Result = {}
+        team1Result = None
         team2Result = {}
         for i in useFullPTags:
             if i.text.find('||') == -1:
@@ -749,7 +735,8 @@ class IplBase(BrowserBase):
             team1CommentryDetails[headings[index]].append(team1Result) 
             team2CommentryDetails[headings[index]].append(team2Result) 
             index += 1
-        teamCommentaryJson = {'commentry' : { team1Result['ShortName'] : team1CommentryDetails , team2Result['ShortName'] : team2CommentryDetails }}
+
+        teamCommentaryJson = {'commentry' : { team1Result['ShortName'] : team1CommentryDetails , team2Result['ShortName'] : team2CommentryDetails }} if team1Result !=None else {}
         resultJson = self.GetScorecardData(url)
         print('teamCommentaryJson is')
         print(teamCommentaryJson)
@@ -1031,17 +1018,13 @@ def GetAllMatchesYearData(ipl):
             print(url)
             match = re.search(r'\d+$', url)
             matchID = str(match.group())
-            try:
-                if containsMatchId(iplMatchesJson, matchID):
-                    continue
-                resultJson = GetMatchdata(url , ipl)
-                ipl.UpdateToDatabase({'matchId' : matchID , 'details' : resultJson }, IplMatchDatabse , str(year))
-                
-                index += 1
-            except CommentryError:
-                print("Attribute error on matchid ")
-                print(matchID)
+            if containsMatchId(iplMatchesJson, matchID):
                 continue
+            resultJson = GetMatchdata(url , ipl)
+            ipl.UpdateToDatabase({'matchId' : matchID , 'details' : resultJson }, IplMatchDatabse , str(year))
+            
+            index += 1
+
 
 
 def MapUrl(urlList, shared_dict1, shared_dict2):
@@ -1085,7 +1068,7 @@ if __name__ == "__main__":
         
     #below one gets all the mathes of the year
 
-    GetAllMatchesYearData(ipl)
+    # GetAllMatchesYearData(ipl)
     # GetMatchdata('https://www.iplt20.com/match/2023/859', ipl)
     # ipl.OpenInNewTab("https://www.iplt20.com/teams/chennai-super-kings/squad/")
     # ipl.GetTeamPlayers("https://www.iplt20.com/teams/chennai-super-kings/squad/")
@@ -1100,7 +1083,7 @@ if __name__ == "__main__":
     # print(matchesList)
 
     # ipl.GetTeamLeaderboard("https://www.iplt20.com/points-table/men/2023")
-    # GetAllTeamData()
+    GetAllTeamData()
 # ipl.GenericTeam("https://www.iplt20.com/teams/chennai-super-kings/squad/")
 # ipl.OpenWindow("https://www.iplt20.com/teams/chennai-super-kings/squad/")
 # soup = ipl.GetHTMLByPageSource()

@@ -1,14 +1,15 @@
 
 // import GCAM_DB_STATE from "@/Components/gcam/mongodb/DB_Name_State";
 
-import connectMongo from "../../../../../middleware/ConnectMongo";
-import Readable from 'node:stream'
+import connectMongo from "../../../middleware/ConnectMongo";
 const { MongoClient, ServerApiVersion } = require('mongodb');
 
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
 export async function handler(req , res){
 
   const body = req.body
+  const db = req.body
+  console.log(db)
   const collection = body.collection
   const filter = body.filter
 
@@ -25,14 +26,15 @@ export async function handler(req , res){
           await client.close() 
         }
            )
-        const data = await client.db('Gcam').collection(collection).find(filter).toArray();
+        const data = await client.db(db).collection(collection).find(filter).toArray();
         await client.close()
         res.send({message :'success'})
 
       } catch (error) {
         await client.close()
+        console.log(error)
         res.send({message :'failed'})
       }
 
 }
-export default handler
+export default connectMongo()

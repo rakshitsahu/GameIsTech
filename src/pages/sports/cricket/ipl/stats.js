@@ -1,7 +1,6 @@
 import React from 'react'
 import Navbar from '../_components/navbar'
-import CircularChart from '../_components/CircularChart'
-import { Doughnut } from 'react-chartjs-2'
+
 import RadicalProgress from '../_components/RadicalProgress'
 function Stats() {
   const sourceData =[

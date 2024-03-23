@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
-function RankBoard({headings , playersJson}) {
+function RankBoard({headings , playersJson ,dataFields }) {
   const [index , setIndex ] = useState(0)
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -28,7 +28,7 @@ function RankBoard({headings , playersJson}) {
             // console.log(index)
             return (
               <tr key={index} className=" odd:bg-gray-900  even:bg-gray-800 border-b border-gray-700">
-              <th
+              <td
                 scope="row"
                 className="px-6 py-4 font-medium whitespace-nowrap text-white"
               >
@@ -42,9 +42,17 @@ function RankBoard({headings , playersJson}) {
 
               </font>
               </div>
-              </th>
-              <td className="px-6 py-4">6</td>
-    
+              </td>
+
+              {
+                dataFields.map((field)=>{
+                  return <td key={field}>
+                  {
+                    player[field]
+                  }
+                  </td>
+                })
+              }
               
             </tr>
             );

@@ -1,7 +1,7 @@
 
 // import GCAM_DB_STATE from "@/Components/gcam/mongodb/DB_Name_State";
 const { MongoClient, ServerApiVersion } = require('mongodb');
-import MongoFind from './gcam/mongo/find';
+import MongoFind from './find';
 import GCAM_URL_STATE from '@/Components/gcam/URLs/GCAM_URL_STATE';
 import { GCAM_URLS } from '@/Components/gcam/URLs/GCAM_URL_MANAGER';
 import { MdMan4 } from 'react-icons/md';

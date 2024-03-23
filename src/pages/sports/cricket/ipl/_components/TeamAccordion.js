@@ -3,6 +3,9 @@ import RadarChartComp from '../../_components/charts/radar'
 import RadicalProgressComp from '../../_components/charts/radical';
 import AvatarComp from '../../_components/daisyUI/avatar';
 import PieComp from '../../_components/charts/pie';
+import LineComp from '../../_components/charts/Line';
+import BarComp from '../bar';
+import CardComp from '../../_components/Card';
 function statsSummary(){
 
   const data = [
@@ -56,13 +59,38 @@ function statsSummary(){
     },
   ];
   const config = [
-    {name : 'Ms. Dhoni' , dataKey : 'A' , stroke:"#8884d8" , fill:"#8884d8"} ,
+    {name : 'Gujrat Titans' , dataKey : 'A' , stroke:"#8884d8" , fill:"#8884d8"} ,
     {name : 'Average' , dataKey : 'B' , stroke:"#ff0000" , fill:"#ff0000"}
+  ]
+  const cardData = [
+    {
+      key : "Strike Rate",
+      value: "158",
+      desc: " ( In top 5% )"
+    },
+    {
+      key : "Runs",
+      value: "40",
+      desc: " ( In top 5% )"
+    },
+    {
+      key : "Wickets",
+      value: "40",
+      desc: " ( In top 5% )"
+    },
+    {
+      key : "Best",
+      value: "500",
+      desc: " ( In top 55% )"
+    }
   ]
   return (
     <div class="w-full">
     <div  className=' w-full'>
     <center>
+    <div className='w-64 '>
+    <CardComp data = {cardData} />
+    </div>
     <div  className=' w-[80%] max-w-[40rem] h-80'>
     <RadarChartComp data={data} config={config}/>
     </div>
@@ -83,6 +111,143 @@ function statsSummary(){
 }
 
 function battingStats(){
+  const lineData = [
+    {
+      name: '2008',
+      uv: 4000,
+      pv: 2400,
+      amt: 2400,
+    },
+    
+    {
+      name: '2009',
+      uv: 3000,
+      pv: 1398,
+      amt: 2210,
+    },
+    {
+      name: '2009',
+      uv: 2000,
+      pv: 9800,
+      amt: 2290,
+    },
+    {
+      name: '2009',
+      uv: 2780,
+      pv: 3908,
+      amt: 2000,
+    },
+    {
+      name: '2008',
+      uv: 1890,
+      pv: 4800,
+      amt: 2181,
+    },
+    {
+      name: '2008',
+      uv: 2390,
+      pv: 3800,
+      amt: 2500,
+    },
+    {
+      name: '2008',
+      uv: 3490,
+      pv: 4300,
+      amt: 2100,
+    },
+  ];
+  const barConfig = [
+    {
+      dataKey:"six",
+       stackId:"a",
+        fill:"#8884d8",
+    },
+    {
+      dataKey:"four",
+      stackId:"a",
+      fill:"#82ca9d" 
+    },
+    {
+      dataKey:"three",
+       stackId:"a",
+        fill:"#8884d8",
+    },
+    {
+      dataKey:"two",
+      stackId:"a",
+      fill:"#82ca9d" 
+    },
+    {
+      dataKey:"one",
+      stackId:"a",
+      fill:"#82ca9d" 
+    }
+  ]
+  const bardata = [
+    {
+      name: 'Page A',
+      six: 4000,
+      four: 2400,
+      three: 2400,
+      two: 2400,
+      one: 2400,
+      amt: 2400,
+    },
+    {
+      name: 'Page B',
+      six: 3000,
+      four: 1398,
+      three: 2400,
+      two: 2400,
+      one: 2400,
+      amt: 2210,
+    },
+    {
+      name: 'Page C',
+      six: 2000,
+      four: 9800,
+      three: 2400,
+      two: 2400,
+      one: 2400,
+      amt: 2290,
+    },
+    {
+      name: 'Page D',
+      six: 2780,
+      four: 3908,
+      three: 2400,
+      two: 2400,
+      one: 2400,
+      amt: 2000,
+    },
+    {
+      name: 'Page E',
+      six: 1890,
+      four: 4800,
+      three: 2400,
+      two: 2400,
+      one: 2400,
+      amt: 2181,
+    },
+    {
+      name: 'Page F',
+      six: 2390,
+      four: 3800,
+      three: 2400,
+      two: 2400,
+      one: 2400,
+      amt: 2500,
+    },
+    {
+      name: 'Page G',
+      six: 3490,
+      four: 4300,
+      three: 2400,
+      two: 2400,
+      one: 2400,
+      amt: 2100,
+    },
+  ];
   const data = [
     {
       subject: 'Strike Rate',
@@ -161,24 +326,63 @@ function battingStats(){
     {name : 'Ms. Dhoni' , dataKey : 'A' , stroke:"#8884d8" , fill:"#8884d8"} ,
     {name : 'Average' , dataKey : 'B' , stroke:"#ff0000" , fill:"#ff0000"}
   ]
+  const defaultData = [
+    { name: 'Group A', value: 400 },
+    { name: 'Group B', value: 300 },
+    { name: 'Group C', value: 300 },
+    { name: 'Group D', value: 200 },
+  ];
+  const runsdata = [
+    { name: "1's", value: 300 },
+    { name: "2's", value: 200 },
+    { name: "3's", value: 200 },
+    { name: "6's", value: 400 },
+    { name: "4's", value: 300 },
+
+  ];
+  const cardData = [
+    {
+      key : "Strike Rate",
+      value: "158",
+      desc: " ( In top 5% )"
+    },
+    {
+      key : "Centuries",
+      value: "40",
+      desc: " ( In top 5% )"
+    },
+    {
+      key : "Half-Centuries",
+      value: "40",
+      desc: " ( In top 5% )"
+    },
+    {
+      key : "Runs",
+      value: "500",
+      desc: " ( In top 55% )"
+    }
+  ]
   return (
     <div class="w-full">
     <div  className=' w-full'>
     <center>
+
+    <div className='w-64 '>
+    <CardComp data = {cardData} />
+    </div>
+
     <div  className=' w-[80%] max-w-[40rem] h-80'>
     <RadarChartComp data={data} config={config}/>
     </div>
-    </center>
+    <div className='w-full h-72'>
+    <LineComp type ='default' data={lineData}  />
     </div>
-    <div className='w-full justify-center flex gap-3 m-3 flex-wrap ' >
-     {
-      data.map((item , index)=>{
-        return <div key={index} className='text-center'>
-        <RadicalProgressComp  radius={6} value={item.ATopPercent} text={item.ATopText}/>
-        <div>{item.subject}</div>
-        </div>
-      })
-     }
+
+    <div className='w-full h-72'>
+    <BarComp type ='default' data={bardata} config = {barConfig}  />
+    </div>
+
+    </center>
     </div>
     </div>
   )
@@ -231,13 +435,39 @@ function bowlingStats(){
     {name : 'Ms. Dhoni' , dataKey : 'A' , stroke:"#8884d8" , fill:"#8884d8"} ,
     {name : 'Average' , dataKey : 'B' , stroke:"#ff0000" , fill:"#ff0000"}
   ]
+  const cardData = [
+    {
+      key : "Economy",
+      value: "4.5",
+      desc: " ( In top 5% )"
+    },
+    {
+      key : "Wickets",
+      value: "40",
+      desc: " ( In top 5% )"
+    },
+    {
+      key : "Best",
+      value: "10/2",
+      desc: " ( In top 5% )"
+    },
+    {
+      key : "Runs",
+      value: "500",
+      desc: " ( In top 55% )"
+    }
+  ]
   return (
     <div class="w-full">
     <div  className=' w-full'>
     <center>
+    <div className='w-64 '>
+    <CardComp data = {cardData} />
+    </div>
     <div  className=' w-[80%] max-w-[40rem] h-80'>
     <RadarChartComp data={data} config={config}/>
     </div>
+    
     </center>
     </div>
     <div className='w-full justify-center flex gap-3 m-3 flex-wrap ' >
@@ -255,13 +485,13 @@ function bowlingStats(){
 }
 function playerLastMatches(){
   const data = [
-    { name: 'CSK', value: 400 },
-    { name: 'RCB', value: 300 },
-    { name: 'PBKS', value: 300 },
-    { name: 'LSG', value: 200 },
-    { name: 'KKR', value: 300 },
-    { name: 'SRH', value: 300 },
-    { name: 'DC', value: 200 },
+    { name: 'CSK', value: 400 , desc : 'Boundries 4' , heading : 'In Top 50%' },
+    { name: 'RCB', value: 300 , desc : 'Boundries 4' , heading : 'In Top 50%' },
+    { name: 'PBKS', value: 300 , desc : 'Boundries 4' , heading : 'In Top 50%' },
+    { name: 'LSG', value: 200 , desc : 'Boundries 4' , heading : 'In Top 50%' },
+    { name: 'KKR', value: 300 , desc : 'Boundries 4' , heading : 'In Top 50%' },
+    { name: 'SRH', value: 300 , desc : 'Boundries 4' , heading : 'In Top 50%' },
+    { name: 'DC', value: 200 , desc : 'Boundries 4' , heading : 'In Top 50%'},
   ];
   return (
     <div>
@@ -289,13 +519,13 @@ function comapreToPlayers(){
 
 function compareToTeams(){
   const data = [
-    { name: 'CSK', value: 400 },
-    { name: 'RCB', value: 300 },
-    { name: 'PBKS', value: 300 },
-    { name: 'LSG', value: 200 },
-    { name: 'KKR', value: 300 },
-    { name: 'SRH', value: 300 },
-    { name: 'DC', value: 200 },
+    { name: 'CSK', value: 400 , desc : 'Boundries 4' , heading : 'In Top 50%' },
+    { name: 'RCB', value: 300 , desc : 'Boundries 4' , heading : 'In Top 50%' },
+    { name: 'PBKS', value: 300 , desc : 'Boundries 4' , heading : 'In Top 50%' },
+    { name: 'LSG', value: 200 , desc : 'Boundries 4' , heading : 'In Top 50%' },
+    { name: 'KKR', value: 300 , desc : 'Boundries 4' , heading : 'In Top 50%' },
+    { name: 'SRH', value: 300 , desc : 'Boundries 4' , heading : 'In Top 50%' },
+    { name: 'DC', value: 200 , desc : 'Boundries 4' , heading : 'In Top 50%'},
   ];
   const playerVsteams = {
     "best" : [ "CSK" , "MI" , "LSG"],
@@ -306,8 +536,8 @@ function compareToTeams(){
     <center>
     <h3 className='underline mt-5'>Below Average Performance Against Teams</h3>
     <div className='w-full h-72'>
-<PieComp type ='custom' data={data} />
-</div>
+    <PieComp type ='custom' data={data}  />
+    </div>
     </center>
     <div className='flex gap-3 flex-wrap'>
     {
@@ -315,13 +545,14 @@ function compareToTeams(){
         return <div key ={team} className='text-center'>
         <AvatarComp/>
         <div>
-        Ms Dhoni vs {team} Stats
+        Hujrat Titans vs {team} Stats
         </div>
         </div>
       })
     }
     </div>
     <center>
+
     <h3 className='underline mt-5'>Above Average Performance Against Teams</h3>
     </center>
     <div className='flex gap-3 flex-wrap'>
@@ -330,7 +561,7 @@ function compareToTeams(){
         return <div key ={team} className='text-center'>
         <AvatarComp/>
         <div>
-        Ms Dhoni vs {team} Stats
+        Hujrat Titans vs {team} Stats
         </div>
         </div>
       })
@@ -346,7 +577,7 @@ function Accordion({playerName}) {
     <div className="collapse collapse-arrow join-item border border-base-300">
     <input type="radio" name="my-accordion-4" defaultChecked /> 
     <div className="collapse-title text-xl font-medium">
-      MS. Dhoni Overall Stats
+      Gujrat Titans Overall Stats
     </div>
     <div className="collapse-content "> 
     {statsSummary()}
@@ -355,7 +586,7 @@ function Accordion({playerName}) {
   <div className="collapse collapse-arrow join-item border border-base-300">
     <input type="radio" name="my-accordion-4" defaultChecked /> 
     <div className="collapse-title text-xl font-medium">
-      MS. Dhoni Batting stats
+      Gujrat Titans Batting stats
     </div>
     <div className="collapse-content"> 
       {battingStats()}
@@ -364,7 +595,7 @@ function Accordion({playerName}) {
   <div className="collapse collapse-arrow join-item border border-base-300">
   <input type="radio" name="my-accordion-4" /> 
   <div className="collapse-title text-xl font-medium">
-      MS. Dhoni Bowling Stats
+      Gujrat Titans Bowling Stats
   </div>
   <div className="collapse-content"> 
     {bowlingStats()}
@@ -374,36 +605,27 @@ function Accordion({playerName}) {
 <div className="collapse collapse-arrow join-item border border-base-300">
 <input type="radio" name="my-accordion-4" /> 
 <div className="collapse-title text-xl font-medium">
-    MS. Dhoni Last Matches
+    Gujrat Titans Last Matches
 </div>
 <div className="collapse-content"> 
   {playerLastMatches()}
 </div>
 </div>
 
-<div className="collapse collapse-arrow join-item border border-base-300">
-<input type="radio" name="my-accordion-4" /> 
-<div className="collapse-title text-xl font-medium">
-    MS. Dhoni Team
-</div>
-<div className="collapse-content"> 
-  <p>hello</p>
-</div>
-</div>
-
   <div className="collapse collapse-arrow join-item border border-base-300">
     <input type="radio" name="my-accordion-4" /> 
     <div className="collapse-title text-xl font-medium">
-        MS. Dhoni performance against players
+        Gujrat Titans performance against players
     </div>
     <div className="collapse-content"> 
       {comapreToPlayers()}
     </div>
   </div>
+
   <div className="collapse collapse-arrow join-item border border-base-300">
     <input type="radio" name="my-accordion-4" /> 
     <div className="collapse-title text-xl font-medium">
-    MS. Dhoni performance against IPL Teams
+    Gujrat Titans performance against IPL Teams
     </div>
     <div className="collapse-content"> 
     {compareToTeams()}

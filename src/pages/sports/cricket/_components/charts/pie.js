@@ -1,5 +1,5 @@
 import React from 'react'
-import { PieChart, Pie, Sector, Cell, ResponsiveContainer } from 'recharts';
+import { PieChart, Pie, Sector, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 import { useState } from 'react';
 let renderActiveShapeCount = 0
 const COLORS = [
@@ -50,7 +50,7 @@ function twoLevel(){
 const renderActiveShape = (props) => {
     const RADIAN = Math.PI / 180;
     
-    const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
+    const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value , desc , heading } = props;
     const sin = Math.sin(-RADIAN * midAngle);
     const cos = Math.cos(-RADIAN * midAngle);
     const sx = cx + (outerRadius + 10) * cos;
@@ -86,9 +86,11 @@ const renderActiveShape = (props) => {
         />
         <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
         <circle  cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">{`PV ${value}`}</text>
+        <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} textAnchor={textAnchor} fill="#333">
+        {heading}
+        </text>
         <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#999">
-          {`(Rate ${(percent * 100).toFixed(2)}%)`}
+          {desc}
         </text>
       </g>
     );
@@ -115,20 +117,98 @@ function CustomActive(data){
             dataKey="value"
             onMouseEnter={onPieEnter}
           />
+
         </PieChart>
       </ResponsiveContainer>
     )
+}
+
+function DefaultPie(data){
+
+  const RADIAN = Math.PI / 180;
+  const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent, index }) => {
+    const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
+    const x = cx + radius * Math.cos(-midAngle * RADIAN);
+    const y = cy + radius * Math.sin(-midAngle * RADIAN);
+  
+    return (
+      <text x={x} y={y} fill="white" textAnchor={x > cx ? 'start' : 'end'} dominantBaseline="central">
+        {`${(percent * 100).toFixed(0)}%`}
+      </text>
+    );
+  };
+
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+    <PieChart width="100%" height="100%">
+      <Pie
+        dataKey="value"
+        isAnimationActive={false}
+        data={data}
+        cx="50%"
+        cy="50%"
+        outerRadius={80}
+        fill="#8884d8"
+        label
+      />
+      
+      <Tooltip />
+    </PieChart>
+  </ResponsiveContainer>
+  )
+}
+
+function CircularDefault(data){
+    
+    return (
+        <PieChart width={800} height={400} onMouseEnter={()=>{}}>
+          <Pie
+            data={data}
+            cx={120}
+            cy={200}
+            innerRadius={60}
+            outerRadius={80}
+            fill="#8884d8"
+            paddingAngle={5}
+            dataKey="value"
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
+          <Pie
+            data={data}
+            cx={420}
+            cy={200}
+            startAngle={180}
+            endAngle={0}
+            innerRadius={60}
+            outerRadius={80}
+            fill="#8884d8"
+            paddingAngle={5}
+            dataKey="value"
+          >
+            {data.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+            ))}
+          </Pie>
+        </PieChart>
+      );
 }
 function PieComp({type ,data}) {
     // console.log("came here")
     // return twoLevel()
   if(type == 'twoLevel')
   return twoLevel()
-else if(type == 'custom')
-{
-    console.log("Came here")
-    return CustomActive(data)
-}
+    else if(type == 'custom')
+    {
+        // console.log("Came here")
+        return CustomActive(data)
+    }
+    else if( type == 'circularDefault')
+    return CircularDefault(data)
+    else if( type == 'defaultPie')
+  return DefaultPie(data)
 }
 
 export default PieComp

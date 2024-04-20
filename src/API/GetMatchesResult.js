@@ -5,7 +5,7 @@ let response = null;
 export default async function GetMatchesResult(matchId = null){
     if(!response) return response
     const filter =  {}
-    console.log("Came in GetPlayersInfo")
+    
     response = await makeRequest(MONGO.findOne , {
         db : IPL_DB.MatchesResult,
         collection : IPL_COLLECTION.StaticPlayerData,
@@ -16,7 +16,7 @@ export default async function GetMatchesResult(matchId = null){
         return null
     }
     const MatchesResultData = response.data[0]
-    // console.log(MatchesResultData)
+
     return matchId != null ? MatchesResultData[matchId] : MatchesResultData
 
 

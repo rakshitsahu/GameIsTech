@@ -8,7 +8,7 @@ export default async function GetPlayerStats(playerId){
     if(!response) return response
     response = await  GetPlayersInfo(playerId)
     const filter =  {}
-    console.log("Came in GetPlayersInfo")
+
     response = await makeRequest(MONGO.findOne , {
         db : IPL_DB.Static,
         collection : IPL_COLLECTION.StaticPlayerData,
@@ -20,7 +20,7 @@ export default async function GetPlayerStats(playerId){
     }
     const playersData = response.data[0]
     const result = playerId != null ? playersData[playerId] : playersData
-    // console.log(result)
+
     return 
 
 

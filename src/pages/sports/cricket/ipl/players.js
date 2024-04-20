@@ -5,7 +5,6 @@ import GetAveragePlayerStats from '@/API/GetAveragePlayerStats'
 
 export async function getStaticProps(){
     const data = {}
-    console.log("Came here")
     await GetAveragePlayerStats()
       return {
         props :{

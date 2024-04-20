@@ -196,13 +196,11 @@ function CircularDefault(data){
       );
 }
 function PieComp({type ,data}) {
-    // console.log("came here")
-    // return twoLevel()
+
   if(type == 'twoLevel')
   return twoLevel()
     else if(type == 'custom')
     {
-        // console.log("Came here")
         return CustomActive(data)
     }
     else if( type == 'circularDefault')

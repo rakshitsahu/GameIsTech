@@ -40,9 +40,7 @@ const getIntroOfPage = (label) => {
   return '';
 };
 const CustomTooltip = ({ active, payload, label }) => {
-  console.log(active)
-  console.log(payload)
-  console.log(label)
+
   if (active && payload && payload.length) {
     return (
       <div className="custom-tooltip bg-blue-700 text-white rounded-md p-3">
@@ -54,7 +52,7 @@ const CustomTooltip = ({ active, payload, label }) => {
         <div className='flex flex-col gap-2'>
         {
           payload.map((element , index)=>{
-            console.log(element.color)
+   
             const originalValue = percentageToValue(element.value , element.payload.fullMark)
            return <div key={element} className='flex gap-2 justify-center items-center '>
             <div className={`w-4 h-4 rounded-full `} 
@@ -69,9 +67,9 @@ const CustomTooltip = ({ active, payload, label }) => {
   }
 }
 function RadarChartComp({data , config , compareKeys}) {
-  console.log(data)
+
   data = scaleData(data , config)
-  console.log(data )
+
     
     return (
       <ResponsiveContainer width="100%" height="100%">

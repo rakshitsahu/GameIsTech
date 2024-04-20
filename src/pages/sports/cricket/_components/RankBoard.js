@@ -1,6 +1,6 @@
 import React from 'react'
 import { useState } from 'react';
-function RankBoard({headings , playersJson ,dataFields }) {
+function RankBoard({headings , data ,dataFields }) {
   const [index , setIndex ] = useState(0)
   return (
     <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -12,7 +12,6 @@ function RankBoard({headings , playersJson ,dataFields }) {
             return (
               <th key={index} scope="col" className="px-6 py-3">
                 {
-                  // console.log(headings[index]),
                   index
                 }
               </th>
@@ -24,8 +23,8 @@ function RankBoard({headings , playersJson ,dataFields }) {
       </thead>
       <tbody className='text-gray-400'>
         {
-          playersJson.map(  (player , index) => { 
-            // console.log(index)
+          data.map(  (player , index) => { 
+
             return (
               <tr key={index} className=" odd:bg-gray-900  even:bg-gray-800 border-b border-gray-700">
               <td
@@ -33,11 +32,11 @@ function RankBoard({headings , playersJson ,dataFields }) {
                 className="px-6 py-4 font-medium whitespace-nowrap text-white"
               >
               <div className='h-14 w-14 rounded-full bg-yellow-200 flex'>
-              <img src={`${playersJson[index].Image}`}/>
+              <img src={`${data[index].Image}`}/>
               <font className={`flex self-center ml-2 ${index == 0? 'text-yellow-500' : ''}`} >
-              {playersJson[index].Name.length > 8
-                ? `${playersJson[index].Name.slice(0, 8)}...`
-                : playersJson[index].Name
+              {data[index].Name.length > 8
+                ? `${data[index].Name.slice(0, 8)}...`
+                : data[index].Name
               }
 
               </font>

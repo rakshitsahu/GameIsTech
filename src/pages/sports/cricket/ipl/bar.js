@@ -12,7 +12,6 @@ import {
     ResponsiveContainer,
   } from 'recharts';
 function BrushBar(data , config){
-    console.log(config)
     return (
         <ResponsiveContainer width="100%" height="100%">
         <BarChart

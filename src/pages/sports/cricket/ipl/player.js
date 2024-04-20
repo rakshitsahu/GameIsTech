@@ -1,29 +1,53 @@
 import React from 'react'
 import Navbar from '../_components/navbar'
-import Accordion from './_components/PlayerAccordion'
+import PlayerAccordion from './_components/PlayerAccordion';
 import GetPlayersInfo from '@/API/GetPlayersInfo';
 import GetAveragePlayerStats from '@/API/GetAveragePlayerStats';
-import { GetPlayerMatchesHistory } from '@/API/GetPlayerHistory';
+import { GetPlayerMatchesHistory, GetPlayerVsTeamAverage } from '@/API/GetPlayerHistory';
+
+function GetRunsAgainstTeams(jsonArray , dataFields){
+  const countMap = {}
+  const averageJson = {}
+  jsonArray.forEach(json => {
+    countMap[json['VS']] = countMap[json['VS']] || 0
+    countMap[json['VS']]++
+    averageJson[json['VS']] = averageJson[json['VS']] || {}
+    dataFields.forEach(element => {
+   
+        averageJson[json['VS']][element] = averageJson[json['VS']][element] || 0
+        averageJson[json['VS']][element] += json[element]
+    });
+
+  });
+
+  Object.keys(averageJson).forEach((team)=>{
+    Object.keys(averageJson[team]).forEach((element)=>{
+      averageJson[team][element] = parseFloat((averageJson[team][element]/countMap[team]).toFixed(2))
+    })
+  })
+
+  return averageJson
+}
+
 export async function getStaticProps() {
   try {
-    // console.log("getStaticProps called")
+
     const playersStats = await GetPlayersInfo(177 , 2023)
-    console.log(playersStats)
     const averageStats = await GetAveragePlayerStats()
-    console.log(averageStats)
     const playerMatchesHistory = await GetPlayerMatchesHistory('177' , '2023')
-    console.log(playerMatchesHistory)
+    const playerPerformanceAgainstTeams = GetRunsAgainstTeams(playerMatchesHistory.Batting , ['Runs', 'StrikeRate' , 'Balls' , 'Fours', 'sixes'])
+    const playersAverageVsTeams = await GetPlayerVsTeamAverage('2023')
     const playerStats = playersStats
-    // console.log(playerStats)
     return {
       props: {
         playerStats,
-        averageStats
-      },
-      revalidate: 60 // Optional: specify revalidation period in seconds
+        averageStats,
+        playerMatchesHistory,
+        playerPerformanceAgainstTeams,
+        playersAverageVsTeams
+      }
     };
   } catch (error) {
-    console.log('Error:', error.message);
     return {
       props: {
         error: 'Internal Server Error' // Pass an error message as props
@@ -31,9 +55,8 @@ export async function getStaticProps() {
     };
   }
 }
-function Player({playerStats , averageStats , error}) {
+function Player({playerStats , averageStats, playerMatchesHistory, playerPerformanceAgainstTeams , playersAverageVsTeams , error}) {
   const arr = []
-  console.log(playerStats)
   arr.push({
     desc : 'Top 70%'
   })
@@ -86,7 +109,11 @@ function Player({playerStats , averageStats , error}) {
       </div>
     
       <div className=' px-2 mt-1 '>
-      <Accordion playerStats={playerStats} averageStats={averageStats}/>
+      <PlayerAccordion playerStats={playerStats} 
+      averageStats={averageStats} 
+      playerMatchesHistory={playerMatchesHistory}
+      playersAverageVsTeams= {playersAverageVsTeams}
+      playerPerformanceAgainstTeams={playerPerformanceAgainstTeams}/>
     
       </div>
       </article>

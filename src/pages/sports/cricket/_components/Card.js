@@ -1,7 +1,7 @@
 import React from 'react'
 
 function CardComp({data}) {
-    // console.log(data)
+ 
   return (
     <div className='w-full h-full bg-blue-700 transform -skew-x-[18deg] text-white around-shadow'>
      <div className='flex flex-col transform skew-x-[18deg] justify-center items-center'>

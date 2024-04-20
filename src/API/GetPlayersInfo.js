@@ -16,7 +16,7 @@ function convertValuesToFloat(json){
 export default async function GetPlayersInfo(playerId = null , year = null){
     if(response) return response
     const filter =  {}
-    console.log("Came in GetPlayersInfo")
+
     response = await makeRequest(MONGO.findOne , {
         db : IPL_DB.Static,
         collection : IPL_COLLECTION.StaticPlayerData,
@@ -35,7 +35,7 @@ export default async function GetPlayersInfo(playerId = null , year = null){
       return  result
     }
     else{
-        console.log(playerId , year)
+
      return   playersData
     }
     const result = playerId != null ? playersData[playerId] : playersData

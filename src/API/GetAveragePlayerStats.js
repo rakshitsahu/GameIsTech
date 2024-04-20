@@ -21,11 +21,11 @@ function getAverageFromJson(playersJson , category , yearKey){
             return
         }
         Roles[playersJson[key]['Role']] = true
-        console.log(key)
+
         const BattingAndFielding = playersJson[key][category][yearKey]
-        console.log(BattingAndFielding)
+     
         if(!BattingAndFielding ){
-            // console.log(playersJson[key]['Name'])
+
         }
         else{
             totalCount += 1
@@ -42,12 +42,7 @@ function getAverageFromJson(playersJson , category , yearKey){
                     // }
 
                     value = parseFloat(value);
-                    if(playersJson[key]['Id'] === "5602"){
-                        // console.log(playersJson[key])
-                    }
-                    if(innerKey == '100' && value != 0){
-                        // console.log(playersJson[key]['Name'] , value)
-                    }
+
                     if(!averageStatsJson.hasOwnProperty(innerKey)){
                         averageStatsJson[innerKey] = value
                     }
@@ -59,12 +54,11 @@ function getAverageFromJson(playersJson , category , yearKey){
         }
 
     })
-    console.log(averageStatsJson)
     Object.keys(averageStatsJson).forEach((key)=>{
         averageStatsJson[key] =  averageStatsJson[key] / totalCount
         averageStatsJson[key].toFixed(2)
     })
-    console.log(averageStatsJson)
+
     return averageStatsJson
 }
 function getAverageStats(playersJson , yearKey){
@@ -72,12 +66,9 @@ function getAverageStats(playersJson , yearKey){
     
     let totalCount = 0
 
-    console.log(totalCount)
     const averageBattingStats = getAverageFromJson(playersJson , "BattingAndFielding" , yearKey)
-    console.log(averageBattingStats)
     const averageBowlingStats = getAverageFromJson(playersJson , "BowlingStats" , yearKey)
-    // console.log(averageBowlingStats)
-    // console.log(Roles)
+
     return {
         "BattingAndFielding" : averageBattingStats,
         "BowlingStats" : averageBowlingStats
@@ -88,16 +79,16 @@ export default async function GetAveragePlayerStats(){
     if(response) return response
     response = await  GetPlayersInfo()
     const filter =  {}
-    console.log("Came in GetPlayersInfo")
-    // console.log("Came here" , response.data)
+
+   
     if(response.status != 200){
-        console.log("Returned")
+     
         return null
     }
-    console.log("Returned")
+
     const playersData = response.data[0]
     const averageStatsJson = getAverageStats(playersData,2023)
-    // console.log(averageStatsJson)
+
     return averageStatsJson
 
 

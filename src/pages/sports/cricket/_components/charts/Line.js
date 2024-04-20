@@ -28,7 +28,7 @@ class CustomizedLabel extends PureComponent {
       );
     }
   }
-function DefaultLine(data){
+function DefaultLine(data , configs){
 
     const renderCustomizedLabel = (props) => {
         const { x, y, stroke, payload } = props;
@@ -56,17 +56,21 @@ function DefaultLine(data){
           }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" height={60} tick={<CustomizedAxisTick />} />
+          <XAxis dataKey="CSKOvers" height={60} tick={<CustomizedAxisTick />} />
           <YAxis />
           <Tooltip />
           <Legend />
-          <Line type="monotone" dataKey="pv" stroke="#8884d8" label={<CustomizedLabel />} />
-          <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+          {
+            configs.map((config)=>{
+  
+             return <Line key={config.dataKey} type="monotone" dataKey={config.dataKey} stroke="#8884d8" label={<CustomizedLabel />} />
+            })
+          }
         </LineChart>
       </ResponsiveContainer>
       );
 }
-function SynchronizedChart(data){
+function SynchronizedChart(data , configs){
     return (
         <div style={{ width: '100%' }}>
           <h4>A demo of synchronized AreaCharts</h4>
@@ -110,7 +114,11 @@ function SynchronizedChart(data){
               <XAxis dataKey="name" />
               <YAxis />
               <Tooltip />
-              <Line type="monotone" dataKey="pv" stroke="#82ca9d" fill="#82ca9d" />
+              {
+                configs.map((config)=>{
+                 return <Line key={config} type="monotone" dataKey={config.dataKey} stroke="#8884d8" fill="#82ca9d" label={<CustomizedLabel />}/>
+                })
+              }
               <Brush />
             </LineChart>
           </ResponsiveContainer>
@@ -138,12 +146,13 @@ function SynchronizedChart(data){
         </div>
       );
 }
-function LineComp({data , type}) {
+function LineComp({data , type , configs}) {
+
     if(type == 'default'){
-        return DefaultLine(data)
+        return DefaultLine(data , configs)
     }
     else if( type == 'synchronized'){
-        return SynchronizedChart(data)
+        return SynchronizedChart(data, configs)
     }
 }
 

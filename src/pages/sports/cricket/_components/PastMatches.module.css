@@ -1,0 +1,3 @@
+.childrenFontThin > * {
+    @apply font-thin text-white text-xl;
+  }

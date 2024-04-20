@@ -181,7 +181,7 @@ function TeamLeaderboard() {
         </thead>
         <tbody className="text-gray-400">
           {teamsDetails.map((teamsDetail, index) => {
-            // console.log(index)
+  
             return (
               <tr
                 key={index}

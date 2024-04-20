@@ -15,7 +15,6 @@ how to use ?
 
 
 export default function OptimizedVerticalCarousel ({children : slides }) {
-  // console.log(slides)
   
   const [currIndex , setCurrentIndex] = useState(0)
   const [sliding , setSliding] = useState(false)

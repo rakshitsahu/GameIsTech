@@ -9,7 +9,6 @@ export async function handler(req , res){
 
   const body = req.body
   const db = req.body
-  console.log(db)
   const collection = body.collection
   const filter = body.filter
 
@@ -32,7 +31,7 @@ export async function handler(req , res){
 
       } catch (error) {
         await client.close()
-        console.log(error)
+        console.error(error)
         res.send({message :'failed'})
       }
 

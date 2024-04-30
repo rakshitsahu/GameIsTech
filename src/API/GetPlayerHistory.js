@@ -22,7 +22,6 @@ function isPlayerFound(playerId , data , year){
 
 
 export default async function GetPlayerTeamHistory(playerId){
-    // if(teamHistoryReesponse) return teamHistoryReesponse
     const filter =  {}
     const teamsData = await makeRequest(MONGO.findOne , {
         db : IPL_DB.Static,
@@ -32,8 +31,9 @@ export default async function GetPlayerTeamHistory(playerId){
     
     // 
     const result = teamsData.data[0];
+  
     delete result._id
-
+  
     const playerTeamHistoryJson = {}
     Object.keys(result).forEach(team => {
        Object.keys(result[team]).forEach( year => {
@@ -44,6 +44,7 @@ export default async function GetPlayerTeamHistory(playerId){
             }
         });
     });
+   
     return playerTeamHistoryJson
 }
 
@@ -191,19 +192,16 @@ async function getPlayerMatchesRuns(playerId , year , matchIds  , team){
     return {Batting: batting , Bowling : bowling}
 }
 export async function GetPlayerMatchesHistory(playerId , year){
-    // if(matchesHistoryResponse) return matchesHistoryResponse
+
     const filter = {}
     const playerTeamHistory = await GetPlayerTeamHistory(playerId)
+  
     const teamMatches = await makeRequest(MONGO.findOne , {
         db : IPL_DB.MatchesResult,
         collection : year,
         filter : filter
     } )
-    // const [playerTeamHistory, teamMatches] = await Promise.all([GetPlayerTeamHistory(playerId), makeRequest(MONGO.findOne , {
-    //     db : IPL_DB.MatchesResult,
-    //     collection : year,
-    //     filter : filter
-    // } )])
+
     
     const matchIds = teamMatches.data[0][year]["teamMatches"][playerTeamHistory[year]]
     const processedMatchIds = []

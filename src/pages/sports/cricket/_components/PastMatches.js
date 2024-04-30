@@ -1,6 +1,6 @@
 import React from 'react'
 import styles from './PastMatches.module.css'
-function BattingMatchesHistory(matchHistory){
+function BattingMatchesHistory(matchHistory , playerName){
   return (
     <div className="overflow-x-auto max-h-screen">
   <table className="table ">
@@ -48,7 +48,7 @@ function BattingMatchesHistory(matchHistory){
     </tbody>
 
     <tfoot className='font-thin'>
-      The above table contains the previous matches batting stats of player
+      The above table contains the previous matches batting stats of {playerName}
     </tfoot>
     
   </table>
@@ -56,7 +56,7 @@ function BattingMatchesHistory(matchHistory){
   )
 }
 
-function BowlingMatchesHistory(matchHistory){
+function BowlingMatchesHistory(matchHistory , playerName){
   return (
     <div className="overflow-x-auto max-h-screen w-full">
   <table className="table ">
@@ -97,15 +97,15 @@ function BowlingMatchesHistory(matchHistory){
     </tbody>
 
     <tfoot className='font-thin'>
-      The above table contains the previous matches bowling stats of player
+      The above table contains the previous matches bowling stats of {playerName}
     </tfoot>
     
   </table>
 </div>
   )
 }
-function PastMatches({matchHistory, isBowling}) {
-  return !isBowling? BattingMatchesHistory(matchHistory) : BowlingMatchesHistory(matchHistory)
+function PastMatches({matchHistory, isBowling , playerName}) {
+  return !isBowling? BattingMatchesHistory(matchHistory , playerName) : BowlingMatchesHistory(matchHistory , playerName)
 }
 
 export default PastMatches

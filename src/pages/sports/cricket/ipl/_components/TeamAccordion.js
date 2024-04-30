@@ -192,7 +192,7 @@ function battingStats(AverageCommentryStats){
   }
 const config = [
   {name : 'GT Batting' , dataKey : 'A' , stroke:"#8884d8" , fill:"#8884d8"} ,
-  {name : 'GT Bowling (Others vs GT)' , dataKey : 'B' , stroke:"#ff0000" , fill:"#ff0000"}
+  {name : 'Average of other teams' , dataKey : 'B' , stroke:"#ff0000" , fill:"#ff0000"}
 ]
  
 
@@ -200,167 +200,82 @@ const config = [
     <div class="w-full flex flex-wrap">
     <div  className=' w-[80%] max-w-[25rem] h-80 '>
     <center><h4>PowerPlay</h4></center>
-    <RadarChartComp data={filterData(AverageCommentryStats.GT.batting.powerPlay , AverageCommentryStats.GT.bowling.powerPlay)} config={config}/>
+    <RadarChartComp data={filterData(AverageCommentryStats.GT.batting.powerPlay , AverageCommentryStats.average.bowling.powerPlay)} config={config}/>
     </div>
     <div  className=' w-[80%] max-w-[25rem] h-80 '>
     <center><h4>Middle Overs</h4></center>
-    <RadarChartComp data={filterData(AverageCommentryStats.GT.batting.middleOvers , AverageCommentryStats.GT.bowling.middleOvers)} config={config}/>
+    <RadarChartComp data={filterData(AverageCommentryStats.GT.batting.middleOvers , AverageCommentryStats.average.bowling.middleOvers)} config={config}/>
     </div>
     <div  className=' w-[80%] max-w-[25rem] h-80 '>
     <center><h4>Death Overs</h4></center>
-    <RadarChartComp data={filterData(AverageCommentryStats.GT.batting.deathOvers , AverageCommentryStats.GT.bowling.deathOvers)} config={config}/>
+    <RadarChartComp data={filterData(AverageCommentryStats.GT.batting.deathOvers , AverageCommentryStats.average.bowling.deathOvers)} config={config}/>
     </div>
     </div>
   )
 }
 
-function bowlingStats(statsJson){
-  const radarChartData = [
-    {
-      subject: 'Wickets',
-      A: statsJson.playerBowlingStats["WKTS"],
-      B: statsJson.averageBowlingStats['WKTS'],
-      fullMark: statsJson.bowlingFullMarks["WKTS"],
-      ATopPercent : 61,
-      ATopText : "Beats 80% of players"
-    },
-    {
-      subject: 'Economy',
-      A: statsJson.playerBowlingStats["Econ"],
-      B: statsJson.averageBowlingStats["Econ"],
-      fullMark: statsJson.bowlingFullMarks["Econ"],
-      ATopPercent : 71,
-      ATopText : "Beats 80% of players"
-    },
-    {
-      subject: 'Balls',
-      A: statsJson.playerBowlingStats["Balls"],
-      B: statsJson.averageBowlingStats["Balls"],
-      fullMark: statsJson.bowlingFullMarks["Balls"],
-      ATopPercent : 71,
-      ATopText : "Beats 80% of players"
-    }
-    ,
-    {
-      subject: 'Runs',
-      A: statsJson.playerBowlingStats["Runs"],
-      B: statsJson.averageBowlingStats["Runs"],
-      fullMark: statsJson.bowlingFullMarks["Runs"],
-      ATopPercent : 71,
-      ATopText : "Beats 80% of players"
-    }
-    ,
-    {
-      subject: '4 Wickets',
-      A: statsJson.playerBowlingStats["4W"],
-      B: statsJson.averageBowlingStats["4W"],
-      fullMark: statsJson.bowlingFullMarks["4W"],
-      ATopPercent : 71,
-      ATopText : "Beats 80% of players"
-    },
-    {
-      subject: '5 Wickets',
-      A: statsJson.playerBowlingStats["5W"],
-      B: statsJson.averageBowlingStats["5W"],
-      fullMark: statsJson.bowlingFullMarks["5W"],
-      ATopPercent : 71,
-      ATopText : "Beats 80% of players"
-    }
-
-    
-  ];
-
-  const config = [
-    {name : 'Ms. Dhoni' , dataKey : 'A' , stroke:"#8884d8" , fill:"#8884d8"} ,
-    {name : 'Average' , dataKey : 'B' , stroke:"#ff0000" , fill:"#ff0000"}
-  ]
-  const cardData = [
-    {
-      key : "Wickets",
-      value: statsJson.playerBowlingStats['WKTS'],
-      desc: " ( In top 5% )"
-    },
-    {
-      key : "Balls",
-      value: statsJson.playerBowlingStats['Balls'],
-      desc: " ( In top 5% )"
-    },
-    {
-      key : "Runs",
-      value: statsJson.playerBowlingStats['Runs'],
-      desc: " ( In top 5% )"
-    },
-    {
-      key : "Economy",
-      value: statsJson.playerBowlingStats['Econ'],
-      desc: " ( In top 55% )"
-    }
-  ]
-  return (
-    <div class="w-full">
-    <div  className=' w-full'>
-    <center>
-    <div className='w-64 '>
-    <CardComp data = {cardData} />
-    </div>
-    <div  className=' w-[80%] max-w-[40rem] h-80'>
-    <RadarChartComp data={radarChartData} config={config}/>
-    </div>
-    
-    </center>
-    </div>
-    <div className='w-full justify-center flex gap-3 m-3 flex-wrap ' >
+function bowlingStats(AverageCommentryStats){
+  function filterData(battingJson , bowlingJson){
+    return [
      {
-
+       subject : 'Runs',
+       A: battingJson.runs,
+       B: bowlingJson.runs,
+       fullMark:battingJson.runs,
+     },
+     {
+       subject : 'wkts',
+       A: battingJson.wkts,
+       B: bowlingJson.wkts,
+       fullMark:battingJson.wkts
+     },
+     {
+       subject : 'rpo',
+       A: battingJson.rpo,
+       B: bowlingJson.rpo,
+       fullMark:battingJson.rpo
+     },
+     {
+       subject : 'fours',
+       A: battingJson.fours,
+       B: bowlingJson.fours,
+       fullMark:battingJson.fours
+     },
+     {
+       subject : 'sixes',
+       A: battingJson.sixes,
+       B: bowlingJson.sixes,
+       fullMark:battingJson.sixes
      }
-    </div>
-    </div>
-  )
-}
-function playerLastMatches(playerMatchesHistory){
-  const headings = ['Player Name' ,'Sixes' ]
-  const playersJson = [{
-  Name : 'MS Dhoni',
-  Rank : 1,
-  },
-  {
-    Name : 'Ishant Sharma',
-    Rank : 1
-  },
-  {
-  Name : 'MS Dhoni',
-  Rank : 1,
-  },
-  {
-  Name : 'Ishant Sharma',
-  Rank : 1,
-  }]
-  return (
-    <div>
-    <div >
-    <h2 className='text-2xl m-2 text-center'>Batting performance in past matches</h2>
-    <PastMatches matchHistory={playerMatchesHistory.Batting}/>
-    </div>
-    <div >
-    <h2 className='text-2xl m-2 text-center'>Bowlong performance in past matches</h2>
+    ]
+   }
+ const config = [
+   {name : 'GT Batting' , dataKey : 'A' , stroke:"#8884d8" , fill:"#8884d8"} ,
+   {name : 'Average of other teams' , dataKey : 'B' , stroke:"#ff0000" , fill:"#ff0000"}
+ ]
   
-    <PastMatches matchHistory={playerMatchesHistory.Bowling} isBowling={true}/>
-   
-    </div>
-    </div>
-  )
+ 
+   return (
+     <div class="w-full flex flex-wrap">
+     <div  className=' w-[80%] max-w-[25rem] h-80 '>
+     <center><h4>PowerPlay</h4></center>
+     <RadarChartComp data={filterData(AverageCommentryStats.GT.batting.powerPlay , AverageCommentryStats.average.bowling.powerPlay)} config={config}/>
+     </div>
+     <div  className=' w-[80%] max-w-[25rem] h-80 '>
+     <center><h4>Middle Overs</h4></center>
+     <RadarChartComp data={filterData(AverageCommentryStats.GT.batting.middleOvers , AverageCommentryStats.average.bowling.middleOvers)} config={config}/>
+     </div>
+     <div  className=' w-[80%] max-w-[25rem] h-80 '>
+     <center><h4>Death Overs</h4></center>
+     <RadarChartComp data={filterData(AverageCommentryStats.GT.batting.deathOvers , AverageCommentryStats.average.bowling.deathOvers)} config={config}/>
+     </div>
+     </div>
+   )
 }
-function comapreToPlayers(){
-  return (
-<div>
-<center>
-<h3 className='underline'>Hard Time With Bowlers</h3>
-</center>
-</div>
-  )
-}
+
 
 function compareToTeams(TeamComparisonData){
+  // console.log(TeamComparisonData)
  function filterData(TeamComparisonData){
 
   const filterData = []
@@ -433,7 +348,7 @@ function TeamAccordion({TeamComparisonData , AverageCommentryStats}) {
       MS. Dhoni Bowling Stats
   </div>
   <div className="collapse-content"> 
-    {''}
+    {bowlingStats(AverageCommentryStats)}
   </div>
 </div>
 

@@ -1,26 +1,9 @@
 import React from 'react'
 import Navbar from '../_components/navbar'
-import TeamAccordion from './_components/TeamAccordion';
+import PlayerAccordion from './_components/PlayerAccordion';
 import GetPlayersInfo from '@/API/GetPlayersInfo';
 import GetAveragePlayerStats from '@/API/GetAveragePlayerStats';
 import { GetPlayerMatchesHistory, GetPlayerVsTeamAverage } from '@/API/GetPlayerHistory';
-import GetAverageFOW from '@/API/GetAverageFallOfWickets';
-import { AverageCommentryStats } from '@/API/Commentry';
-
-function filterFow(json){
-  const lineChartData = {}
-  Object.keys(json).forEach((team)=>{
-    if(!lineChartData[team]){
-      lineChartData[team] = []
-    }
-    json[team]['fow'].forEach((stat)=>{
-
-        lineChartData [team].push(stat)
-        lineChartData [team] .push(stat)
-    })
-})
-return lineChartData
-}
 
 function GetRunsAgainstTeams(jsonArray , dataFields){
   const countMap = {}
@@ -30,6 +13,7 @@ function GetRunsAgainstTeams(jsonArray , dataFields){
     countMap[json['VS']]++
     averageJson[json['VS']] = averageJson[json['VS']] || {}
     dataFields.forEach(element => {
+   
         averageJson[json['VS']][element] = averageJson[json['VS']][element] || 0
         averageJson[json['VS']][element] += json[element]
     });
@@ -45,28 +29,53 @@ function GetRunsAgainstTeams(jsonArray , dataFields){
   return averageJson
 }
 
-export async function getStaticProps() {
-  try {
-    const teamMatches = await GetAverageFOW('2023')
-    const averageCommentry = await AverageCommentryStats('GT')
-    const teamDetails = await GetTeamDetails()
-    const lineChartData = filterFow(teamMatches)
-    return {
-      props: {
-        teamMatches,
-        averageCommentry
-      }
-    };
-  } catch (error) {
-    console.error('Error:', error.message);
-    return {
-      props: {
-        error: 'Internal Server Error' // Pass an error message as props
-      }
-    };
-  }
+// export async function getStaticPaths() {
+//   const paths = []; // Example function to fetch all post IDs
+//   // Return an object with paths and fallback
+//   return {
+
+//     fallback: false // or true or 'blocking'
+//   };
+// }
+function isNotValidPage(params , datFound){
+  const events = ['ipl']
+  console.log(params , datFound)
+  return !events.includes(params[0]) || params[1] != 'player' ||  !datFound
 }
-function Player({teamMatches , averageCommentry}) {
+export async function getServerSideProps(context) {
+
+    const params = context.params.player
+    const category = params[0]
+    const playerId = params[1]
+    
+    const playersStats = await GetPlayersInfo(parseInt(playerId) , 2023)
+    console.log(playersStats)
+    // if(isNotValidPage(params , playersStats)){
+    //   return {
+    //     notFound: true
+    //   };
+    // }
+    // console.log("player stats is ", playersStats)
+    const averageStats = await GetAveragePlayerStats()
+    console.log(averageStats)
+    const playerMatchesHistory = await GetPlayerMatchesHistory(playerId , '2023')
+    console.log(playerMatchesHistory)
+    const playerPerformanceAgainstTeams = GetRunsAgainstTeams(playerMatchesHistory.Batting , ['Runs', 'StrikeRate' , 'Balls' , 'Fours', 'sixes'])
+    console.log(playerPerformanceAgainstTeams)
+    const playersAverageVsTeams = await GetPlayerVsTeamAverage('2023')
+    const playerStats = playersStats
+    return {
+      props: {
+        playerStats,
+        averageStats,
+        playerMatchesHistory,
+        playerPerformanceAgainstTeams,
+        playersAverageVsTeams
+      }
+    };
+
+}
+function Player({playerStats , averageStats, playerMatchesHistory, playerPerformanceAgainstTeams , playersAverageVsTeams , error}) {
   const arr = []
   arr.push({
     desc : 'Top 70%'
@@ -82,7 +91,7 @@ function Player({teamMatches , averageCommentry}) {
    <div className='transform skew-x-[12deg]'>
    <div class="avatar">
   <div class="w-32 rounded-xl">
-    <img src="/sports/cricket/ipl/csk.png" />
+    <img src={playerStats.Image} />
   </div>
 </div>
    </div>
@@ -99,19 +108,19 @@ function Player({teamMatches , averageCommentry}) {
     <div className='flex w-full justify-center'>
     <div className='grid grid-cols-2 grid-rows-3  justify-center transform skew-x-[12deg] w-[18rem] '>
     <div>
-    <font> Name: </font> <font className="text-xl ">Chennai Super Kings</font>
+    <font> Name: </font> <font className="text-xl ">{playerStats.Name}</font>
     </div>
     <div>
-    <font> Nationality: </font> <font className="text-xl ">Indian</font>
+    <font> Nationality: </font> <font className="text-xl ">{playerStats.Nationality}</font>
     </div>
     <div>
-    <font> Role: </font> <font className="text-xl "></font>
+    <font> Role: </font> <font className="text-xl ">{playerStats.Role}</font>
     </div>
     <div>
-    <font> DOB: </font> <font className="text-xl "></font>
+    <font> DOB: </font> <font className="text-xl ">{playerStats.Dob}</font>
     </div>
     <div>
-    <font> Ipl Debut: </font> <font className="text-xl "></font>
+    <font> Ipl Debut: </font> <font className="text-xl ">{playerStats.IplDebut}</font>
     </div>
     </div>
     </div>
@@ -120,7 +129,11 @@ function Player({teamMatches , averageCommentry}) {
       </div>
     
       <div className=' px-2 mt-1 '>
-      <TeamAccordion TeamComparisonData = {teamMatches} AverageCommentryStats={averageCommentry} />
+      <PlayerAccordion playerStats={playerStats} 
+      averageStats={averageStats} 
+      playerMatchesHistory={playerMatchesHistory}
+      playersAverageVsTeams= {playersAverageVsTeams}
+      playerPerformanceAgainstTeams={playerPerformanceAgainstTeams}/>
     
       </div>
       </article>

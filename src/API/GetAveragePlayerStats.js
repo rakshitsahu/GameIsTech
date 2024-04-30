@@ -12,14 +12,12 @@ function getAverageFromJson(playersJson , category , yearKey){
     const averageStatsJson = {}
     const Roles = {}
     let totalCount = 0
+    console.log(playersJson)
     Object.keys(playersJson).forEach((key)=>{
         if(key == '_id'){
             return
         }
-        if(playersJson[key]['Role'] != 'All-Rounder'){
-            
-            return
-        }
+
         Roles[playersJson[key]['Role']] = true
 
         const BattingAndFielding = playersJson[key][category][yearKey]
@@ -54,10 +52,13 @@ function getAverageFromJson(playersJson , category , yearKey){
         }
 
     })
+    console.log(averageStatsJson)
+
     Object.keys(averageStatsJson).forEach((key)=>{
         averageStatsJson[key] =  averageStatsJson[key] / totalCount
         averageStatsJson[key].toFixed(2)
     })
+    console.log(averageStatsJson)
 
     return averageStatsJson
 }
@@ -75,18 +76,12 @@ function getAverageStats(playersJson , yearKey){
     }
 
 }
-export default async function GetAveragePlayerStats(){
-    if(response) return response
-    response = await  GetPlayersInfo()
+export default async function GetAveragePlayerStats(playerId){
+
+    const response = await  GetPlayersInfo()
     const filter =  {}
-
-   
-    if(response.status != 200){
-     
-        return null
-    }
-
-    const playersData = response.data[0]
+    console.log(response)
+    const playersData = response
     const averageStatsJson = getAverageStats(playersData,2023)
 
     return averageStatsJson

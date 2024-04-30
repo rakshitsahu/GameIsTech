@@ -69,21 +69,18 @@ function updateResult(teamData , opponentData , resultJson ){
     if(!resultJson){
         resultJson = {'batting': {...teamData},'bowling' : {...opponentData} }
     }else{
-       
         resultJson['bowling'].powerPlay = addScores(resultJson['bowling'].powerPlay , opponentData.powerPlay)
         resultJson['bowling'].middleOvers = addScores(resultJson['bowling'].middleOvers , opponentData.middleOvers)
         resultJson['bowling'].deathOvers = addScores(resultJson['bowling'].deathOvers , opponentData.deathOvers)
         resultJson['batting'].powerPlay = addScores(resultJson['batting'].powerPlay , teamData.powerPlay)
         resultJson['batting'].middleOvers = addScores(resultJson['batting'].middleOvers , teamData.middleOvers)
         resultJson['batting'].deathOvers = addScores(resultJson['batting'].deathOvers , teamData.deathOvers)
-       
     }
     return resultJson
 }
 export async function AverageCommentryStats(avgForTeam ){
 
     const filter =  {}
-
     const response = await makeRequest(MONGO.findOne , {
         db : IPL_DB.Matches,
         collection : '2023',
@@ -158,7 +155,6 @@ export async function AverageCommentryStats(avgForTeam ){
                 matchesCount : matchesCount[teamName]
             }
             if(avgForTeam != teamName){
-                console.log(teamName)
                 otherTeamsAverage.batting.powerPlay = addScores(result[teamName].batting.powerPlay , otherTeamsAverage.batting.powerPlay)
                 otherTeamsAverage.batting.middleOvers = addScores(result[teamName].batting.middleOvers , otherTeamsAverage.batting.middleOvers)
                 otherTeamsAverage.batting.deathOvers = addScores(result[teamName].batting.deathOvers , otherTeamsAverage.batting.deathOvers)
@@ -169,7 +165,6 @@ export async function AverageCommentryStats(avgForTeam ){
             
         })
         
-        console.log(Object.keys(matchesCount))
         otherTeamsAverage = cloneDeep(calculateAverage(cloneDeep(otherTeamsAverage) ,  Object.keys(matchesCount).length - 1 ))
         result.average = otherTeamsAverage
     }

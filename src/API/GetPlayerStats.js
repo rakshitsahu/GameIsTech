@@ -9,7 +9,7 @@ export default async function GetPlayerStats(playerId){
     response = await  GetPlayersInfo(playerId)
     const filter =  {}
 
-    response = await makeRequest(MONGO.findOne , {
+    response = await makeRequest(MONGO.findAll , {
         db : IPL_DB.Static,
         collection : IPL_COLLECTION.StaticPlayerData,
         filter : filter

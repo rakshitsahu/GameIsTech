@@ -94,7 +94,7 @@ function CalCulateStats(matchesList){
 export default async function GetAverageFOW(){
     
     const filter =  {}
-    const response = await makeRequest(MONGO.findOne , {
+    const response = await makeRequest(MONGO.findAll , {
         db : IPL_DB.Matches,
         collection : '2023',
         filter : filter

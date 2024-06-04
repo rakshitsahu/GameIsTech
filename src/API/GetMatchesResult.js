@@ -6,7 +6,7 @@ export default async function GetMatchesResult(matchId = null){
     if(!response) return response
     const filter =  {}
     
-    response = await makeRequest(MONGO.findOne , {
+    response = await makeRequest(MONGO.findAll , {
         db : IPL_DB.MatchesResult,
         collection : IPL_COLLECTION.StaticPlayerData,
         filter : filter

@@ -14,9 +14,9 @@ async function request(url, collection , filter){
 async function CRICKET_GET_API(state){
     switch (state) {
         case CRICKET_API_STATE.players:
-        return await request(MONGO.findOne , IPL_COLLECTION.StaticPlayerData , {} )
+        return await request(MONGO.findAll , IPL_COLLECTION.StaticPlayerData , {} )
         case CRICKET_API_STATE.teamDetails:
-            return await request(MONGO.findOne , IPL_COLLECTION.StaticTeamData , {} )
+            return await request(MONGO.findAll , IPL_COLLECTION.StaticTeamData , {} )
         default:
             break;
     }

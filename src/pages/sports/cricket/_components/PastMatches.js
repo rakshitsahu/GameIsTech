@@ -1,6 +1,9 @@
 import React from 'react'
 import styles from './PastMatches.module.css'
-function BattingMatchesHistory(matchHistory , playerName){
+import Link from 'next/link'
+const dummyImage = "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg"
+function BattingMatchesHistory(matchHistory , playerName , playersList){
+
   return (
     <div className="overflow-x-auto max-h-screen">
   <table className="table ">
@@ -17,24 +20,28 @@ function BattingMatchesHistory(matchHistory , playerName){
     <tbody className=' text-white'>
       {
         matchHistory.map((match)=>{
+          
             return <tr key={match} className='odd:bg-gray-900  even:bg-gray-800 border-b border-gray-700 text-lg'>
             <td>
               <div className="flex items-center gap-3">
                 <div className="avatar">
                   <div className="mask mask-squircle w-12 h-12">
-                    <img src="/tailwind-css-component-profile-2@56w.png" alt="Avatar Tailwind CSS Component" />
+                    <img src={match.OutBy ?playersList[match.OutBy].Image : dummyImage} alt="Avatar Tailwind CSS Component" />
                   </div>
                 </div>
                 <div>
-                  <div className="font-bold">{match.OutBy}</div>
-                  <div className="text-sm opacity-50">Team Name</div>
+                  <div className="font-bold"></div>
+                  <div className="text-sm opacity-50">{match.VS}</div>
                 </div>
               </div>
             </td>
             <td>
-              {match.Runs}
+              {match.Runs}{!match.OutBy ? '*': '' }
               <br/>
-              <span className="badge badge-ghost badge-sm">Wicket By {match.OutBy}</span>
+              {match.OutBy && <span className="badge badge-ghost badge-sm">Wicket By- <Link  href={`/sports/cricket/ipl/player/${match.OutBy}`}>
+              {playersList[match.OutBy].Name}
+              </Link> </span> }
+              
             </td>
             <td>{match.Balls}</td>
             <td>{match.StrikeRate}</td>
@@ -56,12 +63,13 @@ function BattingMatchesHistory(matchHistory , playerName){
   )
 }
 
-function BowlingMatchesHistory(matchHistory , playerName){
+function BowlingMatchesHistory(matchHistory , playerName, playersList){
   return (
     <div className="overflow-x-auto max-h-screen w-full">
   <table className="table ">
     <thead className='bg-blue-600'>
       <tr className={`${styles.childrenFontThin}`}>
+        <th  className=''>Vs Team</th>
         <th className=''>Wickets</th>
         <th>Runs</th>
         <th>Economy</th>
@@ -73,7 +81,20 @@ function BowlingMatchesHistory(matchHistory , playerName){
     <tbody className=' text-white'>
       {
         matchHistory.map((match)=>{
+          
             return <tr key={match} className='odd:bg-gray-900  even:bg-gray-800 border-b border-gray-700 text-lg'>
+            <td>
+            <div className="flex items-center gap-3">
+            <div className="avatar">
+              <div className="mask mask-squircle w-12 h-12">
+                <img src={dummyImage } alt="Avatar Tailwind CSS Component" />
+              </div>
+            </div>
+            <div>
+              <div className="text-sm opacity-50">{match.VS}</div>
+            </div>
+          </div>
+          </td>
             <td>
               <div className="flex items-center gap-3">
                 <div>
@@ -104,8 +125,9 @@ function BowlingMatchesHistory(matchHistory , playerName){
 </div>
   )
 }
-function PastMatches({matchHistory, isBowling , playerName}) {
-  return !isBowling? BattingMatchesHistory(matchHistory , playerName) : BowlingMatchesHistory(matchHistory , playerName)
+function PastMatches({matchHistory, isBowling , playerName , playersList}) {
+
+  return !isBowling? BattingMatchesHistory(matchHistory , playerName , playersList) : BowlingMatchesHistory(matchHistory , playerName, playersList)
 }
 
 export default PastMatches

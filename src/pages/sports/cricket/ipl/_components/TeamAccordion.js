@@ -1,13 +1,9 @@
 import React from 'react'
 import RadarChartComp from '../../_components/charts/radar'
-import RadicalProgressComp from '../../_components/charts/radical';
-import AvatarComp from '../../_components/daisyUI/avatar';
-import PieComp from '../../_components/charts/pie';
+
 import LineComp from '../../_components/charts/Line';
-import BarComp from '../bar';
-import CardComp from '../../_components/Card';
-import RankBoard from '../../_components/RankBoard';
-import PastMatches from '../../_components/PastMatches';
+import { FaStar } from "react-icons/fa";
+import Link from 'next/link';
 function getFullMarks(playerJson , averageJson ){
   const result = {}
   Object.keys(playerJson).forEach(key =>{
@@ -86,7 +82,7 @@ function initData(statsJson){
 
 }
 
-function statsSummary(AverageCommentryStats){
+function statsSummary(teamNames , AverageCommentryStats){
   function filterData(battingJson , bowlingJson){
        return [
         {
@@ -121,26 +117,26 @@ function statsSummary(AverageCommentryStats){
         }
        ]
       }
-
+      
     const config = [
-      {name : 'GT Batting' , dataKey : 'A' , stroke:"#8884d8" , fill:"#8884d8"} ,
-      {name : 'GT Bowling (Others vs GT)' , dataKey : 'B' , stroke:"#ff0000" , fill:"#ff0000"}
+      {name : `${teamNames.ShortName} Batting` , dataKey : 'A' , stroke:"#8884d8" , fill:"#8884d8"} ,
+      {name : `${teamNames.ShortName} Bowling (Others vs ${teamNames.ShortName})` , dataKey : 'B' , stroke:"#ff0000" , fill:"#ff0000"}
     ]
       return (
       <div>
-      <center><h3 className='text-2xl'>Data based on {AverageCommentryStats.GT.matchesCount} Matches</h3></center>
+      <center><h3 className='text-2xl'>Data based on {AverageCommentryStats[teamNames.ShortName].matchesCount} Matches</h3></center>
       <div class="w-full flex flex-wrap">
       <div  className=' w-[80%] max-w-[25rem] h-80 '>
       <center><h4>PowerPlay</h4></center>
-      <RadarChartComp data={filterData(AverageCommentryStats.GT.batting.powerPlay , AverageCommentryStats.GT.bowling.powerPlay)} config={config}/>
+      <RadarChartComp data={filterData(AverageCommentryStats[teamNames.ShortName].batting.powerPlay , AverageCommentryStats[teamNames.ShortName].bowling.powerPlay)} config={config}/>
       </div>
       <div  className=' w-[80%] max-w-[25rem] h-80 '>
       <center><h4>Middle Overs</h4></center>
-      <RadarChartComp data={filterData(AverageCommentryStats.GT.batting.middleOvers , AverageCommentryStats.GT.bowling.middleOvers)} config={config}/>
+      <RadarChartComp data={filterData(AverageCommentryStats[teamNames.ShortName].batting.middleOvers , AverageCommentryStats[teamNames.ShortName].bowling.middleOvers)} config={config}/>
       </div>
       <div  className=' w-[80%] max-w-[25rem] h-80 '>
       <center><h4>Death Overs</h4></center>
-      <RadarChartComp data={filterData(AverageCommentryStats.GT.batting.deathOvers , AverageCommentryStats.GT.bowling.deathOvers)} config={config}/>
+      <RadarChartComp data={filterData(AverageCommentryStats[teamNames.ShortName].batting.deathOvers , AverageCommentryStats[teamNames.ShortName].bowling.deathOvers)} config={config}/>
       </div>
       </div>
       </div>
@@ -155,7 +151,7 @@ function setBoundryRuns(jsonArray){
   })
 }
 
-function battingStats(AverageCommentryStats){
+function battingStats(teamNames , AverageCommentryStats){
   function filterData(battingJson , bowlingJson){
    return [
     {
@@ -191,7 +187,7 @@ function battingStats(AverageCommentryStats){
    ]
   }
 const config = [
-  {name : 'GT Batting' , dataKey : 'A' , stroke:"#8884d8" , fill:"#8884d8"} ,
+  {name : `${teamNames.ShortName}` , dataKey : 'A' , stroke:"#8884d8" , fill:"#8884d8"} ,
   {name : 'Average of other teams' , dataKey : 'B' , stroke:"#ff0000" , fill:"#ff0000"}
 ]
  
@@ -200,21 +196,21 @@ const config = [
     <div class="w-full flex flex-wrap">
     <div  className=' w-[80%] max-w-[25rem] h-80 '>
     <center><h4>PowerPlay</h4></center>
-    <RadarChartComp data={filterData(AverageCommentryStats.GT.batting.powerPlay , AverageCommentryStats.average.bowling.powerPlay)} config={config}/>
+    <RadarChartComp data={filterData(AverageCommentryStats[teamNames.ShortName].batting.powerPlay , AverageCommentryStats.average.bowling.powerPlay)} config={config}/>
     </div>
     <div  className=' w-[80%] max-w-[25rem] h-80 '>
     <center><h4>Middle Overs</h4></center>
-    <RadarChartComp data={filterData(AverageCommentryStats.GT.batting.middleOvers , AverageCommentryStats.average.bowling.middleOvers)} config={config}/>
+    <RadarChartComp data={filterData(AverageCommentryStats[teamNames.ShortName].batting.middleOvers , AverageCommentryStats.average.bowling.middleOvers)} config={config}/>
     </div>
     <div  className=' w-[80%] max-w-[25rem] h-80 '>
     <center><h4>Death Overs</h4></center>
-    <RadarChartComp data={filterData(AverageCommentryStats.GT.batting.deathOvers , AverageCommentryStats.average.bowling.deathOvers)} config={config}/>
+    <RadarChartComp data={filterData(AverageCommentryStats[teamNames.ShortName].batting.deathOvers , AverageCommentryStats.average.bowling.deathOvers)} config={config}/>
     </div>
     </div>
   )
 }
 
-function bowlingStats(AverageCommentryStats){
+function bowlingStats(teamNames ,AverageCommentryStats){
   function filterData(battingJson , bowlingJson){
     return [
      {
@@ -250,7 +246,7 @@ function bowlingStats(AverageCommentryStats){
     ]
    }
  const config = [
-   {name : 'GT Batting' , dataKey : 'A' , stroke:"#8884d8" , fill:"#8884d8"} ,
+   {name : `${teamNames.ShortName}` , dataKey : 'A' , stroke:"#8884d8" , fill:"#8884d8"} ,
    {name : 'Average of other teams' , dataKey : 'B' , stroke:"#ff0000" , fill:"#ff0000"}
  ]
   
@@ -259,23 +255,22 @@ function bowlingStats(AverageCommentryStats){
      <div class="w-full flex flex-wrap">
      <div  className=' w-[80%] max-w-[25rem] h-80 '>
      <center><h4>PowerPlay</h4></center>
-     <RadarChartComp data={filterData(AverageCommentryStats.GT.batting.powerPlay , AverageCommentryStats.average.bowling.powerPlay)} config={config}/>
+     <RadarChartComp data={filterData(AverageCommentryStats[teamNames.ShortName].batting.powerPlay , AverageCommentryStats.average.bowling.powerPlay)} config={config}/>
      </div>
      <div  className=' w-[80%] max-w-[25rem] h-80 '>
      <center><h4>Middle Overs</h4></center>
-     <RadarChartComp data={filterData(AverageCommentryStats.GT.batting.middleOvers , AverageCommentryStats.average.bowling.middleOvers)} config={config}/>
+     <RadarChartComp data={filterData(AverageCommentryStats[teamNames.ShortName].batting.middleOvers , AverageCommentryStats.average.bowling.middleOvers)} config={config}/>
      </div>
      <div  className=' w-[80%] max-w-[25rem] h-80 '>
      <center><h4>Death Overs</h4></center>
-     <RadarChartComp data={filterData(AverageCommentryStats.GT.batting.deathOvers , AverageCommentryStats.average.bowling.deathOvers)} config={config}/>
+     <RadarChartComp data={filterData(AverageCommentryStats[teamNames.ShortName].batting.deathOvers , AverageCommentryStats.average.bowling.deathOvers)} config={config}/>
      </div>
      </div>
    )
 }
 
 
-function compareToTeams(TeamComparisonData){
-  // console.log(TeamComparisonData)
+function compareToTeams(teamNames ,TeamComparisonData){
  function filterData(TeamComparisonData){
 
   const filterData = []
@@ -313,49 +308,87 @@ Object.keys(TeamComparisonData).forEach((teamName)=>{
     
     
 
-    <div className='flex w-full h-96 bg-cyan-300'>
+    <div className='flex w-full h-96 '>
     <LineComp type ='default' configs={config} data={filteredData}  />
     </div>
     </div>
   )
 }
 
-function TeamAccordion({TeamComparisonData , AverageCommentryStats}) {
+function Squad(playersData,squad){
+  
+ return <div className='flex flex-wrap justify-center gap-2 w-full p-3 '>
+ {
+   Object.keys(squad).map((key) => {
+     if (!Array.isArray(squad[key])) {
+       return <div key={key}></div>; // Use 'key' as the key for the div
+     }
+     return squad[key].map((id) => { // Use 'squad[key]' directly for mapping
+      
+       return <div key={id}>
+       <Link href={`/sports/cricket/ipl/player/${id}`}>
+       <div  className='xl:w-52 lg:w-44 md:w-32 w-28 relative border-collapse border-2'>
+       <div class="avatar">
+        <div class="xl:w-52 lg:w-44 md:w-32 sm:w-28 rounded">
+      <img src={playersData[id].Image} />
+      </div>
+        </div>
 
+        <div class="w-full absolute bottom-0 py-0 justify-center items-center xl:bg-pink-300 lg:bg-yellow-300 md:to-blue-400 bg-red-400 gap-0">
+        <div class="flex flex-col items-center text-white ">
+          <div className='sm:text-base'>{playersData[id].Role}</div>
+          <div className='sm:text-base'>{playersData[id].Name}</div>
+        </div>
+      </div>
+      {
+        squad.Captain === id &&
+        <div className='absolute top-2 left-2'>
+      <FaStar color='gold'/>
+      </div>
+      }
+       </div>
+       </Link>
+       </div>; // Use 'id' as the key for the div
+     });
+   })
+ }
+</div>
+}
+function TeamAccordion({playersData, squad , teamNames , TeamComparisonData , AverageCommentryStats}) {
   return (
     <div className="join join-vertical w-full">
     <div className="collapse collapse-arrow join-item border border-base-300">
     <input type="radio" name="my-accordion-4" defaultChecked /> 
     <div className="collapse-title text-xl font-medium">
-      Channai Super Kings Overall Stats
+      {teamNames.FullName} Overall Stats
     </div>
     <div className="collapse-content "> 
-    {statsSummary(AverageCommentryStats)}
+    {statsSummary(teamNames, AverageCommentryStats)}
   </div>
   </div>
   <div className="collapse collapse-arrow join-item border border-base-300">
     <input type="radio" name="my-accordion-4" defaultChecked /> 
     <div className="collapse-title text-xl font-medium">
-      MS. Dhoni Batting stats
+    {teamNames.FullName} Batting stats
     </div>
     <div className="collapse-content"> 
-      {battingStats(AverageCommentryStats)}
+      {battingStats(teamNames ,AverageCommentryStats)}
     </div>
   </div>
   <div className="collapse collapse-arrow join-item border border-base-300">
   <input type="radio" name="my-accordion-4" /> 
   <div className="collapse-title text-xl font-medium">
-      MS. Dhoni Bowling Stats
+  {teamNames.FullName} Bowling Stats
   </div>
   <div className="collapse-content"> 
-    {bowlingStats(AverageCommentryStats)}
+    {bowlingStats(teamNames ,AverageCommentryStats)}
   </div>
 </div>
 
 <div className="collapse collapse-arrow join-item border border-base-300">
 <input type="radio" name="my-accordion-4" /> 
 <div className="collapse-title text-xl font-medium">
-    MS. Dhoni Last Matches
+{teamNames.FullName} Last Matches
 </div>
 <div className="collapse-content"> 
   {''}
@@ -365,17 +398,17 @@ function TeamAccordion({TeamComparisonData , AverageCommentryStats}) {
 <div className="collapse collapse-arrow join-item border border-base-300">
 <input type="radio" name="my-accordion-4" /> 
 <div className="collapse-title text-xl font-medium">
-    MS. Dhoni Team
+{teamNames.FullName} Squad
 </div>
-<div className="collapse-content"> 
-  <p>hello</p>
+<div className="collapse-content "> 
+  {Squad(playersData,squad)}
 </div>
 </div>
 
   <div className="collapse collapse-arrow join-item border border-base-300">
     <input type="radio" name="my-accordion-4" /> 
     <div className="collapse-title text-xl font-medium">
-        MS. Dhoni performance against players
+    {teamNames.FullName} performance against players
     </div>
     <div className="collapse-content"> 
       {''}
@@ -384,10 +417,10 @@ function TeamAccordion({TeamComparisonData , AverageCommentryStats}) {
   <div className="collapse collapse-arrow join-item border border-base-300">
     <input type="radio" name="my-accordion-4" /> 
     <div className="collapse-title text-xl font-medium">
-    MS. Dhoni performance against IPL Teams
+    {teamNames.FullName} performance against IPL Teams
     </div>
     <div className="collapse-content"> 
-    {compareToTeams(TeamComparisonData)}
+    {compareToTeams(teamNames , TeamComparisonData)}
     </div>
   </div>
 </div>

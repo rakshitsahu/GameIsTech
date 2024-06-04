@@ -9,9 +9,10 @@ async function MongoFind(req , res , client = null){
     const collection = req.body.collection
 
     const filter = req.body.filter
+    const projection = req.body.projection ? req.body.projection : {}
       try {
         
-        const data = await client.collection(collection).find(filter).toArray();
+        const data = await client.collection(collection).findOne(filter ,{projection});
         return data
       } catch (error) {
 

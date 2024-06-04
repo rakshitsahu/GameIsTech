@@ -1,11 +1,13 @@
 import React from 'react'
-import Navbar from '../_components/navbar'
-import TeamAccordion from './_components/TeamAccordion';
-import GetPlayersInfo from '@/API/GetPlayersInfo';
-import GetAveragePlayerStats from '@/API/GetAveragePlayerStats';
-import { GetPlayerMatchesHistory, GetPlayerVsTeamAverage } from '@/API/GetPlayerHistory';
+import Navbar from '../../_components/navbar'
+import TeamAccordion from '../_components/TeamAccordion';
+import { GetTeamNames } from '@/Components/Team';
 import GetAverageFOW from '@/API/GetAverageFallOfWickets';
 import { AverageCommentryStats } from '@/API/Commentry';
+import makeRequest from '@/API/makeRequest';
+import { MONGO } from '@/API/API_States';
+import { IPL_COLLECTION, IPL_DB } from '@/MongoDb/config';
+import GetPlayersInfo from '@/API/GetPlayersInfo';
 
 function filterFow(json){
   const lineChartData = {}
@@ -44,29 +46,61 @@ function GetRunsAgainstTeams(jsonArray , dataFields){
 
   return averageJson
 }
-
-export async function getStaticProps() {
-  try {
-    const teamMatches = await GetAverageFOW('2023')
-    const averageCommentry = await AverageCommentryStats('GT')
-    const teamDetails = await GetTeamDetails()
-    const lineChartData = filterFow(teamMatches)
-    return {
-      props: {
-        teamMatches,
-        averageCommentry
-      }
-    };
-  } catch (error) {
-    console.error('Error:', error.message);
-    return {
-      props: {
-        error: 'Internal Server Error' // Pass an error message as props
-      }
-    };
-  }
+function ProjectionOfPlayersIds(squad){
+  const projection = {}
+  Object.keys(squad).map((key) => {
+    if (!Array.isArray(squad[key])) {
+      return ;
+    }
+    squad[key].map((id) => {
+      projection[id] = {
+        Image : 1,
+        Role : 1,
+        Name : 1
+      };
+    })
+  })
+  return projection
 }
-function Player({teamMatches , averageCommentry}) {
+export async function getServerSideProps(context) {
+  const teamParam = context.params.team
+  const teamNames = GetTeamNames(teamParam)
+  const teamMatches = await GetAverageFOW('2023')
+  const teamProjection = {}
+  const filter = {}
+  filter[teamNames.ShortName] = { $exists: true }
+  teamProjection[teamNames.ShortName] = {2023 : 1}
+  const teamData = await makeRequest(MONGO.findOne , {
+    db : IPL_DB.Static,
+    collection : IPL_COLLECTION.StaticTeamData,
+    filter : filter,
+    projection : teamProjection
+  })
+
+  const squad = teamData.data[teamNames.ShortName][2023]
+  const playersProjection = ProjectionOfPlayersIds(squad)
+  const playerDataResponse = await makeRequest(MONGO.findOne , {
+    db : IPL_DB.Static,
+    collection : IPL_COLLECTION.StaticPlayerData,
+    filter : {},
+    projection : playersProjection
+  })
+  const playersData = playerDataResponse.data
+
+  const averageCommentry = await AverageCommentryStats(teamNames.ShortName)
+  // const teamDetails = await GetTeamDetails()
+  // const lineChartData = filterFow(teamMatches)
+  return {
+    props: {
+      playersData,
+      squad,
+      teamNames,
+      teamMatches,
+      averageCommentry
+    }
+  };
+}
+function Team({playersData, squad ,teamNames, teamMatches , averageCommentry}) {
   const arr = []
   arr.push({
     desc : 'Top 70%'
@@ -82,7 +116,7 @@ function Player({teamMatches , averageCommentry}) {
    <div className='transform skew-x-[12deg]'>
    <div class="avatar">
   <div class="w-32 rounded-xl">
-    <img src="/sports/cricket/ipl/csk.png" />
+    <img src={`/sports/cricket/ipl/logo/${teamNames.ShortName}.png`} />
   </div>
 </div>
    </div>
@@ -120,7 +154,7 @@ function Player({teamMatches , averageCommentry}) {
       </div>
     
       <div className=' px-2 mt-1 '>
-      <TeamAccordion TeamComparisonData = {teamMatches} AverageCommentryStats={averageCommentry} />
+      <TeamAccordion playersData={playersData} squad={squad} teamNames= {teamNames} TeamComparisonData = {teamMatches} AverageCommentryStats={averageCommentry} />
     
       </div>
       </article>
@@ -128,4 +162,4 @@ function Player({teamMatches , averageCommentry}) {
   )
 }
 
-export default Player
+export default Team

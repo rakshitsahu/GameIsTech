@@ -6,7 +6,7 @@ export default async function GetTeamsInfo(team = null){
     if(!response) return response
     const filter =  {}
 
-    response = await makeRequest(MONGO.findOne , {
+    response = await makeRequest(MONGO.findAll , {
         db : IPL_DB.Static,
         collection : IPL_COLLECTION.StaticTeamData,
         filter : filter

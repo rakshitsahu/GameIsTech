@@ -12,22 +12,22 @@ function convertValuesToFloat(json){
     return json
 }
 export default async function GetPlayersInfo(playerId = null , year = null){
-    console.log("came inside GetPlayersInfo ")
+   
 
     const filter =  {}
 
-    const response = await makeRequest(MONGO.findOne , {
+    const response = await makeRequest(MONGO.findAll , {
         db : IPL_DB.Static,
         collection : IPL_COLLECTION.StaticPlayerData,
         filter : filter
 
     } )
-    console.log(response)
+   
     if(response.status != 200){
         return null
     }
     const playersData = response.data[0]
-    console.log(playersData)
+ 
     if(playerId != null && playersData[playerId]) {
         const result = playersData[playerId]
         result["BattingAndFielding"][2023] = convertValuesToFloat(result["BattingAndFielding"][2023])
@@ -35,7 +35,7 @@ export default async function GetPlayersInfo(playerId = null , year = null){
       return  result
     }
     else{
-        console.log("came here")
+        
      return response.data[0]
     }
     const result = playerId != null ? playersData[playerId] : playersData

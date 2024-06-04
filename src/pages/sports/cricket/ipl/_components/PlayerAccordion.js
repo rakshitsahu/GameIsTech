@@ -4,14 +4,16 @@ import RadicalProgressComp from '../../_components/charts/radical';
 import AvatarComp from '../../_components/daisyUI/avatar';
 import PieComp from '../../_components/charts/pie';
 import LineComp from '../../_components/charts/Line';
-import BarComp from '../bar';
-import CardComp from '../../_components/Card';
+import BarComp from '../../_components/charts/bar';
+import CardComp, { SquareCard } from '../../_components/Card';
 // import RankBoard from '../../_components/RankBoard';
 import PastMatches from '../../_components/PastMatches';
+import GetAveragePlayerStats from '@/API/GetAveragePlayerStats';
 function getFullMarks(playerJson , averageJson ){
   const result = {}
-  Object.keys(playerJson).forEach(key =>{
-    result[key] = Math.max(playerJson[key] , averageJson[key]) 
+  Object.keys(averageJson).forEach(key =>{
+    var score = playerJson[key].replace('*', '').replace('-', '0')
+    result[key] = Math.max(score , averageJson[key]) 
   })
   return result
 }
@@ -86,7 +88,8 @@ function initData(statsJson){
 
 }
 
-function statsSummary(statsJson , playerName){
+function statsSummary(statsJson , BattingPercentage, BowlingPercentage , playerName){
+
   const radarChartData = [
     {
       subject: 'Strike Rate',
@@ -106,9 +109,9 @@ function statsSummary(statsJson , playerName){
     },
     {
       subject: 'Economy',
-      A: statsJson.playerBowlingStats["Econ"],
+      A:  statsJson.playerBowlingStats["Econ"],
       B: statsJson.averageBowlingStats["Econ"],
-      fullMark: statsJson.bowlingFullMarks["Econ"],
+      fullMark: statsJson.bowlingFullMarks["Econ"] ,
       ATopPercent : 71,
       ATopText : "Beats 80% of players"
     },
@@ -146,7 +149,7 @@ function statsSummary(statsJson , playerName){
     },
     {
       subject: 'Highest Score',
-      A: statsJson.playerBattingStats['HS'],
+      A: statsJson.playerBattingStats['HS'].replace('*', ''),
       B: statsJson.averageBattingStats['HS'],
       fullMark: statsJson.battingFullMarks["HS"],
       ATopPercent : 91,
@@ -161,22 +164,22 @@ function statsSummary(statsJson , playerName){
     {
       key : "Strike Rate",
       value: statsJson.playerBattingStats['SR'],
-      desc: " ( In top 5% )"
+      desc: `( In top ${BattingPercentage['SR']}% )`
     },
     {
       key : "Runs",
       value: statsJson.playerBattingStats['Runs'],
-      desc: " ( In top 5% )"
+      desc: `( In top ${BattingPercentage['Runs']}% )`
     },
     {
       key : "Wickets",
       value: statsJson.playerBowlingStats['WKTS'],
-      desc: " ( In top 5% )"
+      desc: `( In top ${BowlingPercentage['WKTS']}% )`
     },
     {
       key : "Best",
       value: statsJson.playerBattingStats['HS'],
-      desc: " ( In top 55% )"
+      desc: `( In top ${BattingPercentage['HS']}% )`
     }
   ]
 
@@ -185,7 +188,7 @@ function statsSummary(statsJson , playerName){
     <div  className=' w-full'>
     <center>
     <div className='w-64 '>
-    <CardComp data = {cardData} />
+    <CardComp data = {cardData}  />
     </div>
     <div  className=' w-[80%] max-w-[40rem] h-80'>
     <RadarChartComp data={radarChartData} config={config}/>
@@ -204,9 +207,8 @@ function setBoundryRuns(jsonArray){
   })
 }
 
-function battingStats(statsJson , playerMatchesHistory , playerName){
+function battingStats(statsJson , BattingPercentage, playerMatchesHistory , playerName){
   setBoundryRuns(playerMatchesHistory.Batting)
-
   const barConfig = [
     {
       dataKey: runsByFoursKey,
@@ -269,7 +271,7 @@ function battingStats(statsJson , playerMatchesHistory , playerName){
     },
     {
       subject: 'Highest Score',
-      A: statsJson.playerBattingStats['HS'],
+      A: statsJson.playerBattingStats['HS'].replace('*',''),
       B: statsJson.averageBattingStats['HS'],
       fullMark: statsJson.battingFullMarks["HS"],
       ATopPercent : 91,
@@ -289,22 +291,33 @@ function battingStats(statsJson , playerMatchesHistory , playerName){
     {
       key : "Strike Rate",
       value: statsJson.playerBattingStats['SR'],
-      desc: " ( In top 5% )"
+      desc: `( In top ${BattingPercentage['SR']}% )`
     },
     {
       key : "Runs",
       value: statsJson.playerBattingStats['Runs'],
-      desc: " ( In top 5% )"
+      desc: `( In top ${BattingPercentage['Runs']}% )`
     },
     {
       key : "Wickets",
       value: statsJson.playerBowlingStats['WKTS'],
-      desc: " ( In top 5% )"
+      desc: `( In top ${BattingPercentage['WKTS']}% )`
     },
     {
       key : "Best",
       value: statsJson.playerBattingStats['HS'],
-      desc: " ( In top 55% )"
+      desc: `( In top ${BattingPercentage['HS']}% )`
+    }
+    ,
+    {
+      key : "Half Centuries",
+      value: statsJson.playerBowlingStats[50],
+      desc: `( In top ${BattingPercentage['50']}% )`
+    },
+    {
+      key : "Centuries",
+      value: statsJson.playerBattingStats[100],
+      desc: `( In top ${BattingPercentage['100']}% )`
     }
   ]
 
@@ -316,14 +329,13 @@ function battingStats(statsJson , playerMatchesHistory , playerName){
     { name: "4's", value: 300 },
 
   ];
-
   return (
     <div class="w-full">
     <div  className=' w-full'>
     <center>
 
     <div className='w-64 '>
-    <CardComp data = {cardData} />
+    <SquareCard data = {cardData} />
     </div>
 
     <div  className=' w-[80%] max-w-[40rem] h-80'>
@@ -343,7 +355,8 @@ function battingStats(statsJson , playerMatchesHistory , playerName){
   )
 }
 
-function bowlingStats(statsJson , playerName){
+function bowlingStats(statsJson , BowlingPercentage , playerName){
+
   const radarChartData = [
     {
       subject: 'Wickets',
@@ -355,7 +368,7 @@ function bowlingStats(statsJson , playerName){
     },
     {
       subject: 'Economy',
-      A: statsJson.playerBowlingStats["Econ"],
+      A:  statsJson.playerBowlingStats["Econ"],
       B: statsJson.averageBowlingStats["Econ"],
       fullMark: statsJson.bowlingFullMarks["Econ"],
       ATopPercent : 71,
@@ -406,22 +419,27 @@ function bowlingStats(statsJson , playerName){
     {
       key : "Wickets",
       value: statsJson.playerBowlingStats['WKTS'],
-      desc: " ( In top 5% )"
-    },
-    {
-      key : "Balls",
-      value: statsJson.playerBowlingStats['Balls'],
-      desc: " ( In top 5% )"
-    },
-    {
-      key : "Runs",
-      value: statsJson.playerBowlingStats['Runs'],
-      desc: " ( In top 5% )"
+      desc: `( In top ${BowlingPercentage['WKTS']}% )`
     },
     {
       key : "Economy",
       value: statsJson.playerBowlingStats['Econ'],
-      desc: " ( In top 55% )"
+      desc: `( In top ${BowlingPercentage['Econ']}% )`
+    },
+    {
+      key : "Balls",
+      value: statsJson.playerBowlingStats['Balls'],
+      desc: `( In top ${BowlingPercentage['Balls']}% )`
+    },
+    {
+      key : "Runs",
+      value: statsJson.playerBowlingStats['Runs'],
+      desc: `( In top ${BowlingPercentage['Runs']}% )`
+    },
+    {
+      key : "Economy",
+      value: statsJson.playerBowlingStats['Econ'],
+      desc: `( In top ${BowlingPercentage['Econ']}% )`
     }
   ]
   return (
@@ -445,19 +463,18 @@ function bowlingStats(statsJson , playerName){
     </div>
   )
 }
-function playerLastMatches(playerMatchesHistory , playerStats){
+function playerLastMatches(playerMatchesHistory , playerStats , playersList){
   const headings = ['Player Name' ,'Sixes' ]
-
   return (
     <div>
     <div >
     <h2 className='text-2xl m-2 text-center'>{playerStats.Name} Batting performance in past matches</h2>
-    <PastMatches matchHistory={playerMatchesHistory.Batting}/>
+    <PastMatches matchHistory={playerMatchesHistory.Batting} playersList={playersList}/>
     </div>
     <div >
     <h2 className='text-2xl m-2 text-center'>{playerStats.Name} Bowling performance in past matches</h2>
   
-    <PastMatches matchHistory={playerMatchesHistory.Bowling} isBowling={true} playerName={playerStats.Name}/>
+    <PastMatches matchHistory={playerMatchesHistory.Bowling} isBowling={true} playerName={playerStats.Name} playersList={playersList}/>
    
     </div>
     </div>
@@ -514,11 +531,23 @@ function compareToTeams(playerPerformanceAgainstTeams , playersAverageVsTeams , 
   )
 }
 
-function PlayerAccordion({playerStats, averageStats, playerMatchesHistory , playerPerformanceAgainstTeams , playersAverageVsTeams }) {
+function PlayerAccordion({playerStats, averageStats, playerMatchesHistory , playerPerformanceAgainstTeams , playersAverageVsTeams, playersList }) {
+
+  function handleNullScores(json){
+    Object.keys(json).forEach((key)=>{
+      json[key] = json[key].replace('-', '0')
+    })
+  }
+
+
+
   const averageBattingStats = averageStats["BattingAndFielding"]
   const averageBowlingStats = averageStats["BowlingStats"]
+  const BattingPercentage = averageStats["BattingAndFieldingPercentage"]
+  const BowlingPercentage = averageStats["BowlingStatsPercentage"]
   const playerBattingStats = playerStats["BattingAndFielding"][2023]
   const playerBowlingStats = playerStats["BowlingStats"][2023]
+  handleNullScores(playerBowlingStats)
   const battingFullMarks = getFullMarks(playerBattingStats , averageBattingStats)
   const bowlingFullMarks = getFullMarks(playerBowlingStats , averageBowlingStats)
   const statsJson = {
@@ -530,6 +559,7 @@ function PlayerAccordion({playerStats, averageStats, playerMatchesHistory , play
     bowlingFullMarks : bowlingFullMarks
   }
   initData(statsJson)
+  
   return (
     <div className="join join-vertical w-full">
     <div className="collapse collapse-arrow join-item border border-base-300">
@@ -538,7 +568,7 @@ function PlayerAccordion({playerStats, averageStats, playerMatchesHistory , play
       {playerStats.Name} Overall Stats
     </div>
     <div className="collapse-content "> 
-    {statsSummary(statsJson , playerStats.Name)}
+    {statsSummary(statsJson , BattingPercentage, BowlingPercentage , playerStats.Name)}
   </div>
   </div>
   <div className="collapse collapse-arrow join-item border border-base-300">
@@ -547,7 +577,7 @@ function PlayerAccordion({playerStats, averageStats, playerMatchesHistory , play
       {playerStats.Name} Batting stats
     </div>
     <div className="collapse-content"> 
-      {battingStats(statsJson , playerMatchesHistory , playerStats.Name)}
+      {battingStats(statsJson , BattingPercentage , playerMatchesHistory , playerStats.Name)}
     </div>
   </div>
   <div className="collapse collapse-arrow join-item border border-base-300">
@@ -556,7 +586,7 @@ function PlayerAccordion({playerStats, averageStats, playerMatchesHistory , play
       {playerStats.Name} Bowling Stats
   </div>
   <div className="collapse-content"> 
-    {bowlingStats(statsJson , playerStats.Name)}
+    {bowlingStats(statsJson, BowlingPercentage , playerStats.Name)}
   </div>
 </div>
 
@@ -566,17 +596,7 @@ function PlayerAccordion({playerStats, averageStats, playerMatchesHistory , play
     {playerStats.Name} Last Matches
 </div>
 <div className="collapse-content"> 
-  {playerLastMatches(playerMatchesHistory , playerStats)}
-</div>
-</div>
-
-<div className="collapse collapse-arrow join-item border border-base-300">
-<input type="radio" name="my-accordion-4" /> 
-<div className="collapse-title text-xl font-medium">
-    {playerStats.Name} Team
-</div>
-<div className="collapse-content"> 
-  <p>hello</p>
+  {playerLastMatches(playerMatchesHistory , playerStats , playersList)}
 </div>
 </div>
 

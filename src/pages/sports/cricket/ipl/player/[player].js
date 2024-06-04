@@ -1,9 +1,10 @@
 import React from 'react'
-import Navbar from '../_components/navbar'
-import PlayerAccordion from './_components/PlayerAccordion';
+import Navbar from '../../_components/navbar';
+import PlayerAccordion from '../_components/PlayerAccordion';
 import GetPlayersInfo from '@/API/GetPlayersInfo';
 import GetAveragePlayerStats from '@/API/GetAveragePlayerStats';
 import { GetPlayerMatchesHistory, GetPlayerVsTeamAverage } from '@/API/GetPlayerHistory';
+import Footer from '../../_components/Footer';
 
 function GetRunsAgainstTeams(jsonArray , dataFields){
   const countMap = {}
@@ -37,45 +38,42 @@ function GetRunsAgainstTeams(jsonArray , dataFields){
 //     fallback: false // or true or 'blocking'
 //   };
 // }
+
 function isNotValidPage(params , datFound){
   const events = ['ipl']
-  console.log(params , datFound)
   return !events.includes(params[0]) || params[1] != 'player' ||  !datFound
 }
 export async function getServerSideProps(context) {
 
-    const params = context.params.player
-    const category = params[0]
-    const playerId = params[1]
+    const playerId = context.params.player
     
-    const playersStats = await GetPlayersInfo(parseInt(playerId) , 2023)
-    console.log(playersStats)
-    // if(isNotValidPage(params , playersStats)){
+    const playersList = await GetPlayersInfo()
+    // if(isNotValidPage(params , playersList)){
     //   return {
     //     notFound: true
     //   };
     // }
-    // console.log("player stats is ", playersStats)
-    const averageStats = await GetAveragePlayerStats()
+
+    const averageStats = await GetAveragePlayerStats(playerId , 2023)
     console.log(averageStats)
     const playerMatchesHistory = await GetPlayerMatchesHistory(playerId , '2023')
-    console.log(playerMatchesHistory)
     const playerPerformanceAgainstTeams = GetRunsAgainstTeams(playerMatchesHistory.Batting , ['Runs', 'StrikeRate' , 'Balls' , 'Fours', 'sixes'])
-    console.log(playerPerformanceAgainstTeams)
     const playersAverageVsTeams = await GetPlayerVsTeamAverage('2023')
-    const playerStats = playersStats
+    const playerStats = playersList[parseInt(playerId)]
+    
     return {
       props: {
         playerStats,
         averageStats,
         playerMatchesHistory,
         playerPerformanceAgainstTeams,
-        playersAverageVsTeams
+        playersAverageVsTeams,
+        playersList
       }
     };
 
 }
-function Player({playerStats , averageStats, playerMatchesHistory, playerPerformanceAgainstTeams , playersAverageVsTeams , error}) {
+function Player({playerStats , averageStats, playerMatchesHistory, playerPerformanceAgainstTeams , playersAverageVsTeams ,playersList, error}) {
   const arr = []
   arr.push({
     desc : 'Top 70%'
@@ -133,10 +131,12 @@ function Player({playerStats , averageStats, playerMatchesHistory, playerPerform
       averageStats={averageStats} 
       playerMatchesHistory={playerMatchesHistory}
       playersAverageVsTeams= {playersAverageVsTeams}
-      playerPerformanceAgainstTeams={playerPerformanceAgainstTeams}/>
+      playerPerformanceAgainstTeams={playerPerformanceAgainstTeams}
+      playersList={playersList}/>
     
       </div>
       </article>
+      <Footer/>
     </div>
   )
 }

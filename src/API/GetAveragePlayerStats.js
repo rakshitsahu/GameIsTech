@@ -12,7 +12,7 @@ function getAverageFromJson(playersJson , category , yearKey){
     const averageStatsJson = {}
     const Roles = {}
     let totalCount = 0
-    console.log(playersJson)
+   
     Object.keys(playersJson).forEach((key)=>{
         if(key == '_id'){
             return
@@ -34,10 +34,10 @@ function getAverageFromJson(playersJson , category , yearKey){
                         value = value.replace('*', '')
                     }
 
-                    // if(value == '')
-                    // {
-                    //     value = 0
-                    // }
+                    if(value == '')
+                    {
+                        value = 0
+                    }
 
                     value = parseFloat(value);
 
@@ -52,13 +52,13 @@ function getAverageFromJson(playersJson , category , yearKey){
         }
 
     })
-    console.log(averageStatsJson)
+   
 
     Object.keys(averageStatsJson).forEach((key)=>{
         averageStatsJson[key] =  averageStatsJson[key] / totalCount
         averageStatsJson[key].toFixed(2)
     })
-    console.log(averageStatsJson)
+   
 
     return averageStatsJson
 }
@@ -66,25 +66,83 @@ function getAverageStats(playersJson , yearKey){
     
     
     let totalCount = 0
-
     const averageBattingStats = getAverageFromJson(playersJson , "BattingAndFielding" , yearKey)
     const averageBowlingStats = getAverageFromJson(playersJson , "BowlingStats" , yearKey)
-
     return {
         "BattingAndFielding" : averageBattingStats,
         "BowlingStats" : averageBowlingStats
     }
 
 }
-export default async function GetAveragePlayerStats(playerId){
+
+function GetTopPrecentageJson(playersJson , playerId , domain ,dataKeys , year ){
+    const topPercentageJson = {}
+    dataKeys.forEach(key =>{
+        const playerScore = playersJson[playerId][domain][year][key]
+       const percentage = GetTopPrecentage( playersJson, domain, key , playerScore , year ).toFixed(2)
+       topPercentageJson[key] = percentage
+    })
+    return topPercentageJson
+}
+
+function CalculateTopPrecentage( dataArray , score){
+    for(let i = 0 ; i < dataArray.length ;i++){
+        if(typeof dataArray[i] === 'string'){
+            dataArray[i] = dataArray[i].replace('*','').replace('-','')
+            if(dataArray[i] == ''){
+                dataArray[i] = '0'
+            }
+            dataArray[i] = parseFloat(dataArray[i])
+    }
+    if( score === 'string'){
+        score = score.replace('*','').replace('-','')
+        if(score == ''){
+            score = '0'
+        }
+        score = parseFloat(score)
+    }
+}
+    function sortNumericStrings(arr) {
+        return arr.sort((a, b) => {
+          return parseFloat(a) - parseFloat(b);
+        });
+      }
+      sortNumericStrings(dataArray)
+    let low = 0 , high = dataArray.length - 1;
+    let mid = 0
+    let ans = 0
+    while ( low < high ){
+        mid = Math.floor((high + low) / 2);
+        if( dataArray[mid] <= score ){
+            ans = mid
+            low = mid + 1;
+        } else{
+            high = mid - 1;
+        }
+    }
+    return 100 - ((ans / dataArray.length) * 100)
+}
+function GetTopPrecentage(playersData, battingOrBowlingKey, field , actualScore ,  year){
+    let namesArray = Object.keys(playersData) 
+    .filter(playerId => {return playersData[playerId][battingOrBowlingKey] && playersData[playerId][battingOrBowlingKey][year]})  
+    .map(playerId => playersData[playerId][battingOrBowlingKey][year][field] || 0);
+
+    return CalculateTopPrecentage(namesArray , actualScore)
+}
+export default async function GetAveragePlayerStats(playerId ,year){
 
     const response = await  GetPlayersInfo()
     const filter =  {}
-    console.log(response)
     const playersData = response
-    const averageStatsJson = getAverageStats(playersData,2023)
+    const BattingPercentageJson =  GetTopPrecentageJson(playersData , playerId, "BattingAndFielding",['Runs','4s','6s','Mat','HS','Avg','SR','50','100'] , year)
+    const BowlingPercentageJson =  GetTopPrecentageJson(playersData , playerId, "BowlingStats",['Runs','4W','5W','Econ','WKTS','Ave','SR'] , year)
+    const averageStatsJson = getAverageStats(playersData,year)
 
-    return averageStatsJson
+    return {
+        ...averageStatsJson,
+        "BattingAndFieldingPercentage" : BattingPercentageJson,
+        "BowlingStatsPercentage" : BowlingPercentageJson
+    }
 
 
 }

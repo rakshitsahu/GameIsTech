@@ -23,7 +23,7 @@ function isPlayerFound(playerId , data , year){
 
 export default async function GetPlayerTeamHistory(playerId){
     const filter =  {}
-    const teamsData = await makeRequest(MONGO.findOne , {
+    const teamsData = await makeRequest(MONGO.findAll , {
         db : IPL_DB.Static,
         collection : IPL_COLLECTION.StaticTeamData,
         filter : filter
@@ -151,7 +151,7 @@ export async function GetPlayerVsTeamAverage(year){
     const filter = { }
     const batting = []
     const bowling = []
-   const result = await makeRequest(MONGO.findOne , {
+   const result = await makeRequest(MONGO.findAll , {
         db : IPL_DB.Matches,
         collection : year,
         filter : filter
@@ -167,7 +167,7 @@ async function getPlayerMatchesRuns(playerId , year , matchIds  , team){
     const filter = { matchId: { $in: matchIds } }
     const batting = []
     const bowling = []
-   const matches = await makeRequest(MONGO.findOne , {
+   const matches = await makeRequest(MONGO.findAll , {
         db : IPL_DB.Matches,
         collection : year,
         filter : filter
@@ -189,6 +189,7 @@ async function getPlayerMatchesRuns(playerId , year , matchIds  , team){
             bowling.push( result )
         }
     })
+    
     return {Batting: batting , Bowling : bowling}
 }
 export async function GetPlayerMatchesHistory(playerId , year){
@@ -196,7 +197,7 @@ export async function GetPlayerMatchesHistory(playerId , year){
     const filter = {}
     const playerTeamHistory = await GetPlayerTeamHistory(playerId)
   
-    const teamMatches = await makeRequest(MONGO.findOne , {
+    const teamMatches = await makeRequest(MONGO.findAll , {
         db : IPL_DB.MatchesResult,
         collection : year,
         filter : filter

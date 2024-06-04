@@ -1,39 +1,29 @@
 
-// import GCAM_DB_STATE from "@/Components/gcam/mongodb/DB_Name_State";
 
-import connectMongo from "../../../middleware/ConnectMongo";
-const { MongoClient, ServerApiVersion } = require('mongodb');
-
+import connectDb from '../../../middleware/ConnectMongo';
 const uri = "mongodb+srv://admin1:admin@cluster0.eejo5yk.mongodb.net/?retryWrites=true&w=majority";
-export async function handler(req , res){
+async function MongoFind(req , res , client = null){
 
+  // res.send({"hello" : " success"})
   const body = req.body
-  const db = req.body
-  const collection = body.collection
-  const filter = body.filter
+    const collection = req.body.collection
 
-    const client = new MongoClient(uri, {
-        serverApi: {
-          version: ServerApiVersion.v1,
-          strict: true,
-          deprecationErrors: true,
-        }
-      });
+    const filter = req.body.filter
+    const query = req.body.query ? req.body.query : {}
       try {
-        await client.connect().catch( async (err) => { 
-
-          await client.close() 
-        }
-           )
-        const data = await client.db(db).collection(collection).find(filter).toArray();
-        await client.close()
-        res.send({message :'success'})
-
+        
+        const data = await client.collection(collection).find(filter ,query).toArray();
+        return data
       } catch (error) {
-        await client.close()
-        console.error(error)
-        res.send({message :'failed'})
+
+        res.send({"error":error.message})
       }
 
 }
-export default connectMongo()
+async function ConnectDb(req , res , client = null){
+
+  const result = await connectDb(req , res , MongoFind)
+
+  res.send(result) 
+}
+export default ConnectDb
